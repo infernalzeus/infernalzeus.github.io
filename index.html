@@ -159,6 +159,59 @@
       font-size: 0.82rem;
       color: var(--text-faint);
       margin-bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .degree-line {
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      cursor: default;
+    }
+
+    .degree-inst {
+      font-size: 0.75rem;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity var(--transition);
+      white-space: nowrap;
+    }
+
+    .degree-line:hover .degree-inst { opacity: 1; }
+
+    .card-byline {
+      font-size: 0.68rem;
+      color: var(--text-faint);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+      flex: none;
+    }
+
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--border-dim);
+      padding-top: 0.85rem;
+    }
+
+    .pipeline-step { display: flex; flex-direction: column; gap: 0.3rem; }
+
+    .step-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .step-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.55;
     }
 
     .cta-row {
@@ -501,10 +554,19 @@
     <p class="hero-role">AI Researcher &amp; Software Developer</p>
     <h1>Yash Kumar</h1>
     <p class="hero-bio">
-      Building at the intersection of machine learning, clinical data, and software engineering.
-      Currently working on circadian rhythm analysis and NLP systems at Kent &amp; Medway NHS.
+      Building versatile systems at the intersection of machine learning, clinical data, and software engineering.
+      Currently developing circadian rhythm analysis at Kent &amp; Medway Medical School and NLP systems at Kent &amp; Medway NHS.
     </p>
-    <p class="hero-degree">MSc Artificial Intelligence (Distinction) — Queen Mary University of London</p>
+    <div class="hero-degree">
+      <div class="degree-line">
+        <span>Master of Science in Artificial Intelligence</span>
+        <span class="degree-inst">@Queen Mary University of London</span>
+      </div>
+      <div class="degree-line">
+        <span>Bachelor of Engineering in Computer Science</span>
+        <span class="degree-inst">@Birla Institute of Technology and Science, K.K. Birla Goa Campus</span>
+      </div>
+    </div>
 
     <div class="cta-row">
       <a class="btn btn-solid" href="#projects">View Projects</a>
@@ -551,6 +613,7 @@
           <h3>Monopoly Madness</h3>
           <span class="badge">Personal</span>
         </div>
+        <p class="card-byline">March 2026 – Present</p>
         <p>Full-stack reimagining of Monopoly with real-time multiplayer lobbies, custom game modes (Auction, Pre-Auction, Trading), dark mode, and a dynamic board UI backed by Firebase.</p>
         <div class="tags">
           <span class="tag">React</span><span class="tag">TypeScript</span>
@@ -567,19 +630,37 @@
 
       <div class="card">
         <div class="card-top">
-          <h3>Actigraphy Sleep Metrics</h3>
-          <span class="badge">Personal</span>
+          <h3>Actigraphy Abstraction</h3>
+          <span class="badge collab">Collaboration</span>
         </div>
-        <p>Python pipeline (Step 2) converting Actigraph CSV output into validated circadian rest-activity metrics — IS, IV, M10/L5, and Enright periodograms — with multi-page PDF reporting. Part of the CHIP-D study at University of Kent.</p>
+        <p class="card-byline">April 2026 – Present &middot; University of Kent / CHIP-D</p>
+        <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics. Part of the CHIP-D clinical study at the University of Kent.</p>
         <div class="tags">
-          <span class="tag">Python</span><span class="tag">NumPy</span>
-          <span class="tag">Pandas</span><span class="tag">SciPy</span><span class="tag">Matplotlib</span>
+          <span class="tag">Python</span><span class="tag">Signal Processing</span>
+          <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
+          <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
         </div>
-        <div class="card-actions">
-          <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-            GitHub
-          </a>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <span class="step-label">Step 1 — Epoching</span>
+            <p class="step-desc">Reads GENEActiv .bin files and converts to sample-level and epoch-level CSV with paired metadata.</p>
+            <div class="card-actions" style="margin-top:0.3rem">
+              <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-label">Step 2 — Sleep Metrics</span>
+            <p class="step-desc">Computes IS, IV, M10/L5, and Enright periodograms from epoched CSV. Outputs multi-page PDF reports.</p>
+            <div class="card-actions" style="margin-top:0.3rem">
+              <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -602,19 +683,27 @@
 
       <div class="card">
         <div class="card-top">
-          <h3>Actigraphy Epoching</h3>
+          <h3>3D Bounding Box Annotation</h3>
+          <span class="badge">Personal</span>
+        </div>
+        <p class="card-byline">Jan 2021 – May 2021 &middot; BITS Pilani, Goa</p>
+        <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
+          <span class="tag">OpenCV</span><span class="tag">LiDAR</span><span class="tag">Computer Vision</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>RL Agent for VR Cognitive Assessment</h3>
           <span class="badge collab">Collaboration</span>
         </div>
-        <p>Step 1 of the actigraphy analysis pipeline. Reads raw GENEActiv .bin device files and outputs sample-level and epoch-level CSV data with paired metadata for downstream sleep-metric calculation.</p>
+        <p class="card-byline">Aug 2021 – Aug 2022 &middot; King's College London, IOPPN Laboratory</p>
+        <p>Designed a TD3-DDPG Double Q-learning agent to analyse VR heatmaps from clinical data for cognitive assessment in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
         <div class="tags">
-          <span class="tag">Python</span><span class="tag">Signal Processing</span>
-          <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
-        </div>
-        <div class="card-actions">
-          <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-            GitHub
-          </a>
+          <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
+          <span class="tag">TD3-DDPG</span><span class="tag">OpenAI Gym</span><span class="tag">VR</span>
         </div>
       </div>
 
@@ -642,17 +731,10 @@
       </div>
 
       <div class="rcard">
-        <p class="rcard-type">Project — NLP / Classification</p>
+        <p class="rcard-type">MSc Thesis — Queen Mary University of London</p>
         <h3>Ensemble-based NLP Classification for SPAM Detection</h3>
-        <p class="venue">May 2023 – Aug 2023</p>
+        <p class="venue">May 2023 – Aug 2023 &middot; QMUL, MSc Artificial Intelligence</p>
         <p>Multiple classifier system (MCS) for Yelp Reviews spam detection. Fine-tuned gradient-boosted ensemble models, achieving a <strong style="color:var(--accent)">10.52% accuracy improvement</strong> over single-model baselines.</p>
-      </div>
-
-      <div class="rcard">
-        <p class="rcard-type">Project — Computer Vision / Autonomous Systems</p>
-        <h3>Efficient ML Data Annotation for 3D Bounding Box Recognition</h3>
-        <p class="venue">Jan 2021 – May 2021</p>
-        <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box annotation in self-driving data using OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
       </div>
 
       <div class="rcard">
@@ -736,7 +818,6 @@
     <li><a href="https://github.com/infernalzeus" target="_blank" rel="noopener">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/yashkumar20/" target="_blank" rel="noopener">LinkedIn</a></li>
     <li><a href="https://www.youtube.com/@InfernalZeus" target="_blank" rel="noopener">YouTube</a></li>
-    <li><a href="https://yashkumar1999.wixsite.com/infernalzeus" target="_blank" rel="noopener">Wix Site</a></li>
   </ul>
 </footer>
 
