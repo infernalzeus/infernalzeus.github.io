@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yash Kumar — InfernalZeus</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
@@ -476,12 +477,14 @@
 
     @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
-    .about-text p {
+    .about-text p:not(.panel-label) {
       font-size: 0.88rem;
       color: var(--text-muted);
       margin-bottom: 0.9rem;
       line-height: 1.8;
     }
+
+    .about-text .panel-title { margin-bottom: 1.25rem; }
 
     .em { color: var(--accent); font-style: italic; font-weight: 400; }
 
@@ -491,9 +494,10 @@
       width: 36px;
       height: 36px;
       flex-shrink: 0;
-      overflow: hidden;
       clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
       transition: opacity var(--transition);
+      transform: translateZ(0);
+      will-change: opacity;
     }
     .nav-hex img {
       width: 100%;
@@ -547,10 +551,11 @@
     .collab-box > p {
       font-size: 0.9rem;
       color: var(--text-muted);
-      max-width: 520px;
-      margin: 0 auto 2rem;
+      max-width: 460px;
+      margin: 0 auto 0.5rem;
       line-height: 1.75;
     }
+    .collab-box > p:last-of-type { margin-bottom: 2rem; }
 
     .collab-tags {
       display: flex;
@@ -621,6 +626,16 @@
     }
     .footer-links a:hover { color: var(--accent); }
 
+    /* ── PARALLAX LAYER ──────────────────────────────── */
+    #px-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .px-s { position: absolute; }
+
     /* ── SCROLLBAR ───────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -632,10 +647,14 @@
       nav .nav-links { gap: 1rem; }
       .panel { padding: calc(var(--nav-h) + 2rem) 1.25rem 3rem; }
       footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
+      .degree-line { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+      .degree-inst { opacity: 1; white-space: normal; }
     }
   </style>
 </head>
 <body>
+
+<div id="px-layer" aria-hidden="true"></div>
 
 <!-- ─── NAV ──────────────────────────────────────────── -->
 <nav>
@@ -676,7 +695,6 @@
     <div class="cta-row">
       <a class="btn btn-solid" href="#projects">View Projects</a>
       <a class="btn btn-outline" href="#collaborate">Collaborate</a>
-      <a class="btn btn-outline" href="mailto:yashkumar1999@gmail.com">Contact</a>
     </div>
 
     <div class="socials">
@@ -878,10 +896,10 @@
 <!-- ─── ABOUT PANEL ───────────────────────────────────── -->
 <section class="panel" id="about">
   <div class="panel-inner">
-    <p class="panel-label">Background</p>
-    <h2 class="panel-title">About Me</h2>
     <div class="about-grid">
       <div class="about-text">
+        <p class="panel-label">Background</p>
+        <h2 class="panel-title">About Me</h2>
         <p>I'm a <span class="em">Research Informatics Associate</span>  at Kent and Medway NHS — building NLP systems for clinical research, with a focus on data skills across Data Architecture and Governance.</p>
         <p>I'm also an <span class="em">Honorary Researcher at the University of Kent</span> on the CHIP-D project — building the software pipeline for circadian rest-activity analysis.</p>
       </div>
@@ -922,7 +940,8 @@
   <div class="panel-inner">
     <div class="collab-box">
       <h2>Let's Build Something Together</h2>
-      <p>I'm open to collaborating on research projects, clinical data tools, AI/ML applications, and anything at the intersection of software and science. If you're working on something interesting — or have an idea you want to explore — get in touch.</p>
+      <p>I'm open to collaborating on research projects, clinical data tools, AI/ML applications, and anything at the intersection of software and science.</p>
+      <p>If you're working on something interesting — or have an idea you want to explore — get in touch.</p>
       <div class="collab-tags">
         <span class="ctag">Clinical AI</span>
         <span class="ctag">NLP Systems</span>
@@ -945,7 +964,6 @@
 <footer>
   <p>&copy; 2026 Yash Kumar</p>
   <ul class="footer-links">
-    <li><a href="mailto:yashkumar1999@gmail.com">yashkumar1999@gmail.com</a></li>
     <li><a href="https://github.com/infernalzeus" target="_blank" rel="noopener">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/yashkumar20/" target="_blank" rel="noopener">LinkedIn</a></li>
     <li><a href="https://www.youtube.com/@InfernalZeus" target="_blank" rel="noopener">YouTube</a></li>
@@ -1030,6 +1048,94 @@
   window.addEventListener('resize', resize);
   resize();
   requestAnimationFrame(animate);
+})();
+</script>
+
+<script>
+(function () {
+  if (window.innerWidth < 1024) return;
+
+  var ns  = 'http://www.w3.org/2000/svg';
+  var svg = document.createElementNS(ns, 'svg');
+  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;overflow:visible;';
+  svg.setAttribute('pointer-events', 'none');
+  document.getElementById('px-layer').appendChild(svg);
+
+  var vw = window.innerWidth  / 100;
+  var vh = window.innerHeight / 100;
+
+  /* pointy-top regular hexagon centred at (cx,cy) with circumradius r */
+  function hexPts(cx, cy, r) {
+    var pts = [];
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 180 * (60 * i - 90);
+      pts.push((cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1));
+    }
+    return pts.join(' ');
+  }
+
+  /* [side, xVw, yVh%, circumradius_px, scroll_speed] — 26 shapes total */
+  var defs = [
+    // ── left gutter ─────────────────────────────────────
+    ['left', 1.2,  4,  14, 0.10],
+    ['left', 3.2, 12,   8, 0.30],
+    ['left', 0.5, 22,  20, 0.06],
+    ['left', 2.6, 30,   6, 0.40],
+    ['left', 1.8, 40,  11, 0.18],
+    ['left', 3.8, 48,   5, 0.34],
+    ['left', 0.8, 57,  17, 0.08],
+    ['left', 2.4, 65,   9, 0.26],
+    ['left', 1.0, 73,  13, 0.14],
+    ['left', 4.0, 80,   5, 0.44],
+    ['left', 1.6, 88,  10, 0.20],
+    ['left', 0.3, 17,  24, 0.04],
+    ['left', 2.9, 52,   7, 0.32],
+    // ── right gutter ────────────────────────────────────
+    ['right', 2.8,  8,  15, 0.16],
+    ['right', 0.9, 16,   7, 0.08],
+    ['right', 3.5, 26,  19, 0.22],
+    ['right', 0.7, 36,   6, 0.38],
+    ['right', 2.1, 45,  12, 0.12],
+    ['right', 1.4, 55,   9, 0.28],
+    ['right', 4.0, 63,   5, 0.42],
+    ['right', 0.5, 72,  22, 0.05],
+    ['right', 2.6, 80,  10, 0.24],
+    ['right', 1.1, 87,  14, 0.18],
+    ['right', 3.8, 32,   7, 0.36],
+    ['right', 0.3, 10,  25, 0.04],
+    ['right', 1.9, 94,   8, 0.22],
+  ];
+
+  var groups = defs.map(function (d) {
+    var cx = d[0] === 'left' ? d[1] * vw : window.innerWidth - d[1] * vw;
+    var cy = d[2] * vh;
+    var r  = d[3];
+    var alpha = (0.07 + Math.random() * 0.10).toFixed(2);
+
+    var g    = document.createElementNS(ns, 'g');
+    var poly = document.createElementNS(ns, 'polygon');
+    poly.setAttribute('points', hexPts(cx, cy, r));
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', 'rgba(0,230,118,' + alpha + ')');
+    poly.setAttribute('stroke-width', '1');
+    g.appendChild(poly);
+    svg.appendChild(g);
+    g._speed = d[4];
+    return g;
+  });
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var sy = window.scrollY;
+      for (var i = 0; i < groups.length; i++) {
+        groups[i].style.transform = 'translateY(' + (sy * groups[i]._speed) + 'px)';
+      }
+      ticking = false;
+    });
+  });
 })();
 </script>
 </body>
