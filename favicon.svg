@@ -1,33 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#080c28" rx="3"/>
+<svg viewBox="0 0 32 32" height="256" width="256" xmlns="http://www.w3.org/2000/svg">
+  
+  
+  
+  <polygon fill="#1e40af" points="16,5 28.5,11.5 16,19 3.5,11.5"></polygon>
+  
+  <polygon fill="#2563eb" points="3.5,11.5 16,19 16,29 3.5,21.5"></polygon>
+  
+  <polygon fill="#1e3a8a" points="28.5,11.5 16,19 16,29 28.5,21.5"></polygon>
 
-  <!-- Face fills (3-depth shading) -->
-  <polygon points="16,2 30,10 16,18 2,10" fill="#0d1050"/>
-  <polygon points="2,10 16,18 16,30 2,22"  fill="#06091f"/>
-  <polygon points="16,18 30,10 30,22 16,30" fill="#0a0e3c"/>
+  
+  <polygon opacity="0.85" stroke-linejoin="round" stroke-width="1.4" stroke="#7fffd4" fill="none" points="16,5 28.5,11.5 28.5,21.5 16,29 3.5,21.5 3.5,11.5"></polygon>
 
-  <!-- Top face grid (4 internal lines: 2 each direction) -->
-  <line x1="6.7"  y1="7.3"  x2="20.7" y2="15.3" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="11.3" y1="4.7"  x2="25.3" y2="12.7" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="6.7"  y1="12.7" x2="20.7" y2="4.7"  stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="11.3" y1="15.3" x2="25.3" y2="7.3"  stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
+  
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="19" x2="16" y1="11.5" x1="3.5"></line>
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="19" x2="16" y1="11.5" x1="28.5"></line>
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="29" x2="16" y1="19" x1="16"></line>
 
-  <!-- Left face grid -->
-  <line x1="2"    y1="14"   x2="16"   y2="22"   stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="2"    y1="18"   x2="16"   y2="26"   stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="6.7"  y1="12.7" x2="6.7"  y2="24.7" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="11.3" y1="15.3" x2="11.3" y2="27.3" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
+  
+  <g transform="translate(16.15,12.0) rotate(-30) scale(0.65) translate(-15,-12.5)">
+    <line stroke-linecap="round" stroke-width="1.3" stroke="#00e676" y2="8" x2="21" y1="8" x1="8"></line>
+    <line stroke-linecap="round" stroke-width="1.25" stroke="#00e676" y2="15.8" x2="10.5" y1="8.2" x1="20.2"></line>
+    <line stroke-linecap="round" stroke-width="1.3" stroke="#00e676" y2="16" x2="21.5" y1="16" x1="8.5"></line>
+    <line stroke-linecap="round" stroke-width="0.9" stroke="#00e676" y2="12" x2="19.5" y1="12" x1="10"></line>
+  </g>
 
-  <!-- Right face grid -->
-  <line x1="30"   y1="14"   x2="16"   y2="22"   stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="30"   y1="18"   x2="16"   y2="26"   stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="25.3" y1="12.7" x2="25.3" y2="24.7" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
-  <line x1="20.7" y1="15.3" x2="20.7" y2="27.3" stroke="#00e676" stroke-width="0.55" opacity="0.85"/>
+  
+  <g transform="translate(23.2,19.8) rotate(-30) scale(0.75) translate(-24.5,-18)">
+    <line stroke-linecap="round" stroke-width="1.05" stroke="#00e676" y2="13.9" x2="27.5" y1="14.2" x1="21.5"></line>
+    <line stroke-linecap="round" stroke-width="1.0" stroke="#00e676" y2="20.8" x2="22.5" y1="14.1" x1="27"></line>
+    <line stroke-linecap="round" stroke-width="1.05" stroke="#00e676" y2="20.7" x2="27.8" y1="21" x1="21.8"></line>
+    <line stroke-linecap="round" stroke-width="0.75" stroke="#00e676" y2="17.3" x2="27" y1="17.4" x1="22.3"></line>
+  </g>
 
-  <!-- Outer cube border -->
-  <polygon points="16,2 30,10 30,22 16,30 2,22 2,10" fill="none" stroke="#00e676" stroke-width="1.2" stroke-linejoin="round"/>
-  <!-- Inner face edges (meeting at centre vertex 16,18) -->
-  <line x1="2"  y1="10" x2="16" y2="18" stroke="#00e676" stroke-width="1.2" stroke-linecap="round"/>
-  <line x1="30" y1="10" x2="16" y2="18" stroke="#00e676" stroke-width="1.2" stroke-linecap="round"/>
-  <line x1="16" y1="18" x2="16" y2="30" stroke="#00e676" stroke-width="1.2" stroke-linecap="round"/>
+  
+  <g transform="translate(9.2,19.5) rotate(30) scale(0.76) translate(-9,-18)">
+    <line stroke-linecap="round" stroke-width="1.05" stroke="#00e676" y2="14.5" x2="12.8" y1="14.8" x1="5.5"></line>
+    <line stroke-linecap="round" stroke-width="1.0" stroke="#00e676" y2="21" x2="7" y1="14.7" x1="12.3"></line>
+    <line stroke-linecap="round" stroke-width="1.05" stroke="#00e676" y2="21.2" x2="13" y1="21.5" x1="5.8"></line>
+    <line stroke-linecap="round" stroke-width="0.75" stroke="#00e676" y2="17.9" x2="12.3" y1="18" x1="6.8"></line>
+  </g>
+
 </svg>
