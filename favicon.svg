@@ -2,22 +2,29 @@
   
   
   
-  <polygon fill="#1e40af" points="16,5 28.5,11.5 16,19 3.5,11.5"></polygon>
+  <polygon fill="#1e40af" points="15,3.5 29.5,10 16.5,18.5 3,10"></polygon>
   
-  <polygon fill="#2563eb" points="3.5,11.5 16,19 16,29 3.5,21.5"></polygon>
+  <polygon fill="#2563eb" points="3,10 16.5,18.5 16.5,29.5 3,21"></polygon>
   
-  <polygon fill="#1e3a8a" points="28.5,11.5 16,19 16,29 28.5,21.5"></polygon>
+  <polygon fill="#1e3a8a" points="29.5,10 16.5,18.5 16.5,29.5 29.5,21"></polygon>
 
   
-  <polygon opacity="0.85" stroke-linejoin="round" stroke-width="1.4" stroke="#7fffd4" fill="none" points="16,5 28.5,11.5 28.5,21.5 16,29 3.5,21.5 3.5,11.5"></polygon>
+  <polygon opacity="0.85" stroke-linejoin="round" stroke-width="1.4" stroke="#1a366f" fill="none" points="15,3.5 29.5,10 29.5,21 16.5,29.5 3,21 3,10"></polygon>
 
   
-  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="19" x2="16" y1="11.5" x1="3.5"></line>
-  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="19" x2="16" y1="11.5" x1="28.5"></line>
-  <line opacity="0.85" stroke-linecap="round" stroke-width="1.25" stroke="#34d399" y2="29" x2="16" y1="19" x1="16"></line>
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.2" stroke="#1a366f" y2="18.5" x2="16.5" y1="10" x1="3"></line>
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.2" stroke="#1a366f" y2="18.5" x2="16.5" y1="10" x1="29.5"></line>
+  <line opacity="0.85" stroke-linecap="round" stroke-width="1.2" stroke="#1a366f" y2="29.5" x2="16.5" y1="18.5" x1="16.5"></line>
 
   
-  <g transform="translate(16.15,12.0) rotate(-30) scale(0.65) translate(-15,-12.5)">
+  <g transform="translate(15.8,11.4) rotate(45) scale(0.65) translate(-15,-12.5)">
+    
+    <line opacity="0.85" stroke-linecap="round" stroke-width="2.0" stroke="#ffffff" y2="8" x2="21" y1="8" x1="8"></line>
+    <line opacity="0.85" stroke-linecap="round" stroke-width="1.9" stroke="#ffffff" y2="15.8" x2="10.5" y1="8.2" x1="20.2"></line>
+    <line opacity="0.85" stroke-linecap="round" stroke-width="2.0" stroke="#ffffff" y2="16" x2="21.5" y1="16" x1="8.5"></line>
+    <line opacity="0.85" stroke-linecap="round" stroke-width="1.4" stroke="#ffffff" y2="12" x2="19.5" y1="12" x1="10"></line>
+    
+    
     <line stroke-linecap="round" stroke-width="1.3" stroke="#00e676" y2="8" x2="21" y1="8" x1="8"></line>
     <line stroke-linecap="round" stroke-width="1.25" stroke="#00e676" y2="15.8" x2="10.5" y1="8.2" x1="20.2"></line>
     <line stroke-linecap="round" stroke-width="1.3" stroke="#00e676" y2="16" x2="21.5" y1="16" x1="8.5"></line>
