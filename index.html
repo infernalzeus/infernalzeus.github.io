@@ -6,7 +6,7 @@
   <title>Yash Kumar — InfernalZeus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg:         #080c28;
@@ -97,7 +97,7 @@
     }
 
     .panel-inner {
-      max-width: 1100px;
+      max-width: 1440px;
       margin: 0 auto;
       width: 100%;
     }
@@ -112,10 +112,11 @@
     }
 
     .panel-title {
-      font-size: clamp(2rem, 4vw, 3rem);
+      font-family: "Orbitron", "Outfit", sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
       font-weight: 700;
       color: var(--accent);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.04em;
       margin-bottom: 0.6rem;
       line-height: 1.1;
     }
@@ -139,11 +140,12 @@
     }
 
     .hero h1 {
-      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-family: "Orbitron", "Outfit", sans-serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
       font-weight: 800;
       color: var(--accent);
-      letter-spacing: -0.03em;
-      line-height: 1.0;
+      letter-spacing: 0.04em;
+      line-height: 1.05;
       margin-bottom: 1.5rem;
     }
 
@@ -185,8 +187,43 @@
       font-size: 0.68rem;
       color: var(--text-faint);
       letter-spacing: 0.04em;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.2rem;
       flex: none;
+    }
+
+    .card-affil {
+      font-size: 0.66rem;
+      color: var(--text-faint);
+      font-style: italic;
+      margin-bottom: 0.65rem;
+      flex: none;
+    }
+
+    .accolade {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin-top: 1.25rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-dim);
+      border-radius: 3px;
+      background: rgba(0, 230, 118, 0.03);
+    }
+
+    .accolade-icon {
+      font-size: 0.9rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .accolade-title {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--accent);
+      line-height: 1.4;
     }
 
     .pipeline {
@@ -273,7 +310,7 @@
     /* ── GRID ────────────────────────────────────────── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1rem;
     }
 
@@ -431,7 +468,25 @@
       line-height: 1.8;
     }
 
-    .em { color: var(--accent); font-weight: 600; }
+    .em { color: var(--accent); font-style: italic; font-weight: 400; }
+
+    /* ── NAV HEXAGON ─────────────────────────────────── */
+    .nav-hex {
+      display: block;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      overflow: hidden;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      transition: opacity var(--transition);
+    }
+    .nav-hex img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .nav-hex:hover { opacity: 0.75; }
 
     .skills-block h4 {
       font-size: 0.62rem;
@@ -539,7 +594,9 @@
 
 <!-- ─── NAV ──────────────────────────────────────────── -->
 <nav>
-  <div class="nav-logo">InfernalZeus</div>
+  <a href="#hero" class="nav-hex" aria-label="Back to top">
+    <img src="assets/profile.jpg" alt="Yash Kumar" />
+  </a>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
     <li><a href="#research">Research</a></li>
@@ -630,11 +687,12 @@
 
       <div class="card">
         <div class="card-top">
-          <h3>Actigraphy Abstraction</h3>
+          <h3>Actigraph Abstraction</h3>
           <span class="badge collab">Collaboration</span>
         </div>
-        <p class="card-byline">April 2026 – Present &middot; University of Kent / CHIP-D</p>
-        <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics. Part of the CHIP-D clinical study at the University of Kent.</p>
+        <p class="card-byline">April 2026 – Present</p>
+        <p class="card-affil">Circadian Health in Psychosis and Depression (CHiP-D)</p>
+        <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Signal Processing</span>
           <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
@@ -643,8 +701,7 @@
         <div class="pipeline">
           <div class="pipeline-step">
             <span class="step-label">Step 1 — Epoching</span>
-            <p class="step-desc">Reads GENEActiv .bin files and converts to sample-level and epoch-level CSV with paired metadata.</p>
-            <div class="card-actions" style="margin-top:0.3rem">
+            <div class="card-actions" style="margin-top:0.25rem">
               <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
                 GitHub
@@ -653,8 +710,7 @@
           </div>
           <div class="pipeline-step">
             <span class="step-label">Step 2 — Sleep Metrics</span>
-            <p class="step-desc">Computes IS, IV, M10/L5, and Enright periodograms from epoched CSV. Outputs multi-page PDF reports.</p>
-            <div class="card-actions" style="margin-top:0.3rem">
+            <div class="card-actions" style="margin-top:0.25rem">
               <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
                 GitHub
@@ -686,7 +742,8 @@
           <h3>3D Bounding Box Annotation</h3>
           <span class="badge">Personal</span>
         </div>
-        <p class="card-byline">Jan 2021 – May 2021 &middot; BITS Pilani, Goa</p>
+        <p class="card-byline">Jan 2021 – May 2021</p>
+        <p class="card-affil">BITS Pilani, Goa</p>
         <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
@@ -699,7 +756,8 @@
           <h3>RL Agent for VR Cognitive Assessment</h3>
           <span class="badge collab">Collaboration</span>
         </div>
-        <p class="card-byline">Aug 2021 – Aug 2022 &middot; King's College London, IOPPN Laboratory</p>
+        <p class="card-byline">Aug 2021 – Aug 2022</p>
+        <p class="card-affil">King's College London, IOPPN Laboratory</p>
         <p>Designed a TD3-DDPG Double Q-learning agent to analyse VR heatmaps from clinical data for cognitive assessment in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
@@ -733,7 +791,8 @@
       <div class="rcard">
         <p class="rcard-type">MSc Thesis — Queen Mary University of London</p>
         <h3>Ensemble-based NLP Classification for SPAM Detection</h3>
-        <p class="venue">May 2023 – Aug 2023 &middot; QMUL, MSc Artificial Intelligence</p>
+        <p class="venue">May 2023 – Aug 2023</p>
+        <p class="venue" style="font-style:normal; font-size:0.7rem; color:var(--text-faint); margin-top:-0.25rem;">Queen Mary University of London, MSc AI</p>
         <p>Multiple classifier system (MCS) for Yelp Reviews spam detection. Fine-tuned gradient-boosted ensemble models, achieving a <strong style="color:var(--accent)">10.52% accuracy improvement</strong> over single-model baselines.</p>
       </div>
 
@@ -755,10 +814,14 @@
     <h2 class="panel-title">About Me</h2>
     <div class="about-grid">
       <div class="about-text">
-        <p>I'm a <span class="em">Research Informatics Associate</span> at Kent and Medway NHS and Social Care Partnership Trust, handling Information Governance (DPIA/GDPR), leading NLP system validation (AKRIVIA/CRIS), and building analytical extracts for clinical research.</p>
-        <p>Alongside this, I'm an <span class="em">Honorary Researcher at the University of Kent</span> on the CHIP-D project — building the software pipeline for circadian rest-activity analysis from wrist-worn actigraphy devices.</p>
-        <p>I hold an <span class="em">MSc in Artificial Intelligence (Distinction)</span> from Queen Mary University of London and a BEng in Computer Science from BITS Pilani, Goa. Prior work includes reinforcement learning for VR cognitive assessment at King's College London and ML systems for precision agriculture.</p>
-        <p>I've been awarded the <span class="em">National Talent Search Examination (NTSE) Scholarship</span> (Top 0.02%) and led Enactus BITS Goa's Project Sivaar to a Top 12 Global Race-4-Ocean ranking.</p>
+        <p>I'm a <span class="em">Research Informatics Associate</span> at Kent and Medway NHS — building NLP systems for clinical research, with a focus on data skills across Data Architecture and Governance.</p>
+        <p>I'm also an <span class="em">Honorary Researcher at the University of Kent</span> on the CHIP-D project — building the software pipeline for circadian rest-activity analysis.</p>
+        <div class="accolade">
+          <span class="accolade-icon">★</span>
+          <div>
+            <span class="accolade-title">National Talent Search Examination (NTSE) Scholar</span>
+          </div>
+        </div>
       </div>
       <div class="skills-block">
         <h4>Languages</h4>
