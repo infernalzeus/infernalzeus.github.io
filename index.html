@@ -230,9 +230,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
-      margin-top: 0.5rem;
-      border-top: 1px solid var(--border-dim);
-      padding-top: 0.85rem;
+      margin-top: 0.4rem;
     }
 
     .pipeline-step { display: flex; flex-direction: column; gap: 0.3rem; }
@@ -367,8 +365,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
-      margin-bottom: 1rem;
-      margin-top: auto;
+      margin-bottom: 0.75rem;
     }
 
     .tag {
@@ -386,6 +383,18 @@
       gap: 0.75rem;
       flex-wrap: wrap;
     }
+
+    .card-footer {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .card-footer .card-byline { margin-bottom: 0; }
+    .card-footer .card-affil  { margin-bottom: 0.4rem; }
 
     .link-btn {
       display: inline-flex;
@@ -579,6 +588,17 @@
     }
     .btn-chip:hover { color: var(--accent); border-color: var(--accent); }
 
+    /* ── HERO CANVAS ─────────────────────────────────── */
+    #hero { position: relative; overflow: hidden; }
+    #hero-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #hero > .panel-inner { position: relative; z-index: 1; }
+
     /* ── FOOTER ──────────────────────────────────────── */
     footer {
       display: flex;
@@ -632,6 +652,7 @@
 
 <!-- ─── HERO PANEL ───────────────────────────────────── -->
 <section class="panel" id="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="panel-inner hero">
     <p class="hero-role">AI Researcher &amp; Software Developer</p>
     <h1>Yash Kumar</h1>
@@ -697,19 +718,20 @@
           <h3>Monopoly Madness</h3>
           <span class="badge">Personal</span>
         </div>
-        
         <p>Full-stack reimagining of Monopoly with real-time multiplayer lobbies, custom game modes (Auction, Pre-Auction, Trading), dark mode, and a dynamic board UI backed by Firebase.</p>
         <div class="tags">
           <span class="tag">React</span><span class="tag">TypeScript</span>
           <span class="tag">Firebase</span><span class="tag">Tailwind CSS</span><span class="tag">Vite</span>
         </div>
-        <p class="card-byline">March 2026 – Present</p>
-        <div class="card-actions">
-          <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-            GitHub
-          </a>
-          <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Live Demo →</a>
+        <div class="card-footer">
+          <p class="card-byline">March 2026 – Present</p>
+          <div class="card-actions">
+            <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              GitHub
+            </a>
+            <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Live Demo →</a>
+          </div>
         </div>
       </div>
 
@@ -718,32 +740,33 @@
           <h3>Actigraph Abstraction</h3>
           <span class="badge collab">Collaboration</span>
         </div>
-        
-        
         <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Signal Processing</span>
           <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
           <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
         </div>
-        <p class="card-byline">April 2026 – Present</p>
-        <div class="pipeline">
-          <div class="pipeline-step">
-            <span class="step-label">Step 1 — Epoching</span>
-            <div class="card-actions" style="margin-top:0.25rem">
-              <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
+        <div class="card-footer">
+          <p class="card-byline">April 2026 – Present</p>
+          <p class="card-affil">Circadian Health in Psychosis and Depression (CHIP-D)</p>
+          <div class="pipeline">
+            <div class="pipeline-step">
+              <span class="step-label">Step 1 — Epoching</span>
+              <div class="card-actions" style="margin-top:0.25rem">
+                <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                  GitHub
+                </a>
+              </div>
             </div>
-          </div>
-          <div class="pipeline-step">
-            <span class="step-label">Step 2 — Sleep Metrics</span>
-            <div class="card-actions" style="margin-top:0.25rem">
-              <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
+            <div class="pipeline-step">
+              <span class="step-label">Step 2 — Sleep Metrics</span>
+              <div class="card-actions" style="margin-top:0.25rem">
+                <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                  GitHub
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -758,11 +781,13 @@
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
         </div>
-        <div class="card-actions">
-          <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-            GitHub
-          </a>
+        <div class="card-footer">
+          <div class="card-actions">
+            <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              GitHub
+            </a>
+          </div>
         </div>
       </div>
 
@@ -771,14 +796,15 @@
           <h3>3D Bounding Box Annotation</h3>
           <span class="badge">Personal</span>
         </div>
-        
         <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
           <span class="tag">OpenCV</span><span class="tag">LiDAR</span><span class="tag">Computer Vision</span>
         </div>
-        <p class="card-byline">Jan 2021 – May 2021</p>
-        <p class="card-affil">BITS Pilani, Goa</p>
+        <div class="card-footer">
+          <p class="card-byline">Jan 2021 – May 2021</p>
+          <p class="card-affil">BITS Pilani, Goa</p>
+        </div>
       </div>
 
       <div class="card">
@@ -786,14 +812,15 @@
           <h3>RL Agent for VR Cognitive Assessment</h3>
           <span class="badge collab">Collaboration</span>
         </div>
-        
         <p>Designed a TD3-DDPG Double Q-learning agent to analyse VR heatmaps from clinical data for cognitive assessment in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
           <span class="tag">TD3-DDPG</span><span class="tag">OpenAI Gym</span><span class="tag">VR</span>
         </div>
-        <p class="card-byline">Aug 2021 – Aug 2022</p>
-        <p class="card-affil">King's College London, IOPPN Laboratory</p>
+        <div class="card-footer">
+          <p class="card-byline">Aug 2021 – Aug 2022</p>
+          <p class="card-affil">King's College London, IOPPN Laboratory</p>
+        </div>
       </div>
 
     </div>
@@ -805,39 +832,43 @@
   <div class="panel-inner">
     <p class="panel-label">Research &amp; Publications</p>
     <h2 class="panel-title">Research</h2>
-    <p class="panel-desc">Academic work in AI, NLP, and clinical data — from conference papers to ongoing NHS studies.</p>
+    <p class="panel-desc">Academic work in AI, NLP, and clinical data. </p>
 
     <div class="grid">
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
         <h3>ML-based Analysis to Identify Speech Features Relevant in Predicting Alzheimer's</h3>
-        <p class="venue">ICCAI 2022 — ACM Digital Library</p>
         <p class="rcard-author">Primary Author</p>
         <p>Analysed speech patterns across clinical datasets to identify acoustic and linguistic features strongly associated with Alzheimer's disease. Demonstrated ML approaches for early-stage detection from spontaneous speech.</p>
-        <div class="card-actions" style="margin-top:0.5rem">
-          <a class="link-btn" href="https://dl.acm.org/doi/10.1145/3556223.3556234" target="_blank" rel="noopener">ACM Digital Library →</a>
+        <div class="card-footer">
+          <p class="venue">ICCAI 2022 — ACM Digital Library</p>
+          <div class="card-actions">
+            <a class="link-btn" href="https://dl.acm.org/doi/10.1145/3556223.3556234" target="_blank" rel="noopener">ACM Digital Library →</a>
+          </div>
         </div>
       </div>
 
       <div class="rcard">
         <p class="rcard-type">MSc Thesis</p>
         <h3>Ensemble-based NLP Classification for SPAM Detection</h3>
-        
-        
+        <p class="rcard-author"></p>
         <p>Multiple classifier system (MCS) for Yelp Reviews spam detection. Fine-tuned gradient-boosted ensemble models, achieving a <strong style="color:var(--accent)">10.52% accuracy improvement</strong> over single-model baselines.</p>
-        <p class="venue">May 2023 – Aug 2023</p>
-        <p class="rcard-author"> Queen Mary University of London</p>
+        <div class="card-footer">
+          <p class="card-byline">May 2023 – Aug 2023</p>
+          <p class="venue"> Queen Mary University of London</p>
+        </div>
       </div>
 
       <div class="rcard">
-        <p class="rcard-type">Ongoing Research</p>
+        <p class="rcard-type">Circadian Data Analysis</p>
         <h3>CHIP-D: Circadian Health in Psychosis and Depression</h3>
-        
-        
+        <p class="rcard-author">Yash Kumar — Honorary Researcher</p>
         <p>Developing actigraphy-based circadian rhythm abstraction and acting as Data Controller for the Medallion Data Structure. Also contributing to eClocker: shift-workers' cognitive performance study.</p>
-        <p class="venue">Mar 2024 – Present</p>
-        <p class="rcard-author">Kent and Medway Medical School</p>
+        <div class="card-footer">
+          <p class="card-byline">Mar 2024 – Present</p>
+          <p class="venue">Kent and Medway Medical School</p>
+        </div>
       </div>
 
     </div>
@@ -921,5 +952,85 @@
   </ul>
 </footer>
 
+<script>
+(function () {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const hero = document.getElementById('hero');
+  const particles = [];
+  let mouseX = -9999, mouseY = -9999;
+  let lastCursorSpawn = 0, lastAmbientSpawn = 0;
+
+  function resize() {
+    canvas.width = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  }
+
+  function Particle(x, y, ambient) {
+    this.x = x + (Math.random() - 0.5) * (ambient ? 60 : 18);
+    this.y = y + (Math.random() - 0.5) * (ambient ? 60 : 18);
+    this.vx = (Math.random() - 0.5) * (ambient ? 0.35 : 0.9);
+    this.vy = -(0.12 + Math.random() * (ambient ? 0.35 : 0.85));
+    this.size = ambient ? 1.0 + Math.random() * 1.2 : 1.5 + Math.random() * 2.2;
+    this.life = ambient ? 0.45 + Math.random() * 0.35 : 0.65 + Math.random() * 0.3;
+    this.decay = ambient ? 0.0025 + Math.random() * 0.002 : 0.005 + Math.random() * 0.005;
+    this.ambient = ambient;
+  }
+
+  function animate(ts) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const rightEdge = canvas.width * 0.42;
+
+    /* cursor particles */
+    if (mouseX > rightEdge && ts - lastCursorSpawn > 40 && particles.length < 200) {
+      for (let i = 0; i < 2; i++) particles.push(new Particle(mouseX, mouseY, false));
+      lastCursorSpawn = ts;
+    }
+
+    /* ambient particles — gentle drift across right half */
+    if (ts - lastAmbientSpawn > 220 && particles.length < 200) {
+      const x = rightEdge + Math.random() * (canvas.width - rightEdge);
+      const y = canvas.height * (0.15 + Math.random() * 0.7);
+      particles.push(new Particle(x, y, true));
+      lastAmbientSpawn = ts;
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx += (Math.random() - 0.5) * 0.03;
+      p.vy -= 0.007;
+      p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+      const alpha = p.life * (p.ambient ? 0.38 : 0.62);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, 6.2832);
+      if (!p.ambient) {
+        ctx.shadowColor = 'rgba(0,230,118,0.45)';
+        ctx.shadowBlur = 7;
+      }
+      ctx.fillStyle = 'rgba(0,230,118,' + alpha + ')';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  hero.addEventListener('mousemove', function (e) {
+    const r = hero.getBoundingClientRect();
+    mouseX = e.clientX - r.left;
+    mouseY = e.clientY - r.top;
+  });
+  hero.addEventListener('mouseleave', function () { mouseX = -9999; mouseY = -9999; });
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(animate);
+})();
+</script>
 </body>
 </html>
