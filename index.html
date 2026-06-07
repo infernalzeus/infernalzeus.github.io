@@ -360,7 +360,6 @@
       font-size: 0.82rem;
       color: var(--text-muted);
       line-height: 1.65;
-      flex: 1;
       margin-bottom: 1rem;
     }
 
@@ -369,6 +368,7 @@
       flex-wrap: wrap;
       gap: 0.35rem;
       margin-bottom: 1rem;
+      margin-top: auto;
     }
 
     .tag {
@@ -385,7 +385,6 @@
       display: flex;
       gap: 0.75rem;
       flex-wrap: wrap;
-      margin-top: auto;
     }
 
     .link-btn {
@@ -449,6 +448,13 @@
       font-size: 0.81rem;
       color: var(--text-muted);
       line-height: 1.65;
+    }
+
+    .rcard-author {
+      font-size: 0.74rem;
+      color: var(--text-faint);
+      font-style: italic;
+      letter-spacing: 0.02em;
     }
 
     /* ── ABOUT PANEL ─────────────────────────────────── */
@@ -553,6 +559,25 @@
       border-radius: 2px;
       padding: 0.28rem 0.75rem;
     }
+
+    .btn-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1.2rem;
+      border-radius: 2px;
+      font-family: "Outfit", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      border: 1px solid var(--border-dim);
+      background: transparent;
+      transition: color var(--transition), border-color var(--transition);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-chip:hover { color: var(--accent); border-color: var(--accent); }
 
     /* ── FOOTER ──────────────────────────────────────── */
     footer {
@@ -691,7 +716,7 @@
           <span class="badge collab">Collaboration</span>
         </div>
         <p class="card-byline">April 2026 – Present</p>
-        <p class="card-affil">Circadian Health in Psychosis and Depression (CHiP-D)</p>
+        
         <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Signal Processing</span>
@@ -779,9 +804,10 @@
     <div class="grid">
 
       <div class="rcard">
-        <p class="rcard-type">Publication — Primary Author</p>
+        <p class="rcard-type">Publication</p>
         <h3>ML-based Analysis to Identify Speech Features Relevant in Predicting Alzheimer's</h3>
         <p class="venue">ICCAI 2022 — ACM Digital Library</p>
+        <p class="rcard-author">Primary Author</p>
         <p>Analysed speech patterns across clinical datasets to identify acoustic and linguistic features strongly associated with Alzheimer's disease. Demonstrated ML approaches for early-stage detection from spontaneous speech.</p>
         <div class="card-actions" style="margin-top:0.5rem">
           <a class="link-btn" href="https://dl.acm.org/doi/10.1145/3556223.3556234" target="_blank" rel="noopener">ACM Digital Library →</a>
@@ -789,18 +815,21 @@
       </div>
 
       <div class="rcard">
-        <p class="rcard-type">MSc Thesis — Queen Mary University of London</p>
+        <p class="rcard-type">MSc Thesis</p>
         <h3>Ensemble-based NLP Classification for SPAM Detection</h3>
         <p class="venue">May 2023 – Aug 2023</p>
-        <p class="venue" style="font-style:normal; font-size:0.7rem; color:var(--text-faint); margin-top:-0.25rem;">Queen Mary University of London, MSc AI</p>
+        
         <p>Multiple classifier system (MCS) for Yelp Reviews spam detection. Fine-tuned gradient-boosted ensemble models, achieving a <strong style="color:var(--accent)">10.52% accuracy improvement</strong> over single-model baselines.</p>
+        <p class="rcard-author"> Queen Mary University of London</p>
       </div>
 
       <div class="rcard">
-        <p class="rcard-type">Ongoing Research — University of Kent</p>
+        <p class="rcard-type">Ongoing Research</p>
         <h3>CHIP-D: Circadian Health in Psychosis and Depression</h3>
         <p class="venue">Mar 2024 – Present</p>
-        <p>Honorary researcher on the CHIP-D study — leading actigraphy-based circadian rhythm abstraction and acting as Data Controller for the Medallion Data Structure. Also contributing to eClocker: shift-workers' cognitive performance study.</p>
+        
+        <p>Developing actigraphy-based circadian rhythm abstraction and acting as Data Controller for the Medallion Data Structure. Also contributing to eClocker: shift-workers' cognitive performance study.</p>
+        <p class="rcard-author">Kent and Medway Medical School</p>
       </div>
 
     </div>
@@ -814,14 +843,8 @@
     <h2 class="panel-title">About Me</h2>
     <div class="about-grid">
       <div class="about-text">
-        <p>I'm a <span class="em">Research Informatics Associate</span> at Kent and Medway NHS — building NLP systems for clinical research, with a focus on data skills across Data Architecture and Governance.</p>
+        <p>I'm a <span class="em">Research Informatics Associate</span>  at Kent and Medway NHS — building NLP systems for clinical research, with a focus on data skills across Data Architecture and Governance.</p>
         <p>I'm also an <span class="em">Honorary Researcher at the University of Kent</span> on the CHIP-D project — building the software pipeline for circadian rest-activity analysis.</p>
-        <div class="accolade">
-          <span class="accolade-icon">★</span>
-          <div>
-            <span class="accolade-title">National Talent Search Examination (NTSE) Scholar</span>
-          </div>
-        </div>
       </div>
       <div class="skills-block">
         <h4>Languages</h4>
@@ -844,6 +867,12 @@
           <span class="chip">React</span><span class="chip">Power BI</span>
           <span class="chip">Git</span><span class="chip">Linux</span>
         </div>
+        <h4>Accolades</h4>
+        <div class="chip-row">
+          <div>
+            <span class="chip">National Talent Search Examination (NTSE) Scholar</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -865,9 +894,9 @@
         <span class="ctag">Full-Stack Tools</span>
       </div>
       <div class="cta-row" style="justify-content:center">
-        <a class="btn btn-solid" href="mailto:yashkumar1999@gmail.com">Get in Touch</a>
-        <a class="btn btn-outline" href="https://github.com/infernalzeus" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn btn-outline" href="https://www.linkedin.com/in/yashkumar20/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn-chip" href="mailto:yashkumar1999@gmail.com">Get in Touch</a>
+        <a class="btn-chip" href="https://github.com/infernalzeus" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn-chip" href="https://www.linkedin.com/in/yashkumar20/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
   </div>
@@ -875,7 +904,7 @@
 
 <!-- ─── FOOTER ────────────────────────────────────────── -->
 <footer>
-  <p>&copy; 2025 Yash Kumar</p>
+  <p>&copy; 2026 Yash Kumar</p>
   <ul class="footer-links">
     <li><a href="mailto:yashkumar1999@gmail.com">yashkumar1999@gmail.com</a></li>
     <li><a href="https://github.com/infernalzeus" target="_blank" rel="noopener">GitHub</a></li>
