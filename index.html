@@ -129,7 +129,7 @@
     }
 
     .panel-inner {
-      max-width: 1440px;
+      max-width: 1680px;
       margin: 0 auto;
       width: 100%;
     }
@@ -340,7 +340,7 @@
     /* ── GRID ────────────────────────────────────────── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
       gap: 1rem;
     }
 
@@ -623,6 +623,37 @@
       text-decoration: none;
     }
     .btn-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── HERO HEX BUTTON ────────────────────────────── */
+    #hero-hex-btn {
+      position: absolute;
+      left: 72%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 2;
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      animation: hero-hex-pulse 3.2s ease-in-out infinite;
+      pointer-events: all;
+    }
+    #hero-hex-btn svg {
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #hero-hex-btn:hover {
+      animation-play-state: paused;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 18px rgba(0,230,118,0.90)) !important;
+    }
+    @keyframes hero-hex-pulse {
+      0%, 100% { opacity: 0.08; filter: drop-shadow(0 0 3px rgba(0,230,118,0.20)); }
+      50%       { opacity: 1.0;  filter: drop-shadow(0 0 14px rgba(0,230,118,0.72)); }
+    }
 
     /* ── HERO CANVAS ─────────────────────────────────── */
     #hero { position: relative; overflow: hidden; }
@@ -923,21 +954,32 @@
         position: static !important;
         transform: none !important;
         flex-direction: row;
-        align-items: center;
-        gap: 0.55rem;
-        padding: 0.4rem 0;
+        align-items: flex-start;
+        gap: 0.65rem;
+        padding: 0.55rem 0;
         margin-left: -1.5rem;
       }
       .tl-item.above { bottom: auto !important; }
       .tl-item.below { top: auto !important; }
       /* In .above items the dot is last in DOM — pull it first with order */
       .tl-item.above .tl-dot { order: -1; }
-      .tl-item .tl-content { align-items: flex-start; }
-      .tl-item .tl-name { text-align: left; }
-      .tl-item .tl-desc { display: none; }
+      .tl-dot { margin-top: 0.3rem; flex-shrink: 0; }
+      .tl-item .tl-content { align-items: flex-start; gap: 2px; }
+      .tl-item .tl-name { text-align: left; white-space: normal; }
+      .tl-item .tl-desc {
+        display: block;
+        opacity: 1;
+        transform: none;
+        transition: none;
+        white-space: normal;
+        text-align: left;
+        font-size: 0.65rem;
+        pointer-events: none;
+      }
 
-      /* Hero hex canvas: irrelevant on touch-only screens */
+      /* Hero hex canvas + button: not needed on touch screens */
       #hero-canvas { display: none; }
+      #hero-hex-btn { display: none; }
     }
   </style>
 </head>
@@ -964,6 +1006,14 @@
 <!-- ─── HERO PANEL ───────────────────────────────────── -->
 <section class="panel" id="hero">
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <button id="hero-hex-btn" aria-label="Action">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <polygon points="24,2 46,14 46,34 24,46 2,34 2,14"
+               fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.80)" stroke-width="1.5"/>
+      <path d="M27 7 L15 28 L23 28 L19 42 L33 21 L25 21 Z"
+            fill="rgba(0,230,118,0.90)"/>
+    </svg>
+  </button>
   <div class="panel-inner hero">
     <p class="hero-role">AI Researcher &amp; Software Developer</p>
     <h1>Yash Kumar</h1>
@@ -1536,11 +1586,9 @@
   svg.setAttribute('pointer-events', 'none');
   document.getElementById('px-layer').appendChild(svg);
 
-  var W        = window.innerWidth;
-  var VH       = window.innerHeight;
-  var isMobile = W < 640;
-  var vw = W  / 100;
-  var vh = VH / 100;
+  /* viewport metrics — updated on every buildShapes() call */
+  var W, VH, vw, vh, isMobile;
+  var shapes = [];
 
   /* pointy-top hexagon centred at (cx,cy) with circumradius r */
   function hexPts(cx, cy, r) {
@@ -1554,11 +1602,10 @@
 
   /*
    * columns: side | xVw | initY% | size_px | bubble_px/s | scroll_speed | shape
+   * xVw  = distance from the named edge, as a percentage of viewport width
+   * initY = initial vertical position as a percentage of viewport height
    * size = circumradius for hex, half-side for sq
-   * bubble = upward drift speed in px/s (continuous animation)
-   * scroll = parallax multiplier on scrollY
    */
-  /* Mobile shapes — tiny, hugging the side edges only */
   var mobileDefs = [
     ['left',  1.0, 12, 4, 16, 0.09, 'hex'],
     ['left',  2.5, 30, 3, 24, 0.15, 'sq' ],
@@ -1605,60 +1652,81 @@
     ['right', 3.2, 22, 10, 25, 0.14, 'hex'],
   ];
 
-  var activeDefs = isMobile ? mobileDefs : defs;
+  /* Build (or rebuild) all shape elements from current viewport dimensions.
+     Called on load and again on every resize/zoom so edge shapes stay glued. */
+  function buildShapes() {
+    /* remove old SVG children */
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    shapes.length = 0;
 
-  var shapes = activeDefs.map(function (d) {
-    var side   = d[0];
-    var cx     = side === 'left' ? d[1] * vw : W - d[1] * vw;
-    var initY  = d[2] * vh;
-    var size   = d[3];
-    var bubble = d[4];
-    var scroll = d[5];
-    var type   = d[6];
-    var alpha  = isMobile
-      ? (0.05 + Math.random() * 0.07).toFixed(2)
-      : (0.07 + Math.random() * 0.10).toFixed(2);
-    var stroke = 'rgba(0,230,118,' + alpha + ')';
+    W        = window.innerWidth;
+    VH       = window.innerHeight;
+    isMobile = W < 640;
+    vw       = W  / 100;
+    vh       = VH / 100;
 
-    var g = document.createElementNS(ns, 'g');
-    var el;
+    var activeDefs = isMobile ? mobileDefs : defs;
 
-    if (type === 'hex') {
-      el = document.createElementNS(ns, 'polygon');
-      el.setAttribute('points', hexPts(cx, initY, size));
-    } else {
-      el = document.createElementNS(ns, 'rect');
-      el.setAttribute('x',      (cx - size).toFixed(1));
-      el.setAttribute('y',      (initY - size).toFixed(1));
-      el.setAttribute('width',  (size * 2).toFixed(1));
-      el.setAttribute('height', (size * 2).toFixed(1));
-      /* slight tilt so squares don't look like axis-aligned boxes */
-      var tilt = (Math.random() * 22 - 11).toFixed(1);
-      el.setAttribute('transform',
-        'rotate(' + tilt + ',' + cx.toFixed(1) + ',' + initY.toFixed(1) + ')');
+    for (var k = 0; k < activeDefs.length; k++) {
+      var d      = activeDefs[k];
+      var side   = d[0];
+      var cx     = side === 'left' ? d[1] * vw : W - d[1] * vw;
+      var initY  = d[2] * vh;
+      var size   = d[3];
+      var bubble = d[4];
+      var scroll = d[5];
+      var type   = d[6];
+      var alpha  = isMobile
+        ? (0.05 + Math.random() * 0.07).toFixed(2)
+        : (0.07 + Math.random() * 0.10).toFixed(2);
+      var stroke = 'rgba(0,230,118,' + alpha + ')';
+
+      var g  = document.createElementNS(ns, 'g');
+      var el;
+
+      if (type === 'hex') {
+        el = document.createElementNS(ns, 'polygon');
+        el.setAttribute('points', hexPts(cx, initY, size));
+      } else {
+        el = document.createElementNS(ns, 'rect');
+        el.setAttribute('x',      (cx - size).toFixed(1));
+        el.setAttribute('y',      (initY - size).toFixed(1));
+        el.setAttribute('width',  (size * 2).toFixed(1));
+        el.setAttribute('height', (size * 2).toFixed(1));
+        var tilt = (Math.random() * 22 - 11).toFixed(1);
+        el.setAttribute('transform',
+          'rotate(' + tilt + ',' + cx.toFixed(1) + ',' + initY.toFixed(1) + ')');
+      }
+
+      el.setAttribute('fill', 'none');
+      el.setAttribute('stroke', stroke);
+      el.setAttribute('stroke-width', '1');
+      g.appendChild(el);
+      svg.appendChild(g);
+
+      /* stagger starting positions so they don't all spawn at the same height */
+      var floatY = Math.random() * VH;
+      shapes.push({ g: g, initY: initY, floatY: floatY, bubble: bubble, scroll: scroll, size: size });
     }
+  }
 
-    el.setAttribute('fill', 'none');
-    el.setAttribute('stroke', stroke);
-    el.setAttribute('stroke-width', '1');
-    g.appendChild(el);
-    svg.appendChild(g);
-
-    return { g: g, initY: initY, floatY: initY, bubble: bubble, scroll: scroll, size: size };
-  });
-
-  /* stagger starting positions so they don't all respawn at once */
-  shapes.forEach(function (s) {
-    s.floatY = Math.random() * VH;
-  });
-
-  /* Today date label */
+  /* Today date label — set once at startup */
   var todayEl = document.getElementById('tl-today-date');
   if (todayEl) {
-    var _d = new Date();
+    var _d  = new Date();
     var _mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     todayEl.textContent = _mo[_d.getMonth()] + ' ' + _d.getFullYear();
   }
+
+  /* Initial build */
+  buildShapes();
+
+  /* Rebuild on resize/zoom so shapes stay flush with the viewport edge at any zoom level */
+  var _resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(buildShapes, 150);
+  });
 
   var lastTs = null;
   var lastSy = 0;
