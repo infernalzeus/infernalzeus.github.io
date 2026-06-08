@@ -896,20 +896,35 @@
       .degree-line { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
       .degree-inst { opacity: 1; white-space: normal; }
 
-      /* Timeline: horizontal scroll on mobile */
-      .tl-outer {
-        overflow-x: auto;
-        overflow-y: visible;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 1.5rem;
-        margin-left: -1.25rem;
-        margin-right: -1.25rem;
+      /* Timeline: vertical list on mobile */
+      .tl-outer { overflow: visible; padding: 0; margin-left: 0; margin-right: 0; }
+      .tl-track, .tl-track::after, .tl-midline, .tl-now { display: none; }
+      .tl-items {
+        position: static;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(0,230,118,0.28);
         padding-left: 1.25rem;
-        padding-right: 1.25rem;
-        scrollbar-width: none;
+        margin-left: 0.4rem;
+        min-width: 0;
       }
-      .tl-outer::-webkit-scrollbar { display: none; }
-      .tl-track, .tl-items { min-width: 660px; }
+      .tl-item {
+        position: static !important;
+        transform: none !important;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.4rem 0;
+        margin-left: -1.5rem;
+      }
+      .tl-item.above { bottom: auto !important; }
+      .tl-item.below { top: auto !important; }
+      /* In .above items the dot is last in DOM — pull it first with order */
+      .tl-item.above .tl-dot { order: -1; }
+      .tl-item .tl-content { align-items: flex-start; }
+      .tl-item .tl-name { text-align: left; }
+      .tl-item .tl-desc { display: none; }
 
       /* Hero hex canvas: irrelevant on touch-only screens */
       #hero-canvas { display: none; }
@@ -923,7 +938,7 @@
 <!-- ─── NAV ──────────────────────────────────────────── -->
 <nav>
   <a href="#hero" class="nav-hex" aria-label="Back to top">
-    <img src="assets/profile.jpg" alt="Yash Kumar" />
+    <img src="assets/instagram.jpg" alt="Yash Kumar" />
   </a>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
@@ -1068,7 +1083,28 @@
           </div>
         </div>
 
-        <!-- 3 — ML Reference Notebooks (Dec 2023) -->
+        <!-- 3 — SHA256 Encryptor (Jan 2025) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>SHA256 Encryptor</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>Modular passkey management tool built around SHA-256 hashing. Structured CLI with configurable service layers, interface adapters, and a utility layer for cryptographic operations.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Jan 2025</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 — ML Reference Notebooks (Dec 2023) -->
         <div class="card">
           <div class="card-top">
             <h3>ML Reference Notebooks</h3>
@@ -1091,7 +1127,7 @@
           </div>
         </div>
 
-        <!-- 4 — BM25 IR Search Engine (Apr 2023) -->
+        <!-- 5 — BM25 IR Search Engine (Apr 2023) -->
         <div class="card">
           <div class="card-top">
             <h3>BM25 Information Retrieval Engine</h3>
@@ -1107,26 +1143,6 @@
             <p class="card-byline">Mar 2023 – Apr 2023</p>
             <div class="card-actions">
               <a class="link-btn" href="https://github.com/infernalzeus/BM-IR-Search-Engine" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 — SHA256 Encryptor -->
-        <div class="card">
-          <div class="card-top">
-            <h3>SHA256 Encryptor</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>Modular passkey management tool built around SHA-256 hashing. Structured CLI with configurable service layers, interface adapters, and a utility layer for cryptographic operations.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
                 GitHub
               </a>
@@ -1675,8 +1691,9 @@
 
     function perPage() {
       var w = grid.clientWidth;
-      if (w >= 760) return 4;
-      if (w >= 500) return 2;
+      if (w >= 900) return 5;
+      if (w >= 600) return 3;
+      if (w >= 400) return 2;
       return 1;
     }
 
