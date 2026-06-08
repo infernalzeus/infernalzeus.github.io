@@ -688,12 +688,60 @@
 
     .tl-track {
       height: 1px;
+      position: relative;
+      overflow: visible;
       background: linear-gradient(90deg,
         transparent 0%,
         rgba(0,230,118,.35) 2%,
-        rgba(0,230,118,.35) 98%,
-        transparent 100%);
+        rgba(0,230,118,.35) 73%,
+        transparent 79%);
       box-shadow: 0 0 8px rgba(0,230,118,.10);
+    }
+
+    .tl-track::after {
+      content: '';
+      position: absolute;
+      left: 77%;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(0,230,118,0.28) 0px,
+        rgba(0,230,118,0.28) 5px,
+        transparent 5px,
+        transparent 11px
+      );
+      -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0) 90%);
+      mask-image: linear-gradient(90deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0) 90%);
+    }
+
+    .tl-now {
+      position: absolute;
+      right: 0;
+      top: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tl-dot-now {
+      background: var(--accent);
+      animation: tl-pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes tl-pulse {
+      0%, 100% { box-shadow: 0 0 7px 2px rgba(0,230,118,.25); }
+      50%       { box-shadow: 0 0 16px 6px rgba(0,230,118,.60); }
+    }
+
+    .tl-now-date {
+      font-size: 0.56rem;
+      font-weight: 500;
+      color: var(--text-faint);
+      white-space: nowrap;
+      letter-spacing: 0.04em;
     }
 
     .tl-items { position: relative; height: 0; }
@@ -1086,13 +1134,23 @@
         <!-- above: [tl-content([tl-desc, tl-name]), tl-dot] — name nearest dot, desc farthest -->
         <!-- below: [tl-dot, tl-content([tl-name, tl-desc])] — name nearest dot, desc farthest -->
 
-        <div class="tl-item above" style="left:6%">
+        <div class="tl-item above" style="left:5%">
           <div class="tl-content">
             <div class="tl-desc">NAOqi robot control, Watson AI, Swift iOS</div>
             <div class="tl-name">IBM <span class="tl-yr">2019</span></div>
           </div>
           <div class="tl-dot"></div>
         </div>
+
+
+        <div class="tl-item below" style="left:10%">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-name">BITS Pilani, Goa <span class="tl-yr">2021–22</span></div>
+            <div class="tl-desc">Teaching Assistant for Computer Programming and Architecture</div>
+          </div>
+        </div>
+
 
         <div class="tl-item above" style="left:20%">
           <div class="tl-content">
@@ -1102,7 +1160,7 @@
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item below" style="left:38%">
+        <div class="tl-item below" style="left:30%">
           <div class="tl-dot"></div>
           <div class="tl-content">
             <div class="tl-name">King's College London <span class="tl-yr">2021–22</span></div>
@@ -1110,7 +1168,7 @@
           </div>
         </div>
 
-        <div class="tl-item above" style="left:62%">
+        <div class="tl-item above" style="left:40%">
           <div class="tl-content">
             <div class="tl-desc">ETL pipelines, ZohoDesk CRM</div>
             <div class="tl-name">Govdata <span class="tl-yr">2024</span></div>
@@ -1118,7 +1176,7 @@
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item above" style="left:75%">
+        <div class="tl-item above" style="left:60%">
           <div class="tl-content">
             <div class="tl-desc">Data governance &amp; Administration, NLP / AI research</div>
             <div class="tl-name">Kent &amp; Medway NHS <span class="tl-yr">2024–</span></div>
@@ -1126,12 +1184,18 @@
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item below" style="left:86%">
+        <div class="tl-item below" style="left:70%">
           <div class="tl-dot"></div>
           <div class="tl-content">
             <div class="tl-name">Kent &amp; Medway Medical School <span class="tl-yr">2024–</span></div>
             <div class="tl-desc">Circadian health in psychosis &amp; depression — (CHiP-D)</div>
           </div>
+        </div>
+
+        <!-- Today marker pinned to the right end of the track -->
+        <div class="tl-now">
+          <div class="tl-dot tl-dot-now"></div>
+          <div class="tl-now-date" id="tl-today-date"></div>
         </div>
 
       </div>
@@ -1396,23 +1460,38 @@
     s.floatY = Math.random() * VH;
   });
 
+  /* Today date label */
+  var todayEl = document.getElementById('tl-today-date');
+  if (todayEl) {
+    var _d = new Date();
+    var _mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    todayEl.textContent = _mo[_d.getMonth()] + ' ' + _d.getFullYear();
+  }
+
   var lastTs = null;
+  var lastSy = 0;
 
   function tick(ts) {
-    if (lastTs === null) lastTs = ts;
-    var dt = Math.min((ts - lastTs) / 1000, 0.05);
-    lastTs = ts;
+    if (lastTs === null) { lastTs = ts; lastSy = window.scrollY; }
+    var dt  = Math.min((ts - lastTs) / 1000, 0.05);
+    lastTs  = ts;
 
-    var sy = window.scrollY;
+    var sy  = window.scrollY;
+    var dsy = sy - lastSy;
+    lastSy  = sy;
 
     for (var i = 0; i < shapes.length; i++) {
       var s = shapes[i];
-      s.floatY -= s.bubble * dt;                          /* rise */
-      if (s.floatY + s.size < 0) {                       /* respawn below */
+      s.floatY -= s.bubble * dt;       /* continuous upward drift */
+      s.floatY += dsy * s.scroll;      /* parallax: shift by scroll delta only */
+
+      if (s.floatY + s.size < 0) {                    /* risen above top → respawn below */
         s.floatY = VH + s.size + Math.random() * 60;
+      } else if (s.floatY - s.size > VH) {            /* fallen below bottom → respawn above */
+        s.floatY = -s.size - Math.random() * 60;
       }
-      var dy = (s.floatY - s.initY) + sy * s.scroll;     /* bubble + parallax */
-      s.g.style.transform = 'translateY(' + dy.toFixed(1) + 'px)';
+
+      s.g.style.transform = 'translateY(' + (s.floatY - s.initY).toFixed(1) + 'px)';
     }
 
     requestAnimationFrame(tick);
