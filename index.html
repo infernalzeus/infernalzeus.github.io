@@ -824,7 +824,68 @@
     /* desc reveals only when the title is hovered — not the desc itself */
     .tl-item:has(.tl-name:hover) .tl-desc { opacity: 1; transform: translateY(0); }
 
-    @media (max-width: 640px) { .tl-outer { display: none; } }
+    /* ── TIMELINE MID-PULSE LINE ────────────────────── */
+    .tl-midline {
+      position: absolute;
+      left: 50%;
+      top: -40px;
+      height: 80px;
+      width: 0;
+      border-left: 1px dashed rgba(0,230,118,0.38);
+      transform: translateX(-50%);
+      animation: mid-pulse 2.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes mid-pulse {
+      0%, 100% { opacity: 0.25; }
+      50%       { opacity: 0.72; }
+    }
+
+    /* ── BADGE ACADEMIC ─────────────────────────────── */
+    .badge.academic { color: rgba(255,183,77,0.72); border-color: rgba(255,183,77,0.35); }
+
+    /* ── CAROUSEL ────────────────────────────────────── */
+    .carousel { position: relative; }
+
+    .carousel-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    .carousel-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; height: 30px;
+      background: rgba(0,230,118,0.05);
+      border: 1px solid var(--border-dim);
+      border-radius: 3px;
+      color: var(--accent);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .carousel-btn:hover:not(:disabled) {
+      background: rgba(0,230,118,0.12);
+      border-color: var(--accent);
+    }
+    .carousel-btn:disabled { opacity: 0.20; cursor: default; }
+
+    .carousel-dots { display: flex; gap: 5px; align-items: center; }
+
+    .carousel-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--border-dim);
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .carousel-dot.active { background: var(--accent); transform: scale(1.45); }
 
     /* ── RESPONSIVE ──────────────────────────────────── */
     @media (max-width: 640px) {
@@ -834,6 +895,24 @@
       footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
       .degree-line { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
       .degree-inst { opacity: 1; white-space: normal; }
+
+      /* Timeline: horizontal scroll on mobile */
+      .tl-outer {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1.5rem;
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        scrollbar-width: none;
+      }
+      .tl-outer::-webkit-scrollbar { display: none; }
+      .tl-track, .tl-items { min-width: 660px; }
+
+      /* Hero hex canvas: irrelevant on touch-only screens */
+      #hero-canvas { display: none; }
     }
   </style>
 </head>
@@ -921,118 +1000,175 @@
     <h2 class="panel-title">Projects</h2>
     <p class="panel-desc">Software and research tools — from clinical data pipelines to full-stack applications.</p>
 
-    <div class="grid">
-
-      <div class="card">
-        <div class="card-top">
-          <h3>Monopoly Madness</h3>
-          <span class="badge">Personal</span>
-        </div>
-        <p>Full-stack reimagining of Monopoly with real-time multiplayer lobbies, custom game modes (Auction, Pre-Auction, Trading), dark mode, and a dynamic board UI backed by Firebase.</p>
-        <div class="tags">
-          <span class="tag">React</span><span class="tag">TypeScript</span>
-          <span class="tag">Firebase</span><span class="tag">Tailwind CSS</span><span class="tag">Vite</span>
-        </div>
-        <div class="card-footer">
-          <p class="card-byline">March 2026 – Present</p>
-          <div class="card-actions">
-            <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-              GitHub
-            </a>
-            <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Play Game →</a>
-          </div>
-        </div>
+    <div class="carousel">
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="proj-prev" aria-label="Previous projects">&#8592;</button>
+        <button class="carousel-btn" id="proj-next" aria-label="Next projects">&#8594;</button>
+        <div class="carousel-dots" id="proj-dots"></div>
       </div>
+      <div class="grid" id="projects-grid">
 
-      <div class="card">
-        <div class="card-top">
-          <h3>Actigraph Abstraction</h3>
-          <span class="badge collab">Collab</span>
-        </div>
-        <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">Signal Processing</span>
-          <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
-          <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
-        </div>
-        <div class="card-footer">
-          <p class="card-byline">April 2026 – Present</p>
-          <p class="card-affil"></p>
-          <div class="pipeline">
-            <div class="pipeline-step">
-              <span class="step-label">Step 1 — Epoching</span>
-              <div class="card-actions" style="margin-top:0.25rem">
-                <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                  GitHub
-                </a>
+        <!-- 1 — Actigraph Abstraction (Apr 2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>Actigraph Abstraction</h3>
+            <span class="badge collab">Collab</span>
+          </div>
+          <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Signal Processing</span>
+            <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
+            <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">April 2026 – Present</p>
+            <div class="pipeline">
+              <div class="pipeline-step">
+                <span class="step-label">Step 1 — Epoching</span>
+                <div class="card-actions" style="margin-top:0.25rem">
+                  <a class="link-btn" href="https://github.com/liyang-D/actigraphy-epoching" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    GitHub
+                  </a>
+                </div>
               </div>
-            </div>
-            <div class="pipeline-step">
-              <span class="step-label">Step 2 — Sleep Metrics</span>
-              <div class="card-actions" style="margin-top:0.25rem">
-                <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                  GitHub
-                </a>
+              <div class="pipeline-step">
+                <span class="step-label">Step 2 — Sleep Metrics</span>
+                <div class="card-actions" style="margin-top:0.25rem">
+                  <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    GitHub
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-top">
-          <h3>SHA256 Encryptor</h3>
-          <span class="badge">Personal</span>
-        </div>
-        <p>Modular passkey management tool built around SHA-256 hashing. Structured CLI with configurable service layers, interface adapters, and a utility layer for cryptographic operations.</p>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
-        </div>
-        <div class="card-footer">
-          <div class="card-actions">
-            <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-              GitHub
-            </a>
+        <!-- 2 — Monopoly Madness (Mar 2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>Monopoly Madness</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>Full-stack reimagining of Monopoly with real-time multiplayer lobbies, custom game modes (Auction, Pre-Auction, Trading), dark mode, and a dynamic board UI backed by Firebase.</p>
+          <div class="tags">
+            <span class="tag">React</span><span class="tag">TypeScript</span>
+            <span class="tag">Firebase</span><span class="tag">Tailwind CSS</span><span class="tag">Vite</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">March 2026 – Present</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+              <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Play Game →</a>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-top">
-          <h3>3D Bounding Box Annotation</h3>
-          <span class="badge">Personal</span>
+        <!-- 3 — ML Reference Notebooks (Dec 2023) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>ML Reference Notebooks</h3>
+            <span class="badge academic">Academic</span>
+          </div>
+          <p>Comprehensive collection of Jupyter notebooks covering classical ML tasks — EDA, classification, regression, and clustering. Bank data analysis, scikit-learn workflows, and a variety of supervised and unsupervised techniques.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Jupyter</span>
+            <span class="tag">Machine Learning</span><span class="tag">EDA</span>
+            <span class="tag">Scikit-learn</span><span class="tag">Data Analysis</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">2021 – 2023</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/Jupyter-Notebooks" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
         </div>
-        <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
-          <span class="tag">OpenCV</span><span class="tag">LiDAR</span><span class="tag">Computer Vision</span>
-        </div>
-        <div class="card-footer">
-          <p class="card-byline">Jan 2021 – May 2021</p>
-          <p class="card-affil">BITS Pilani, Goa</p>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-top">
-          <h3>RL Agent for VR Cognitive Assessment</h3>
-          <span class="badge collab">Collab</span>
+        <!-- 4 — BM25 IR Search Engine (Apr 2023) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>BM25 Information Retrieval Engine</h3>
+            <span class="badge academic">Academic</span>
+          </div>
+          <p>Full-stack search engine using BM25 ranking over the MIND (Microsoft News) dataset of 100K+ articles. Flask backend with a web UI and Docker containerisation for deployment.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Flask</span>
+            <span class="tag">BM25</span><span class="tag">Information Retrieval</span>
+            <span class="tag">NLP</span><span class="tag">Docker</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Mar 2023 – Apr 2023</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/BM-IR-Search-Engine" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
         </div>
-        <p>Designed a TD3-DDPG Double Q-learning agent to analyse Virtual Reality heatmaps of clinical cognitive assessments in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
-          <span class="tag">TD3-DDPG</span><span class="tag">OpenAI Gym</span><span class="tag">VR</span>
-        </div>
-        <div class="card-footer">
-          <p class="card-byline">Aug 2021 – Aug 2022</p>
-          <p class="card-affil">King's College London, IOPPN</p>
-        </div>
-      </div>
 
+        <!-- 5 — SHA256 Encryptor -->
+        <div class="card">
+          <div class="card-top">
+            <h3>SHA256 Encryptor</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>Modular passkey management tool built around SHA-256 hashing. Structured CLI with configurable service layers, interface adapters, and a utility layer for cryptographic operations.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 — RL Agent for VR (Aug 2021–Aug 2022) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>RL Agent for VR Cognitive Assessment</h3>
+            <span class="badge collab">Collab</span>
+          </div>
+          <p>Designed a TD3-DDPG Double Q-learning agent to analyse Virtual Reality heatmaps of clinical cognitive assessments in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
+            <span class="tag">TD3-DDPG</span><span class="tag">OpenAI Gym</span><span class="tag">VR</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Aug 2021 – Aug 2022</p>
+            <p class="card-affil">King's College London, IOPPN</p>
+          </div>
+        </div>
+
+        <!-- 7 — 3D Bounding Box (Jan–May 2021) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>3D Bounding Box Annotation</h3>
+            <span class="badge academic">Academic</span>
+          </div>
+          <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
+            <span class="tag">OpenCV</span><span class="tag">LiDAR</span><span class="tag">Computer Vision</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Jan 2021 – May 2021</p>
+            <p class="card-affil">BITS Pilani, Goa</p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>
@@ -1042,9 +1178,15 @@
   <div class="panel-inner">
     <p class="panel-label">Research &amp; Publications</p>
     <h2 class="panel-title">Research</h2>
-    <p class="panel-desc">Academic work in AI, NLP, and clinical data. </p>
+    <p class="panel-desc">Academic work in AI, NLP, and clinical data.</p>
 
-    <div class="grid">
+    <div class="carousel">
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="res-prev" aria-label="Previous">&#8592;</button>
+        <button class="carousel-btn" id="res-next" aria-label="Next">&#8594;</button>
+        <div class="carousel-dots" id="res-dots"></div>
+      </div>
+      <div class="grid" id="research-grid">
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
@@ -1082,7 +1224,8 @@
         </div>
       </div>
 
-    </div>
+      </div><!-- /.grid -->
+    </div><!-- /.carousel -->
   </div>
 </section>
 
@@ -1191,6 +1334,9 @@
             <div class="tl-desc">Circadian health in psychosis &amp; depression — (CHiP-D)</div>
           </div>
         </div>
+
+        <!-- Vertical mid-pulse marker at the 50% mark -->
+        <div class="tl-midline"></div>
 
         <!-- Today marker pinned to the right end of the track -->
         <div class="tl-now">
@@ -1355,16 +1501,15 @@
 
 <script>
 (function () {
-  if (window.innerWidth < 1024) return;
-
   var ns  = 'http://www.w3.org/2000/svg';
   var svg = document.createElementNS(ns, 'svg');
   svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;overflow:visible;';
   svg.setAttribute('pointer-events', 'none');
   document.getElementById('px-layer').appendChild(svg);
 
-  var W  = window.innerWidth;
-  var VH = window.innerHeight;
+  var W        = window.innerWidth;
+  var VH       = window.innerHeight;
+  var isMobile = W < 640;
   var vw = W  / 100;
   var vh = VH / 100;
 
@@ -1384,6 +1529,20 @@
    * bubble = upward drift speed in px/s (continuous animation)
    * scroll = parallax multiplier on scrollY
    */
+  /* Mobile shapes — tiny, hugging the side edges only */
+  var mobileDefs = [
+    ['left',  1.0, 12, 4, 16, 0.09, 'hex'],
+    ['left',  2.5, 30, 3, 24, 0.15, 'sq' ],
+    ['left',  0.8, 52, 5, 14, 0.07, 'hex'],
+    ['left',  2.2, 70, 3, 28, 0.18, 'sq' ],
+    ['left',  1.2, 88, 4, 18, 0.10, 'hex'],
+    ['right', 1.5, 18, 4, 20, 0.11, 'hex'],
+    ['right', 2.8, 40, 3, 26, 0.14, 'sq' ],
+    ['right', 0.9, 60, 5, 15, 0.08, 'hex'],
+    ['right', 2.4, 78, 3, 30, 0.17, 'sq' ],
+    ['right', 1.1,  5, 4, 13, 0.07, 'hex'],
+  ];
+
   var defs = [
     // ── left gutter ────────────────────────────────────────
     ['left', 1.2,  8, 13, 22, 0.10, 'hex'],
@@ -1417,7 +1576,9 @@
     ['right', 3.2, 22, 10, 25, 0.14, 'hex'],
   ];
 
-  var shapes = defs.map(function (d) {
+  var activeDefs = isMobile ? mobileDefs : defs;
+
+  var shapes = activeDefs.map(function (d) {
     var side   = d[0];
     var cx     = side === 'left' ? d[1] * vw : W - d[1] * vw;
     var initY  = d[2] * vh;
@@ -1425,7 +1586,9 @@
     var bubble = d[4];
     var scroll = d[5];
     var type   = d[6];
-    var alpha  = (0.07 + Math.random() * 0.10).toFixed(2);
+    var alpha  = isMobile
+      ? (0.05 + Math.random() * 0.07).toFixed(2)
+      : (0.07 + Math.random() * 0.10).toFixed(2);
     var stroke = 'rgba(0,230,118,' + alpha + ')';
 
     var g = document.createElementNS(ns, 'g');
@@ -1498,6 +1661,69 @@
   }
 
   requestAnimationFrame(tick);
+})();
+</script>
+
+<script>
+/* ── CAROUSEL ─────────────────────────────────────────────── */
+(function () {
+  function initCarousel(gridId, prevId, nextId, dotsId) {
+    var grid = document.getElementById(gridId);
+    if (!grid) return;
+    var cards = Array.from(grid.children);
+    var page  = 0;
+
+    function perPage() {
+      var w = grid.clientWidth;
+      if (w >= 760) return 4;
+      if (w >= 500) return 2;
+      return 1;
+    }
+
+    function totalPages() { return Math.ceil(cards.length / perPage()); }
+
+    var prevBtn  = document.getElementById(prevId);
+    var nextBtn  = document.getElementById(nextId);
+    var dotsWrap = document.getElementById(dotsId);
+    var navWrap  = prevBtn && prevBtn.parentElement;
+
+    function render() {
+      var pp = perPage();
+      var tp = totalPages();
+      page   = Math.min(page, tp - 1);
+
+      cards.forEach(function (c, i) {
+        c.style.display = (i >= page * pp && i < (page + 1) * pp) ? '' : 'none';
+      });
+
+      if (prevBtn) prevBtn.disabled = page === 0;
+      if (nextBtn) nextBtn.disabled = page >= tp - 1;
+
+      /* hide nav entirely when everything fits on one page */
+      if (navWrap) navWrap.style.display = tp <= 1 ? 'none' : '';
+
+      if (dotsWrap) {
+        dotsWrap.innerHTML = '';
+        for (var i = 0; i < tp; i++) {
+          var dot = document.createElement('span');
+          dot.className = 'carousel-dot' + (i === page ? ' active' : '');
+          (function (idx) {
+            dot.addEventListener('click', function () { page = idx; render(); });
+          })(i);
+          dotsWrap.appendChild(dot);
+        }
+      }
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { if (page > 0) { page--; render(); } });
+    if (nextBtn) nextBtn.addEventListener('click', function () { if (page < totalPages() - 1) { page++; render(); } });
+
+    render();
+    window.addEventListener('resize', render);
+  }
+
+  initCarousel('projects-grid', 'proj-prev', 'proj-next', 'proj-dots');
+  initCarousel('research-grid', 'res-prev',  'res-next',  'res-dots');
 })();
 </script>
 </body>
