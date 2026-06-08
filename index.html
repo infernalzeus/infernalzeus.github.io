@@ -651,8 +651,8 @@
       filter: drop-shadow(0 0 18px rgba(0,230,118,0.90)) !important;
     }
     @keyframes hero-hex-pulse {
-      0%, 100% { opacity: 0.08; filter: drop-shadow(0 0 3px rgba(0,230,118,0.20)); }
-      50%       { opacity: 1.0;  filter: drop-shadow(0 0 14px rgba(0,230,118,0.72)); }
+      0%, 100% { opacity: 0;   filter: drop-shadow(0 0 0px rgba(0,230,118,0)); }
+      45%, 55% { opacity: 1.0; filter: drop-shadow(0 0 14px rgba(0,230,118,0.72)); }
     }
 
     /* ── HERO CANVAS ─────────────────────────────────── */
@@ -932,7 +932,11 @@
     @media (max-width: 640px) {
       nav { padding: 0 1.25rem; }
       nav .nav-links { gap: 1rem; }
-      .panel { padding: calc(var(--nav-h) + 2rem) 1.25rem 3rem; }
+      /* Start content right after nav — no extra centering blank space */
+      .panel {
+        justify-content: flex-start;
+        padding: calc(var(--nav-h) + 1.25rem) 1.25rem 2.5rem;
+      }
       footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
       .degree-line { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
       .degree-inst { opacity: 1; white-space: normal; }
@@ -961,11 +965,13 @@
       }
       .tl-item.above { bottom: auto !important; }
       .tl-item.below { top: auto !important; }
-      /* In .above items the dot is last in DOM — pull it first with order */
+      /* In .above items the dot is last in DOM — pull it first */
       .tl-item.above .tl-dot { order: -1; }
       .tl-dot { margin-top: 0.3rem; flex-shrink: 0; }
       .tl-item .tl-content { align-items: flex-start; gap: 2px; }
       .tl-item .tl-name { text-align: left; white-space: normal; }
+      /* .above items have DOM order [desc, name] — reorder so name always comes first */
+      .tl-item.above .tl-name { order: -1; }
       .tl-item .tl-desc {
         display: block;
         opacity: 1;
@@ -977,9 +983,19 @@
         pointer-events: none;
       }
 
-      /* Hero hex canvas + button: not needed on touch screens */
+      /* Hero canvas: not rendered on touch screens */
       #hero-canvas { display: none; }
-      #hero-hex-btn { display: none; }
+
+      /* Hex button: show as a small floating corner badge instead of centred overlay */
+      #hero-hex-btn {
+        left: auto;
+        right: 1.25rem;
+        bottom: 4.5rem;
+        top: auto;
+        transform: none;
+        width: 44px;
+        height: 44px;
+      }
     }
   </style>
 </head>
@@ -1008,10 +1024,14 @@
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <button id="hero-hex-btn" aria-label="Action">
     <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- flat-top hex outline, centred at (24,24) -->
       <polygon points="24,2 46,14 46,34 24,46 2,34 2,14"
                fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.80)" stroke-width="1.5"/>
-      <path d="M27 7 L15 28 L23 28 L19 42 L33 21 L25 21 Z"
-            fill="rgba(0,230,118,0.90)"/>
+      <!-- lightning bolt: all coordinates offset from centre (24,24) so it is perfectly centred -->
+      <g transform="translate(24,24)">
+        <path d="M3,-16 L-10,4 L-2,4 L-5,16 L10,-2 L2,-2 Z"
+              fill="rgba(0,230,118,0.90)"/>
+      </g>
     </svg>
   </button>
   <div class="panel-inner hero">
