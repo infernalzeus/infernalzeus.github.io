@@ -625,16 +625,21 @@
     .btn-chip:hover { color: var(--accent); border-color: var(--accent); }
 
     /* ── HERO HEX BUTTON ────────────────────────────── */
+    /*
+     * Desktop: absolute, relative to #hero > .panel-inner (which is position:relative).
+     * left:74% of panel-inner puts the button near the centre of the right-half hex grid.
+     * viewBox 46×52 matches the canvas grid hex aspect ratio (√3:2).
+     */
     #hero-hex-btn {
       position: absolute;
-      left: 72%;
+      left: 74%;
       top: 48%;
       transform: translate(-50%, -50%);
       background: none;
       border: none;
       cursor: pointer;
       z-index: 2;
-      width: 52px;
+      width: 46px;
       height: 52px;
       padding: 0;
       animation: hero-hex-pulse 3.2s ease-in-out infinite;
@@ -930,8 +935,12 @@
 
     /* ── RESPONSIVE ──────────────────────────────────── */
     @media (max-width: 640px) {
-      nav { padding: 0 1.25rem; }
-      nav .nav-links { gap: 1rem; }
+      /* ── nav: hide brand text, shrink links to fit all 4 ── */
+      nav { padding: 0 1rem; }
+      .nav-logo { display: none; }
+      nav .nav-links { gap: 0.55rem; }
+      nav .nav-links a { font-size: 0.66rem; letter-spacing: 0.03em; }
+
       /* Start content right after nav — no extra centering blank space */
       .panel {
         justify-content: flex-start;
@@ -940,6 +949,14 @@
       footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
       .degree-line { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
       .degree-inst { opacity: 1; white-space: normal; }
+
+      /* ── socials: 3-per-row grid so GitHub/LinkedIn/YouTube wrap neatly ── */
+      .socials {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        justify-content: start;
+        gap: 0.65rem 1.1rem;
+      }
 
       /* Timeline: vertical list on mobile */
       .tl-outer { overflow: visible; padding: 0; margin-left: 0; margin-right: 0; }
@@ -986,15 +1003,15 @@
       /* Hero canvas: not rendered on touch screens */
       #hero-canvas { display: none; }
 
-      /* Hex button: show as a small floating corner badge instead of centred overlay */
+      /* Hex button: pull out of absolute flow, centre below socials */
       #hero-hex-btn {
-        left: auto;
-        right: 1.25rem;
-        bottom: 4.5rem;
-        top: auto;
+        position: relative;
+        left: auto; top: auto;
         transform: none;
-        width: 44px;
-        height: 44px;
+        margin: 1.75rem auto 0;
+        display: block;
+        width: 40px;
+        height: 46px;
       }
     }
   </style>
@@ -1022,18 +1039,6 @@
 <!-- ─── HERO PANEL ───────────────────────────────────── -->
 <section class="panel" id="hero">
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
-  <button id="hero-hex-btn" aria-label="Action">
-    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <!-- flat-top hex outline, centred at (24,24) -->
-      <polygon points="24,2 46,14 46,34 24,46 2,34 2,14"
-               fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.80)" stroke-width="1.5"/>
-      <!-- lightning bolt: all coordinates offset from centre (24,24) so it is perfectly centred -->
-      <g transform="translate(24,24)">
-        <path d="M3,-16 L-10,4 L-2,4 L-5,16 L10,-2 L2,-2 Z"
-              fill="rgba(0,230,118,0.90)"/>
-      </g>
-    </svg>
-  </button>
   <div class="panel-inner hero">
     <p class="hero-role">AI Researcher &amp; Software Developer</p>
     <h1>Yash Kumar</h1>
@@ -1088,6 +1093,23 @@
         Email
       </a>
     </div>
+
+    <!-- hex action button — absolute on desktop, inline-centred on mobile -->
+    <button id="hero-hex-btn" aria-label="Action">
+      <!--
+        Pointy-top hexagon matching the canvas grid (HEX_R≈24, ratio √3:2).
+        viewBox 46×52 → hex width 42px / height 48px → ratio 0.875 ≈ √3/2. ✓
+        Bolt origin at centre (23,26) so it is always geometrically centred.
+      -->
+      <svg viewBox="0 0 46 52" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <polygon points="23,2 44,14 44,38 23,50 2,38 2,14"
+                 fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.78)" stroke-width="1.4"/>
+        <g transform="translate(23,26)">
+          <path d="M3,-15 L-10,4 L-2,4 L-5,15 L10,-2 L2,-2 Z"
+                fill="rgba(0,230,118,0.90)"/>
+        </g>
+      </svg>
+    </button>
   </div>
 </section>
 
