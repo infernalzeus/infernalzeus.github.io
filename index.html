@@ -28,10 +28,12 @@
 
     html {
       scroll-behavior: smooth;
-      /* snap container */
       overflow-y: scroll;
-      scroll-snap-type: y proximity;
       height: 100%;
+    }
+
+    @media (min-width: 641px) {
+      html { scroll-snap-type: y proximity; }
     }
 
     body {
@@ -677,6 +679,91 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 2px; }
 
+    /* ── WORK TIMELINE ──────────────────────────────── */
+    .tl-outer { margin-top: 3.5rem; overflow: visible; }
+    .tl-outer > .panel-label {
+      text-align: center;
+      margin-bottom: 3.5rem; /* room for above-track blip names */
+    }
+
+    .tl-track {
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,230,118,.35) 2%,
+        rgba(0,230,118,.35) 98%,
+        transparent 100%);
+      box-shadow: 0 0 8px rgba(0,230,118,.10);
+    }
+
+    .tl-items { position: relative; height: 0; }
+
+    .tl-item {
+      position: absolute;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: default;
+    }
+
+    .tl-item.above {
+      bottom: 6px;
+      flex-direction: column-reverse;
+    }
+
+    .tl-item.below { top: 6px; }
+
+    .tl-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      background: var(--bg);
+      box-shadow: 0 0 7px 2px rgba(0,230,118,.22);
+      flex-shrink: 0;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .tl-item:hover .tl-dot {
+      background: var(--accent);
+      box-shadow: 0 0 12px 4px rgba(0,230,118,.45);
+    }
+
+    .tl-name {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+      text-align: center;
+      transition: color var(--transition);
+    }
+
+    .tl-item:hover .tl-name { color: #33eb8f; }
+
+    .tl-yr {
+      font-weight: 400;
+      font-size: 0.55rem;
+      color: var(--text-faint);
+      margin-left: 0.2em;
+    }
+
+    .tl-desc {
+      font-size: 0.57rem;
+      color: var(--text-faint);
+      white-space: nowrap;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(2px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      pointer-events: none;
+    }
+
+    .tl-item:hover .tl-desc { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 640px) { .tl-outer { display: none; } }
+
     /* ── RESPONSIVE ──────────────────────────────────── */
     @media (max-width: 640px) {
       nav { padding: 0 1.25rem; }
@@ -976,6 +1063,52 @@
         </div>
       </div>
     </div>
+    <!-- work experience timeline -->
+    <div class="tl-outer">
+      <p class="panel-label">Work Experience</p>
+      <div class="tl-track"></div>
+      <div class="tl-items">
+
+        <!-- above blips: DOM order [desc, name, dot] so dot lands at bottom (nearest track) with column-reverse -->
+        <div class="tl-item above" style="left:6%">
+          <div class="tl-desc">NAOqi robot control, Watson AI, Swift iOS — 1st at CodeFest</div>
+          <div class="tl-name">IBM <span class="tl-yr">2019</span></div>
+          <div class="tl-dot"></div>
+        </div>
+
+        <div class="tl-item below" style="left:17%">
+          <div class="tl-dot"></div>
+          <div class="tl-name">ALW Lighting <span class="tl-yr">2020</span></div>
+          <div class="tl-desc">YOLOv3 CNN &amp; RNN prediction — luminescent crop growth</div>
+        </div>
+
+        <div class="tl-item above" style="left:34%">
+          <div class="tl-desc">Reinforcement learning agent for VR cognitive assessments</div>
+          <div class="tl-name">King's College London <span class="tl-yr">2021–22</span></div>
+          <div class="tl-dot"></div>
+        </div>
+
+        <div class="tl-item below" style="left:62%">
+          <div class="tl-dot"></div>
+          <div class="tl-name">Govdata <span class="tl-yr">Jan 2024</span></div>
+          <div class="tl-desc">ETL pipelines, ZohoDesk CRM — 1M+ supplier records</div>
+        </div>
+
+        <div class="tl-item above" style="left:71%">
+          <div class="tl-desc">Data governance &amp; NLP / AI research — CRIS de-anonymisation</div>
+          <div class="tl-name">Kent &amp; Medway NHS <span class="tl-yr">2024–</span></div>
+          <div class="tl-dot"></div>
+        </div>
+
+        <div class="tl-item below" style="left:80%">
+          <div class="tl-dot"></div>
+          <div class="tl-name">Kent &amp; Medway Medical School <span class="tl-yr">2024–</span></div>
+          <div class="tl-desc">Circadian health in psychosis &amp; depression — CHiP-D study</div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1019,81 +1152,112 @@
 <script>
 (function () {
   const canvas = document.getElementById('hero-canvas');
-  const ctx = canvas.getContext('2d');
-  const hero = document.getElementById('hero');
-  const particles = [];
-  let mouseX = -9999, mouseY = -9999;
-  let lastCursorSpawn = 0, lastAmbientSpawn = 0;
+  const ctx    = canvas.getContext('2d');
+  const hero   = document.getElementById('hero');
+
+  let W = 0, H = 0;
+  let mx = -9999, my = -9999;
+
+  /* hex grid geometry (pointy-top) */
+  const HEX_R  = 26;                      /* circumradius */
+  const HEX_RD = HEX_R - 2;              /* draw radius — leaves a gap */
+  const H_STEP = HEX_R * Math.sqrt(3);   /* horizontal step between columns */
+  const V_STEP = HEX_R * 1.5;            /* vertical step between rows */
+
+  /* interaction constants */
+  const REACH = 210;   /* cursor influence radius in px */
+  const EDGE  = 90;    /* boundary fade zone in px */
 
   function resize() {
-    canvas.width = hero.offsetWidth;
-    canvas.height = hero.offsetHeight;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
   }
 
-  function Particle(x, y, ambient) {
-    this.x = x + (Math.random() - 0.5) * (ambient ? 60 : 18);
-    this.y = y + (Math.random() - 0.5) * (ambient ? 60 : 18);
-    this.vx = (Math.random() - 0.5) * (ambient ? 0.35 : 0.9);
-    this.vy = -(0.12 + Math.random() * (ambient ? 0.35 : 0.85));
-    this.size = ambient ? 1.0 + Math.random() * 1.2 : 1.5 + Math.random() * 2.2;
-    this.life = ambient ? 0.45 + Math.random() * 0.35 : 0.65 + Math.random() * 0.3;
-    this.decay = ambient ? 0.0025 + Math.random() * 0.002 : 0.005 + Math.random() * 0.005;
-    this.ambient = ambient;
-  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
 
-  function animate(ts) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const rightEdge = W * 0.42; /* mirror original animation's right-half boundary */
 
-    const rightEdge = canvas.width * 0.42;
+    /* only active when cursor is in the right half */
+    if (mx < -100 || mx < rightEdge) { requestAnimationFrame(frame); return; }
 
-    /* cursor particles */
-    if (mouseX > rightEdge && ts - lastCursorSpawn > 40 && particles.length < 200) {
-      for (let i = 0; i < 2; i++) particles.push(new Particle(mouseX, mouseY, false));
-      lastCursorSpawn = ts;
-    }
+    /* global dim based on cursor proximity to any panel edge — smooth entrance/exit */
+    /* top offset by nav height (62px) so fade starts at the visible content edge */
+    const NAV_H = 62;
+    const cursorFade = Math.min(1,
+      (mx - rightEdge) / EDGE,
+      (W - mx) / EDGE,
+      (my - NAV_H) / EDGE,
+      (H - my) / EDGE
+    );
+    if (cursorFade < 0.01) { requestAnimationFrame(frame); return; }
 
-    /* ambient particles — gentle drift across right half */
-    if (ts - lastAmbientSpawn > 220 && particles.length < 200) {
-      const x = rightEdge + Math.random() * (canvas.width - rightEdge);
-      const y = canvas.height * (0.15 + Math.random() * 0.7);
-      particles.push(new Particle(x, y, true));
-      lastAmbientSpawn = ts;
-    }
+    const cols = Math.ceil(W / H_STEP) + 2;
+    const rows = Math.ceil(H / V_STEP) + 2;
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vx += (Math.random() - 0.5) * 0.03;
-      p.vy -= 0.007;
-      p.life -= p.decay;
-      if (p.life <= 0) { particles.splice(i, 1); continue; }
+    for (let row = -1; row < rows; row++) {
+      const rowOff = (row & 1) ? H_STEP * 0.5 : 0;
+      for (let col = -1; col < cols; col++) {
+        const cx = col * H_STEP + rowOff;
+        const cy = row * V_STEP;
 
-      const alpha = p.life * (p.ambient ? 0.38 : 0.62);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, 6.2832);
-      if (!p.ambient) {
-        ctx.shadowColor = 'rgba(0,230,118,0.45)';
-        ctx.shadowBlur = 7;
+        /* skip hexes entirely in the text / left-side zone */
+        if (cx < rightEdge - EDGE) continue;
+
+        const dx   = cx - mx;
+        const dy   = cy - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist >= REACH) continue;
+
+        /* smoothstep radial falloff from cursor */
+        let t = 1 - dist / REACH;
+        t = t * t * (3 - 2 * t);
+
+        /* hex boundary fade × cursor proximity fade */
+        const ef = Math.min(1,
+          (cx - rightEdge) / EDGE,
+          (W - cx) / EDGE,
+          cy / EDGE,
+          (H - cy) / EDGE
+        );
+        t *= Math.max(0, ef) * cursorFade;
+        if (t < 0.015) continue;
+
+        /* draw hex path */
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a  = Math.PI / 3 * i - Math.PI / 6;
+          const px = cx + HEX_RD * Math.cos(a);
+          const py = cy + HEX_RD * Math.sin(a);
+          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+
+        /* subtle fill, then glowing stroke */
+        ctx.fillStyle   = 'rgba(0,230,118,' + (t * 0.05).toFixed(3) + ')';
+        ctx.fill();
+        ctx.shadowColor = 'rgba(0,230,118,' + (t * 0.75).toFixed(3) + ')';
+        ctx.shadowBlur  = 6 + t * 18;
+        ctx.strokeStyle = 'rgba(0,230,118,' + (t * 0.90).toFixed(3) + ')';
+        ctx.lineWidth   = 0.75 + t * 0.65;
+        ctx.stroke();
+        ctx.shadowBlur  = 0;
       }
-      ctx.fillStyle = 'rgba(0,230,118,' + alpha + ')';
-      ctx.fill();
-      ctx.shadowBlur = 0;
     }
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(frame);
   }
 
   hero.addEventListener('mousemove', function (e) {
     const r = hero.getBoundingClientRect();
-    mouseX = e.clientX - r.left;
-    mouseY = e.clientY - r.top;
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
   });
-  hero.addEventListener('mouseleave', function () { mouseX = -9999; mouseY = -9999; });
+  hero.addEventListener('mouseleave', function () { mx = -9999; my = -9999; });
 
   window.addEventListener('resize', resize);
   resize();
-  requestAnimationFrame(animate);
+  requestAnimationFrame(frame);
 })();
 </script>
 
