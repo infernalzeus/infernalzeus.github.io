@@ -626,15 +626,15 @@
 
     /* ── HERO HEX BUTTON ────────────────────────────── */
     /*
-     * Desktop: absolute, relative to #hero > .panel-inner (which is position:relative).
-     * left:74% of panel-inner puts the button near the centre of the right-half hex grid.
-     * viewBox 46×52 matches the canvas grid hex aspect ratio (√3:2).
+     * Button is a direct child of #hero (position:relative) so left/top are
+     * in the same pixel space as the canvas hex grid.
+     * JS (snapHexBtn) computes the exact hex-vertex position and overrides these fallbacks.
+     * Fallback keeps the button roughly in place before JS runs — no transform needed.
      */
     #hero-hex-btn {
       position: absolute;
-      left: 74%;
-      top: 48%;
-      transform: translate(-50%, -50%);
+      left: calc(71% - 23px);   /* fallback: 71% of hero width − half button width */
+      top:  calc(46% - 26px);   /* fallback: 46% of hero height − half button height */
       background: none;
       border: none;
       cursor: pointer;
@@ -1093,24 +1093,22 @@
         Email
       </a>
     </div>
-
-    <!-- hex action button — absolute on desktop, inline-centred on mobile -->
-    <button id="hero-hex-btn" aria-label="Action">
-      <!--
-        Pointy-top hexagon matching the canvas grid (HEX_R≈24, ratio √3:2).
-        viewBox 46×52 → hex width 42px / height 48px → ratio 0.875 ≈ √3/2. ✓
-        Bolt origin at centre (23,26) so it is always geometrically centred.
-      -->
-      <svg viewBox="0 0 46 52" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <polygon points="23,2 44,14 44,38 23,50 2,38 2,14"
-                 fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.78)" stroke-width="1.4"/>
-        <g transform="translate(23,26)">
-          <path d="M3,-15 L-10,4 L-2,4 L-5,15 L10,-2 L2,-2 Z"
-                fill="rgba(0,230,118,0.90)"/>
-        </g>
-      </svg>
-    </button>
-  </div>
+  </div><!-- /.panel-inner -->
+  <!--
+    Button is a direct child of #hero (position:relative) so its absolute
+    coordinates share the same pixel space as the canvas hex grid.
+    JS snaps it to the nearest exact grid vertex — see snapHexBtn() below.
+  -->
+  <button id="hero-hex-btn" aria-label="Action">
+    <svg viewBox="0 0 46 52" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <polygon points="23,2 44,14 44,38 23,50 2,38 2,14"
+               fill="rgba(0,230,118,0.08)" stroke="rgba(0,230,118,0.78)" stroke-width="1.4"/>
+      <g transform="translate(23,26)">
+        <path d="M3,-15 L-10,4 L-2,4 L-5,15 L10,-2 L2,-2 Z"
+              fill="rgba(0,230,118,0.90)"/>
+      </g>
+    </svg>
+  </button>
 </section>
 
 <!-- ─── PROJECTS PANEL ────────────────────────────────── -->
@@ -1800,6 +1798,51 @@
   }
 
   requestAnimationFrame(tick);
+})();
+</script>
+
+<script>
+/* ── HEX BUTTON SNAP ──────────────────────────────────────── */
+/*
+ * The canvas draws hexes at discrete pixel positions computed from
+ * HEX_R = 26.  We snap the button to the nearest grid vertex so it
+ * sits inside exactly one hex cell at every zoom level.
+ *
+ * Coordinate space: both the canvas and the button use #hero as their
+ * containing block (canvas fills it, button is position:absolute in it).
+ */
+(function () {
+  var H_STEP = 26 * Math.sqrt(3);   /* horizontal column pitch ≈ 45.03 px */
+  var V_STEP = 26 * 1.5;            /* vertical row pitch = 39 px         */
+  var BW     = 46;                  /* button width  (px)                  */
+  var BH     = 52;                  /* button height (px)                  */
+
+  function snapHexBtn() {
+    var btn  = document.getElementById('hero-hex-btn');
+    if (!btn || window.innerWidth < 641) return;   /* skip on mobile */
+    var hero = document.getElementById('hero');
+    var W    = hero.offsetWidth;
+    var H    = hero.offsetHeight;
+
+    /* Target: visual centre of the right-half hex grid */
+    var tX = W * 0.71;
+    var tY = H * 0.46;
+
+    /* Snap to nearest grid vertex (same formula the canvas uses) */
+    var row    = Math.round(tY / V_STEP);
+    var rowOff = (row & 1) ? H_STEP * 0.5 : 0;
+    var col    = Math.round((tX - rowOff) / H_STEP);
+    var snapX  = col * H_STEP + rowOff;
+    var snapY  = row * V_STEP;
+
+    /* Offset by half the button so it is centred on the vertex */
+    btn.style.left = (snapX - BW * 0.5).toFixed(1) + 'px';
+    btn.style.top  = (snapY - BH * 0.5).toFixed(1) + 'px';
+  }
+
+  /* Run immediately and re-run on every resize / zoom change */
+  snapHexBtn();
+  window.addEventListener('resize', snapHexBtn);
 })();
 </script>
 
