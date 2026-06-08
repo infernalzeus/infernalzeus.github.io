@@ -63,13 +63,23 @@
       border-bottom: 1px solid var(--border-dim);
     }
 
+    .nav-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
     .nav-logo {
-      font-weight: 800;
-      font-size: 1.0rem;
+      font-family: "Orbitron", sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
       letter-spacing: 0.12em;
       color: var(--accent);
       text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity var(--transition);
+      white-space: nowrap;
     }
+    .nav-logo:hover { opacity: 0.75; }
 
     .nav-links {
       display: flex;
@@ -937,9 +947,12 @@
 
 <!-- ─── NAV ──────────────────────────────────────────── -->
 <nav>
-  <a href="#hero" class="nav-hex" aria-label="Back to top">
-    <img src="assets/instagram.jpg" alt="Yash Kumar" />
-  </a>
+  <div class="nav-brand-wrap">
+    <a href="#hero" class="nav-hex" aria-label="Back to top">
+      <img src="assets/instagram.jpg" alt="Yash Kumar" />
+    </a>
+    <a href="#hero" class="nav-logo">Infernal Zeus</a>
+  </div>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
     <li><a href="#research">Research</a></li>
@@ -1741,6 +1754,27 @@
 
   initCarousel('projects-grid', 'proj-prev', 'proj-next', 'proj-dots');
   initCarousel('research-grid', 'res-prev',  'res-next',  'res-dots');
+})();
+
+(function() {
+  var img = new Image();
+  img.onload = function() {
+    var size = 64;
+    var c = document.createElement('canvas');
+    c.width = c.height = size;
+    var ctx = c.getContext('2d');
+    ctx.beginPath();
+    var pts = [[0.5,0],[1,0.25],[1,0.75],[0.5,1],[0,0.75],[0,0.25]];
+    for (var i = 0; i < pts.length; i++) {
+      (i === 0 ? ctx.moveTo : ctx.lineTo).call(ctx, pts[i][0]*size, pts[i][1]*size);
+    }
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(img, 0, 0, size, size);
+    var link = document.querySelector("link[rel='icon']");
+    if (link) link.href = c.toDataURL('image/png');
+  };
+  img.src = 'assets/instagram.jpg';
 })();
 </script>
 </body>
