@@ -683,7 +683,7 @@
     .tl-outer { margin-top: 3.5rem; overflow: visible; }
     .tl-outer > .panel-label {
       text-align: center;
-      margin-bottom: 3.5rem; /* room for above-track blip names */
+      margin-bottom: 3.5rem;
     }
 
     .tl-track {
@@ -698,22 +698,33 @@
 
     .tl-items { position: relative; height: 0; }
 
+    /*
+     * Each blip is a flex column anchored to the track line.
+     * .above  →  content-wrapper above the dot; container's bottom = 5px above track
+     * .below  →  dot above the content-wrapper; container's top = 5px below track
+     *
+     * Content wrapper DOM order:
+     *   above: [tl-desc (farther), tl-name (nearest dot)]  — column, reads top→down
+     *   below: [tl-name (nearest dot), tl-desc (farther)]  — column, reads top→down
+     */
     .tl-item {
       position: absolute;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      cursor: default;
+      gap: 5px;
     }
 
-    .tl-item.above {
-      bottom: 6px;
-      flex-direction: column-reverse;
-    }
+    .tl-item.above { bottom: 5px; }
+    .tl-item.below { top: 5px; }
 
-    .tl-item.below { top: 6px; }
+    .tl-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
 
     .tl-dot {
       width: 8px; height: 8px;
@@ -725,7 +736,8 @@
       transition: background var(--transition), box-shadow var(--transition);
     }
 
-    .tl-item:hover .tl-dot {
+    /* highlight dot + brighten name when name itself is hovered */
+    .tl-item:has(.tl-name:hover) .tl-dot {
       background: var(--accent);
       box-shadow: 0 0 12px 4px rgba(0,230,118,.45);
     }
@@ -738,9 +750,10 @@
       letter-spacing: 0.05em;
       text-align: center;
       transition: color var(--transition);
+      cursor: default;
     }
 
-    .tl-item:hover .tl-name { color: #33eb8f; }
+    .tl-name:hover { color: #33eb8f; }
 
     .tl-yr {
       font-weight: 400;
@@ -760,7 +773,8 @@
       pointer-events: none;
     }
 
-    .tl-item:hover .tl-desc { opacity: 1; transform: translateY(0); }
+    /* desc reveals only when the title is hovered — not the desc itself */
+    .tl-item:has(.tl-name:hover) .tl-desc { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 640px) { .tl-outer { display: none; } }
 
@@ -1069,41 +1083,55 @@
       <div class="tl-track"></div>
       <div class="tl-items">
 
-        <!-- above blips: DOM order [desc, name, dot] so dot lands at bottom (nearest track) with column-reverse -->
+        <!-- above: [tl-content([tl-desc, tl-name]), tl-dot] — name nearest dot, desc farthest -->
+        <!-- below: [tl-dot, tl-content([tl-name, tl-desc])] — name nearest dot, desc farthest -->
+
         <div class="tl-item above" style="left:6%">
-          <div class="tl-desc">NAOqi robot control, Watson AI, Swift iOS — 1st at CodeFest</div>
-          <div class="tl-name">IBM <span class="tl-yr">2019</span></div>
+          <div class="tl-content">
+            <div class="tl-desc">NAOqi robot control, Watson AI, Swift iOS</div>
+            <div class="tl-name">IBM <span class="tl-yr">2019</span></div>
+          </div>
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item below" style="left:17%">
-          <div class="tl-dot"></div>
-          <div class="tl-name">ALW Lighting <span class="tl-yr">2020</span></div>
-          <div class="tl-desc">YOLOv3 CNN &amp; RNN prediction — luminescent crop growth</div>
-        </div>
-
-        <div class="tl-item above" style="left:34%">
-          <div class="tl-desc">Reinforcement learning agent for VR cognitive assessments</div>
-          <div class="tl-name">King's College London <span class="tl-yr">2021–22</span></div>
+        <div class="tl-item above" style="left:20%">
+          <div class="tl-content">
+            <div class="tl-desc">YOLOv3 CNN &amp; RNN prediction — Luminescent crop growth</div>
+            <div class="tl-name">ALW Lighting <span class="tl-yr">2020</span></div>
+          </div>
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item below" style="left:62%">
+        <div class="tl-item below" style="left:38%">
           <div class="tl-dot"></div>
-          <div class="tl-name">Govdata <span class="tl-yr">Jan 2024</span></div>
-          <div class="tl-desc">ETL pipelines, ZohoDesk CRM — 1M+ supplier records</div>
+          <div class="tl-content">
+            <div class="tl-name">King's College London <span class="tl-yr">2021–22</span></div>
+            <div class="tl-desc">Reinforcement learning agent for VR cognitive assessments</div>
+          </div>
         </div>
 
-        <div class="tl-item above" style="left:71%">
-          <div class="tl-desc">Data governance &amp; NLP / AI research — CRIS de-anonymisation</div>
-          <div class="tl-name">Kent &amp; Medway NHS <span class="tl-yr">2024–</span></div>
+        <div class="tl-item above" style="left:62%">
+          <div class="tl-content">
+            <div class="tl-desc">ETL pipelines, ZohoDesk CRM</div>
+            <div class="tl-name">Govdata <span class="tl-yr">2024</span></div>
+          </div>
           <div class="tl-dot"></div>
         </div>
 
-        <div class="tl-item below" style="left:80%">
+        <div class="tl-item above" style="left:75%">
+          <div class="tl-content">
+            <div class="tl-desc">Data governance &amp; Administration, NLP / AI research</div>
+            <div class="tl-name">Kent &amp; Medway NHS <span class="tl-yr">2024–</span></div>
+          </div>
           <div class="tl-dot"></div>
-          <div class="tl-name">Kent &amp; Medway Medical School <span class="tl-yr">2024–</span></div>
-          <div class="tl-desc">Circadian health in psychosis &amp; depression — CHiP-D study</div>
+        </div>
+
+        <div class="tl-item below" style="left:86%">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-name">Kent &amp; Medway Medical School <span class="tl-yr">2024–</span></div>
+            <div class="tl-desc">Circadian health in psychosis &amp; depression — (CHiP-D)</div>
+          </div>
         </div>
 
       </div>
