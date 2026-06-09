@@ -660,6 +660,25 @@
       45%, 55% { opacity: 1.0; filter: drop-shadow(0 0 14px rgba(0,230,118,0.72)); }
     }
 
+    /* ── JOLT SPARKS ─────────────────────────────────── */
+    .hex-spark {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #00e676;
+      box-shadow: 0 0 5px 2px rgba(0,230,118,0.75);
+      pointer-events: none;
+      z-index: 20;
+      animation: hex-spark-fly 0.5s ease-out forwards;
+    }
+    @keyframes hex-spark-fly {
+      0%   { opacity: 1;   transform: translate(-50%, -50%) scale(1.6); }
+      100% { opacity: 0;   transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.15); }
+    }
+
+    /* ── MOBILE HEX CANVAS (hidden on desktop) ───────── */
+    #mobile-hex-canvas { display: none; pointer-events: none; }
+
     /* ── HERO CANVAS ─────────────────────────────────── */
     #hero { position: relative; overflow: hidden; }
     #hero-canvas {
@@ -1003,15 +1022,24 @@
       /* Hero canvas: not rendered on touch screens */
       #hero-canvas { display: none; }
 
-      /* Hex button: pull out of absolute flow, centre below socials */
+      /* Hex button: pull out of absolute flow, centre below canvas */
       #hero-hex-btn {
         position: relative;
         left: auto; top: auto;
         transform: none;
-        margin: 1.75rem auto 0;
+        margin: 0.75rem auto 0;
         display: block;
         width: 40px;
         height: 46px;
+      }
+
+      /* Mobile hex canvas: visible strip below socials */
+      #mobile-hex-canvas {
+        display: block;
+        width: 100%;
+        height: 140px;
+        margin-top: 1rem;
+        flex-shrink: 0;
       }
     }
   </style>
@@ -1094,6 +1122,11 @@
       </a>
     </div>
   </div><!-- /.panel-inner -->
+  <!--
+    Mobile hex grid canvas — hidden on desktop, shown below socials on mobile.
+    JS draws a dim static hex grid and animates the jolt wave on button click.
+  -->
+  <canvas id="mobile-hex-canvas" aria-hidden="true"></canvas>
   <!--
     Button is a direct child of #hero (position:relative) so its absolute
     coordinates share the same pixel space as the canvas hex grid.
@@ -1514,40 +1547,66 @@
 
   let W = 0, H = 0;
   let mx = -9999, my = -9999;
+  let jolts = [];   /* active jolt waves: { ox, oy, maxR, start, dur } */
 
   /* hex grid geometry (pointy-top) */
-  const HEX_R  = 26;                      /* circumradius */
-  const HEX_RD = HEX_R - 2;              /* draw radius — leaves a gap */
-  const H_STEP = HEX_R * Math.sqrt(3);   /* horizontal step between columns */
-  const V_STEP = HEX_R * 1.5;            /* vertical step between rows */
+  const HEX_R  = 26;
+  const HEX_RD = HEX_R - 2;
+  const H_STEP = HEX_R * Math.sqrt(3);
+  const V_STEP = HEX_R * 1.5;
 
   /* interaction constants */
-  const REACH = 210;   /* cursor influence radius in px */
-  const EDGE  = 90;    /* boundary fade zone in px */
+  const REACH = 210;
+  const EDGE  = 90;
 
   function resize() {
     W = canvas.width  = hero.offsetWidth;
     H = canvas.height = hero.offsetHeight;
   }
 
+  /* Fire a jolt wave from the snapped button vertex */
+  function fireJolt() {
+    const tX   = W * 0.71;
+    const tY   = H * 0.46;
+    const row  = Math.round(tY / V_STEP);
+    const rOff = (row & 1) ? H_STEP * 0.5 : 0;
+    const col  = Math.round((tX - rOff) / H_STEP);
+    jolts.push({
+      ox: col * H_STEP + rOff,
+      oy: row * V_STEP,
+      maxR: Math.sqrt(W * W + H * H),
+      start: performance.now(),
+      dur: 1500
+    });
+  }
+  window._fireDesktopJolt = fireJolt;
+
   function frame() {
     ctx.clearRect(0, 0, W, H);
 
-    const rightEdge = W * 0.42; /* mirror original animation's right-half boundary */
+    const rightEdge = W * 0.42;
+    const now       = performance.now();
 
-    /* only active when cursor is in the right half */
-    if (mx < -100 || mx < rightEdge) { requestAnimationFrame(frame); return; }
+    /* remove expired jolts */
+    for (let j = jolts.length - 1; j >= 0; j--) {
+      if (now - jolts[j].start >= jolts[j].dur) jolts.splice(j, 1);
+    }
 
-    /* global dim based on cursor proximity to any panel edge — smooth entrance/exit */
-    /* top offset by nav height (62px) so fade starts at the visible content edge */
+    const hasCursor = mx >= rightEdge;
+    const hasJolt   = jolts.length > 0;
+
+    if (!hasCursor && !hasJolt) { requestAnimationFrame(frame); return; }
+
+    /* cursor proximity fade (only relevant when cursor is present) */
     const NAV_H = 62;
-    const cursorFade = Math.min(1,
+    const cursorFade = hasCursor ? Math.min(1,
       (mx - rightEdge) / EDGE,
-      (W - mx) / EDGE,
-      (my - NAV_H) / EDGE,
-      (H - my) / EDGE
-    );
-    if (cursorFade < 0.01) { requestAnimationFrame(frame); return; }
+      (W  - mx)         / EDGE,
+      (my - NAV_H)      / EDGE,
+      (H  - my)         / EDGE
+    ) : 0;
+
+    if (cursorFade < 0.01 && !hasJolt) { requestAnimationFrame(frame); return; }
 
     const cols = Math.ceil(W / H_STEP) + 2;
     const rows = Math.ceil(H / V_STEP) + 2;
@@ -1555,42 +1614,71 @@
     for (let row = -1; row < rows; row++) {
       const rowOff = (row & 1) ? H_STEP * 0.5 : 0;
       for (let col = -1; col < cols; col++) {
-        const cx = col * H_STEP + rowOff;
-        const cy = row * V_STEP;
+        const hx = col * H_STEP + rowOff;
+        const hy = row * V_STEP;
 
-        /* skip hexes entirely in the text / left-side zone */
-        if (cx < rightEdge - EDGE) continue;
+        /* cursor mode: skip left-side hexes; jolt mode: draw the full grid */
+        if (!hasJolt && hx < rightEdge - EDGE) continue;
 
-        const dx   = cx - mx;
-        const dy   = cy - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist >= REACH) continue;
+        let t = 0;
 
-        /* smoothstep radial falloff from cursor */
-        let t = 1 - dist / REACH;
-        t = t * t * (3 - 2 * t);
+        /* ── cursor contribution ── */
+        if (hasCursor && cursorFade > 0.01 && hx >= rightEdge - EDGE) {
+          const ddx  = hx - mx, ddy = hy - my;
+          const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dist < REACH) {
+            let ct = 1 - dist / REACH;
+            ct = ct * ct * (3 - 2 * ct);
+            const ef = Math.min(1,
+              (hx - rightEdge) / EDGE,
+              (W  - hx) / EDGE,
+              hy / EDGE,
+              (H  - hy) / EDGE
+            );
+            ct *= Math.max(0, ef) * cursorFade;
+            if (ct > t) t = ct;
+          }
+        }
 
-        /* hex boundary fade × cursor proximity fade */
-        const ef = Math.min(1,
-          (cx - rightEdge) / EDGE,
-          (W - cx) / EDGE,
-          cy / EDGE,
-          (H - cy) / EDGE
-        );
-        t *= Math.max(0, ef) * cursorFade;
+        /* ── jolt wave contributions ── */
+        for (let j = 0; j < jolts.length; j++) {
+          const jolt    = jolts[j];
+          const elapsed = now - jolt.start;
+          const prog    = elapsed / jolt.dur;
+          const radius  = prog * jolt.maxR * 1.05;
+
+          const jdx  = hx - jolt.ox, jdy = hy - jolt.oy;
+          const dist = Math.sqrt(jdx * jdx + jdy * jdy);
+
+          const RING_W = 55;
+          const diff   = radius - dist;   /* > 0 = inside/behind wavefront */
+
+          if (diff < -12 || diff >= RING_W) continue;
+
+          /* leading-edge glow → sharp front → trailing fade */
+          let jt = diff < 0 ? 1 + diff / 12 : 1 - diff / RING_W;
+          const fade = 1 - prog;
+          jt = Math.max(0, jt) * fade * (0.60 + 0.40 * fade);
+
+          /* boundary fade near all 4 canvas edges */
+          const jef = Math.min(1, hx / EDGE, (W - hx) / EDGE, hy / EDGE, (H - hy) / EDGE);
+          jt *= Math.max(0, jef);
+
+          if (jt > t) t = jt;
+        }
+
         if (t < 0.015) continue;
 
-        /* draw hex path */
+        /* draw hex */
         ctx.beginPath();
         for (let i = 0; i < 6; i++) {
-          const a  = Math.PI / 3 * i - Math.PI / 6;
-          const px = cx + HEX_RD * Math.cos(a);
-          const py = cy + HEX_RD * Math.sin(a);
-          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          const a = Math.PI / 3 * i - Math.PI / 6;
+          i === 0
+            ? ctx.moveTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a))
+            : ctx.lineTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a));
         }
         ctx.closePath();
 
-        /* subtle fill, then glowing stroke */
         ctx.fillStyle   = 'rgba(0,230,118,' + (t * 0.05).toFixed(3) + ')';
         ctx.fill();
         ctx.shadowColor = 'rgba(0,230,118,' + (t * 0.75).toFixed(3) + ')';
@@ -1843,6 +1931,207 @@
   /* Run immediately and re-run on every resize / zoom change */
   snapHexBtn();
   window.addEventListener('resize', snapHexBtn);
+})();
+</script>
+
+<script>
+/* ── JOLT SPARKS ──────────────────────────────────────────── */
+/*
+ * Spawns tiny glowing dots from each of the six hex-button vertices.
+ * Each vertex emits a tight 3-spark burst that flies outward and fades.
+ * Uses CSS custom properties --tx / --ty so no rAF loop is needed.
+ */
+function _fireHexButtonSparks() {
+  var btn    = document.getElementById('hero-hex-btn');
+  var heroEl = document.getElementById('hero');
+  if (!btn || !heroEl) return;
+
+  var hr = heroEl.getBoundingClientRect();
+  var br = btn.getBoundingClientRect();
+  var bL = br.left - hr.left;
+  var bT = br.top  - hr.top;
+  var bW = br.width, bH = br.height;
+
+  /* vertices as fractions of the button's bounding box (viewBox "0 0 46 52") */
+  var verts = [
+    { rx: 23/46, ry:  2/52 },   /* top          */
+    { rx: 44/46, ry: 14/52 },   /* top-right    */
+    { rx: 44/46, ry: 38/52 },   /* bottom-right */
+    { rx: 23/46, ry: 50/52 },   /* bottom       */
+    { rx:  2/46, ry: 38/52 },   /* bottom-left  */
+    { rx:  2/46, ry: 14/52 },   /* top-left     */
+  ];
+
+  verts.forEach(function (v) {
+    var vx    = bL + v.rx * bW;
+    var vy    = bT + v.ry * bH;
+    var angle = Math.atan2(v.ry - 0.5, v.rx - 0.5);
+
+    for (var s = 0; s < 3; s++) {
+      var a   = angle + (s - 1) * 0.38;          /* −0.38, 0, +0.38 rad spread */
+      var spd = 22 + Math.random() * 20;
+      var el  = document.createElement('span');
+      el.className = 'hex-spark';
+      el.style.left = vx.toFixed(1) + 'px';
+      el.style.top  = vy.toFixed(1) + 'px';
+      el.style.setProperty('--tx', (Math.cos(a) * spd).toFixed(1) + 'px');
+      el.style.setProperty('--ty', (Math.sin(a) * spd).toFixed(1) + 'px');
+      el.style.animationDelay = (Math.random() * 55).toFixed(0) + 'ms';
+      heroEl.appendChild(el);
+      el.addEventListener('animationend', function () { this.remove(); }, { once: true });
+    }
+  });
+}
+
+/* ── MOBILE HEX GRID CANVAS ─────────────────────────────── */
+/*
+ * Draws a dim static hex grid on #mobile-hex-canvas (visible on mobile only).
+ * On button click, fires the same radial jolt wave as the desktop canvas.
+ */
+(function () {
+  var canvas = document.getElementById('mobile-hex-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  var W = 0, H = 0;
+  var HEX_R  = 22;
+  var HEX_RD = 20;
+  var H_STEP = HEX_R * Math.sqrt(3);
+  var V_STEP = HEX_R * 1.5;
+  var EDGE   = 36;
+
+  var jolts = [];
+  var rafId = null;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+    H = canvas.height = canvas.offsetHeight || 140;
+    if (!rafId) drawStatic();
+  }
+
+  function drawStatic() {
+    ctx.clearRect(0, 0, W, H);
+    var cols = Math.ceil(W / H_STEP) + 2;
+    var rows = Math.ceil(H / V_STEP) + 2;
+    for (var r = -1; r < rows; r++) {
+      var off = (r & 1) ? H_STEP * 0.5 : 0;
+      for (var c = -1; c < cols; c++) {
+        var hx = c * H_STEP + off;
+        var hy = r * V_STEP;
+        var ef = Math.min(1, hx / EDGE, (W - hx) / EDGE, hy / EDGE, (H - hy) / EDGE);
+        if (ef <= 0.01) continue;
+        ctx.beginPath();
+        for (var i = 0; i < 6; i++) {
+          var a = Math.PI / 3 * i - Math.PI / 6;
+          i === 0
+            ? ctx.moveTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a))
+            : ctx.lineTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a));
+        }
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(0,230,118,' + (0.10 * ef).toFixed(3) + ')';
+        ctx.lineWidth   = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+
+  function animateJolt() {
+    var now = performance.now();
+    for (var j = jolts.length - 1; j >= 0; j--) {
+      if (now - jolts[j].start >= jolts[j].dur) jolts.splice(j, 1);
+    }
+
+    ctx.clearRect(0, 0, W, H);
+
+    var cols = Math.ceil(W / H_STEP) + 2;
+    var rows = Math.ceil(H / V_STEP) + 2;
+
+    for (var r = -1; r < rows; r++) {
+      var off = (r & 1) ? H_STEP * 0.5 : 0;
+      for (var c = -1; c < cols; c++) {
+        var hx = c * H_STEP + off;
+        var hy = r * V_STEP;
+        var ef = Math.max(0, Math.min(1,
+          hx / EDGE, (W - hx) / EDGE,
+          hy / EDGE, (H - hy) / EDGE));
+        if (ef <= 0) continue;
+
+        var t = 0;
+
+        for (var k = 0; k < jolts.length; k++) {
+          var jolt    = jolts[k];
+          var elapsed = now - jolt.start;
+          var prog    = elapsed / jolt.dur;
+          var radius  = prog * jolt.maxR * 1.05;
+          var ddx     = hx - jolt.ox, ddy = hy - jolt.oy;
+          var dist    = Math.sqrt(ddx * ddx + ddy * ddy);
+          var RING_W  = 50;
+          var diff    = radius - dist;
+          if (diff < -10 || diff >= RING_W) continue;
+          var jt = diff < 0 ? 1 + diff / 10 : 1 - diff / RING_W;
+          var fade = 1 - prog;
+          jt = Math.max(0, jt) * fade * (0.55 + 0.45 * fade) * ef;
+          if (jt > t) t = jt;
+        }
+
+        ctx.beginPath();
+        for (var i = 0; i < 6; i++) {
+          var a = Math.PI / 3 * i - Math.PI / 6;
+          i === 0
+            ? ctx.moveTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a))
+            : ctx.lineTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a));
+        }
+        ctx.closePath();
+
+        if (t > 0.015) {
+          ctx.fillStyle   = 'rgba(0,230,118,' + (t * 0.05).toFixed(3) + ')';
+          ctx.fill();
+          ctx.shadowColor = 'rgba(0,230,118,' + (t * 0.70).toFixed(3) + ')';
+          ctx.shadowBlur  = 4 + t * 14;
+          ctx.strokeStyle = 'rgba(0,230,118,' + (t * 0.85).toFixed(3) + ')';
+          ctx.lineWidth   = 0.6 + t * 0.6;
+          ctx.stroke();
+          ctx.shadowBlur  = 0;
+        } else {
+          ctx.strokeStyle = 'rgba(0,230,118,' + (0.10 * ef).toFixed(3) + ')';
+          ctx.lineWidth   = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (jolts.length > 0) {
+      rafId = requestAnimationFrame(animateJolt);
+    } else {
+      rafId = null;
+      drawStatic();
+    }
+  }
+
+  window._fireMobileJolt = function () {
+    var maxR = Math.sqrt(W * W + H * H);
+    jolts.push({ ox: W / 2, oy: H / 2, maxR: maxR, start: performance.now(), dur: 1300 });
+    if (!rafId) rafId = requestAnimationFrame(animateJolt);
+  };
+
+  resize();
+  window.addEventListener('resize', resize);
+})();
+
+/* ── HEX BUTTON CLICK HANDLER ────────────────────────────── */
+(function () {
+  var btn = document.getElementById('hero-hex-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    /* sparks fire on both desktop and mobile */
+    _fireHexButtonSparks();
+    /* jolt fires on the appropriate canvas */
+    if (window.innerWidth <= 640) {
+      if (typeof window._fireMobileJolt   === 'function') window._fireMobileJolt();
+    } else {
+      if (typeof window._fireDesktopJolt  === 'function') window._fireDesktopJolt();
+    }
+  });
 })();
 </script>
 
