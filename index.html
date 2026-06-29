@@ -921,6 +921,19 @@
     /* ── CAROUSEL ────────────────────────────────────── */
     .carousel { position: relative; }
 
+    .grid {
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    .grid.carousel-out {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    .grid.carousel-in-start {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: none;
+    }
+
     .carousel-nav {
       display: flex;
       align-items: center;
@@ -2189,13 +2202,17 @@ function _fireHexButtonSparks() {
 </script>
 
 <script>
-/* ── CAROUSEL ─────────────────────────────────────────────── */
+/* ── CAROUSEL — scale-fade transition ────────────────────── */
 (function () {
+  var OUT_MS = 200;   /* fade+shrink out */
+  var IN_MS  = 200;   /* fade+grow in    */
+
   function initCarousel(gridId, prevId, nextId, dotsId) {
     var grid = document.getElementById(gridId);
     if (!grid) return;
     var cards = Array.from(grid.children);
     var page  = 0;
+    var busy  = false;
 
     function perPage() {
       var w = grid.clientWidth;
@@ -2204,7 +2221,6 @@ function _fireHexButtonSparks() {
       if (w >= 400) return 2;
       return 1;
     }
-
     function totalPages() { return Math.ceil(cards.length / perPage()); }
 
     var prevBtn  = document.getElementById(prevId);
@@ -2212,39 +2228,57 @@ function _fireHexButtonSparks() {
     var dotsWrap = document.getElementById(dotsId);
     var navWrap  = prevBtn && prevBtn.parentElement;
 
-    function render() {
-      var pp = perPage();
-      var tp = totalPages();
-      page   = Math.min(page, tp - 1);
-
+    function applyPage() {
+      var pp = perPage(), tp = totalPages();
+      page = Math.min(page, tp - 1);
       cards.forEach(function (c, i) {
         c.style.display = (i >= page * pp && i < (page + 1) * pp) ? '' : 'none';
       });
-
       if (prevBtn) prevBtn.disabled = page === 0;
       if (nextBtn) nextBtn.disabled = page >= tp - 1;
-
-      /* hide nav entirely when everything fits on one page */
       if (navWrap) navWrap.style.display = tp <= 1 ? 'none' : '';
-
       if (dotsWrap) {
         dotsWrap.innerHTML = '';
         for (var i = 0; i < tp; i++) {
           var dot = document.createElement('span');
           dot.className = 'carousel-dot' + (i === page ? ' active' : '');
-          (function (idx) {
-            dot.addEventListener('click', function () { page = idx; render(); });
-          })(i);
+          (function (idx) { dot.addEventListener('click', function () { goTo(idx); }); })(i);
           dotsWrap.appendChild(dot);
         }
       }
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { if (page > 0) { page--; render(); } });
-    if (nextBtn) nextBtn.addEventListener('click', function () { if (page < totalPages() - 1) { page++; render(); } });
+    function goTo(newPage) {
+      if (busy || newPage === page) return;
+      busy = true;
 
-    render();
-    window.addEventListener('resize', render);
+      /* fade + shrink out */
+      grid.classList.add('carousel-out');
+
+      setTimeout(function () {
+        /* swap content while invisible */
+        page = newPage;
+        applyPage();
+
+        /* snap to scale-up start state without transition */
+        grid.classList.remove('carousel-out');
+        grid.classList.add('carousel-in-start');
+
+        /* force reflow so the browser registers the class before we remove it */
+        void grid.offsetWidth;
+
+        /* fade + grow in */
+        grid.classList.remove('carousel-in-start');
+
+        setTimeout(function () { busy = false; }, IN_MS);
+      }, OUT_MS);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(page - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(page + 1); });
+
+    applyPage();
+    window.addEventListener('resize', applyPage);
   }
 
   initCarousel('projects-grid', 'proj-prev', 'proj-next', 'proj-dots');
