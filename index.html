@@ -1075,6 +1075,118 @@
         animation: mobile-hex-pulse 2s ease-in-out infinite !important;
       }
     }
+
+    /* ── PROJECT MODAL ───────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(5, 7, 24, 0.82);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 2rem) 1.5rem 3rem;
+      overflow-y: auto;
+    }
+    .modal-overlay[hidden] { display: none; }
+
+    .modal-box {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      background: linear-gradient(150deg, var(--bg) 0%, var(--bg-mid) 100%);
+      border: 1px solid var(--border-dim);
+      border-radius: 4px;
+      padding: 2.5rem 2.5rem 2rem;
+      box-shadow: 0 0 40px rgba(0,230,118,0.10), 0 0 4px rgba(0,230,118,0.30);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.1rem; right: 1.1rem;
+      width: 32px; height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border-dim);
+      border-radius: 3px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .modal-close:hover { color: var(--accent); border-color: var(--accent); }
+
+    .modal-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-faint);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-box h2 {
+      font-family: "Orbitron", "Outfit", sans-serif;
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+      padding-right: 2rem;
+    }
+
+    .modal-byline {
+      font-size: 0.78rem;
+      color: var(--text-faint);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-box p.modal-p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 1.1rem;
+    }
+
+    .modal-note {
+      border: 1px solid var(--border-dim);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      background: rgba(0, 230, 118, 0.04);
+      padding: 0.9rem 1.1rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .modal-note-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .modal-note p { font-size: 0.83rem; color: var(--text); line-height: 1.65; margin: 0; }
+
+    .modal-box h4.modal-h4 {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--text-faint);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -1186,7 +1298,7 @@
   <div class="panel-inner">
     <p class="panel-label">Work</p>
     <h2 class="panel-title">Projects</h2>
-    <p class="panel-desc">Software and Research tools — clinical data pipelines, full-stack applications.</p>
+    <p class="panel-desc">AI systems, health-data architecture, and full-stack builds.</p>
 
     <div class="carousel">
       <div class="carousel-nav">
@@ -1196,20 +1308,22 @@
       </div>
       <div class="grid" id="projects-grid">
 
-        <!-- 1 — Actigraph Abstraction (Apr 2026) -->
+        <!-- Circadian Health Systems (consolidated 2026-08-16) -->
         <div class="card">
           <div class="card-top">
-            <h3>Actigraph Abstraction</h3>
+            <h3>Circadian Health Systems</h3>
             <span class="badge collab">Collab</span>
           </div>
-          <p>End-to-end pipeline for wrist-worn actigraphy device data — from raw binary device files to validated circadian rest-activity metrics.</p>
+          <p>Data-pipeline architecture and statistical analysis for a circadian-health research programme (NHS &amp; Wellcome Trust) — wrist-worn device data flows through interface-contracted stages into a config-driven compliance dashboard built for non-technical clinical researchers.</p>
           <div class="tags">
-            <span class="tag">Python</span><span class="tag">Signal Processing</span>
-            <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">SciPy</span>
+            <span class="tag">Python</span><span class="tag">FastAPI</span>
+            <span class="tag">Pandas</span><span class="tag">NumPy</span>
             <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
+            <span class="tag">Compliance Dashboard</span>
           </div>
           <div class="card-footer">
-            <p class="card-byline">April 2026 – Present</p>
+            <p class="card-byline">March 2024 – Present</p>
+            <p class="card-affil">Kent &amp; Medway NHS / University of Kent — CHiP-D, eClocker</p>
             <div class="pipeline">
               <div class="pipeline-step">
                 <span class="step-label">Step 1 — Epoching</span>
@@ -1221,7 +1335,16 @@
                 </div>
               </div>
               <div class="pipeline-step">
-                <span class="step-label">Step 2 — Sleep Metrics</span>
+                <span class="step-label">Step 2 — Calibration</span>
+                <div class="card-actions" style="margin-top:0.25rem">
+                  <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-calibration" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    GitHub <span style="opacity:.6">(private)</span>
+                  </a>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-label">Step 3 — Sleep Metrics</span>
                 <div class="card-actions" style="margin-top:0.25rem">
                   <a class="link-btn" href="https://github.com/infernalzeus/actigraphy-sleep-metrics" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
@@ -1229,29 +1352,139 @@
                   </a>
                 </div>
               </div>
+              <div class="pipeline-step">
+                <span class="step-label">Parallel — Luminosity Metrics</span>
+                <div class="card-actions" style="margin-top:0.25rem">
+                  <a class="link-btn" href="https://github.com/infernalzeus/luminosity-metrics" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-label">Surfaced by — Compliance Dashboard</span>
+                <div class="card-actions" style="margin-top:0.25rem">
+                  <a class="link-btn" href="https://github.com/infernalzeus/CD-Compliance-Checks" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions" style="margin-top:1rem">
+              <a class="link-btn outlined" href="#project/circadian-health-systems" data-project="circadian-health-systems">Full Write-Up →</a>
             </div>
           </div>
         </div>
 
-        <!-- 2 — Monopoly Madness (Mar 2026) -->
+        <!-- Agent Hub (Aug 2026) -->
         <div class="card">
           <div class="card-top">
-            <h3>Monopoly Madness</h3>
+            <h3>Agent Hub</h3>
             <span class="badge">Personal</span>
           </div>
-          <p>Full-stack reimagining of Monopoly with real-time multiplayer lobbies, custom game modes (Auction, Pre-Auction, Trading), dark mode, and a dynamic board UI backed by Firebase.</p>
+          <p>Always-on reverse-proxy and orchestration platform for my own project portfolio — fronts multiple services over a private mesh network, with a self-updating dependency graph that auto-discovers projects and tracks their git sync state.</p>
           <div class="tags">
-            <span class="tag">React</span><span class="tag">TypeScript</span>
-            <span class="tag">Firebase</span><span class="tag">Tailwind CSS</span><span class="tag">Vite</span>
+            <span class="tag">Python</span><span class="tag">aiohttp</span>
+            <span class="tag">Tailscale</span><span class="tag">D3.js</span>
+            <span class="tag">Orchestration</span>
           </div>
           <div class="card-footer">
-            <p class="card-byline">March 2026 – Present</p>
+            <p class="card-byline">Aug 2026 – Present</p>
             <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">
+              <a class="link-btn" href="https://github.com/infernalzeus/Agent-Hub" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
                 GitHub
               </a>
-              <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Play Game →</a>
+              <a class="link-btn outlined" href="#project/agent-hub" data-project="agent-hub">Full Write-Up →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- AlphaForge (May 2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>AlphaForge</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>AI-powered trading intelligence platform and MCP server — turns Claude Code into a systematic market analyst with live Binance data, configurable indicators, LLM-generated narratives, and a full auto-trader with backtesting and paper/live execution modes.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">FastAPI</span>
+            <span class="tag">MCP</span><span class="tag">Binance API</span>
+            <span class="tag">SQLite</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">May 2026</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/AlphaForge" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+              <a class="link-btn outlined" href="#project/alphaforge" data-project="alphaforge">Full Write-Up →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- movie-shorts-clipper (Jul 2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>movie-shorts-clipper</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>One pipeline, three configurable output formats for turning long-form video into vertical shorts — classic captioned clips, TTS-narrated clips, and LLM-generated plot-recap clips with beat-synced audio.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">ffmpeg</span>
+            <span class="tag">Whisper</span><span class="tag">LLM</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Jul 2026 – Present</p>
+            <div class="card-actions">
+              <a class="link-btn" href="https://github.com/infernalzeus/movie-shorts-clipper" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+              </a>
+              <a class="link-btn outlined" href="#project/movie-shorts-clipper" data-project="movie-shorts-clipper">Full Write-Up →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cadenza (Jun 2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>Cadenza</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>ML-driven generative music pipeline — a categorised MIDI corpus feeds a generator + classifier pair; the classifier's job is taste, not composition, scoring candidates against a requested genre/mood before rendering through LMMS.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">scikit-learn</span>
+            <span class="tag">MIDI</span><span class="tag">Flask</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">Jun 2026 – Present</p>
+            <div class="card-actions">
+              <span class="link-btn outlined" style="cursor:default;opacity:.55">Private repo</span>
+              <a class="link-btn outlined" href="#project/cadenza" data-project="cadenza">Full Write-Up →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portable MRI Simulation (2026) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>Portable MRI Simulation</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>Two-stage discrete-event simulation for NHS mobile-MRI appointment scheduling — a schema-driven demand model feeds a scheduling-strategy model, with a FastAPI + JS slider UI for exploring resourcing scenarios.</p>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">FastAPI</span>
+            <span class="tag">Discrete-Event Simulation</span>
+          </div>
+          <div class="card-footer">
+            <p class="card-byline">2026</p>
+            <p class="card-affil">Kent mobile-MRI resourcing project</p>
+            <div class="card-actions">
+              <span class="link-btn outlined" style="cursor:default;opacity:.55">Private repo</span>
+              <a class="link-btn outlined" href="#project/portable-mri-sim" data-project="portable-mri-sim">Full Write-Up →</a>
             </div>
           </div>
         </div>
@@ -1354,6 +1587,48 @@
           <div class="card-footer">
             <p class="card-byline">Jan 2021 – May 2021</p>
             <p class="card-affil">BITS Pilani, Goa</p>
+          </div>
+        </div>
+
+        <!-- Also Built (games & hobby builds, collapsed 2026-08-16) -->
+        <div class="card">
+          <div class="card-top">
+            <h3>Also Built</h3>
+            <span class="badge">Personal</span>
+          </div>
+          <p>Games and interactive builds — kept lighter-weight here so they read as range rather than crowding out the systems work above.</p>
+          <div class="pipeline">
+            <div class="pipeline-step">
+              <span class="step-label">NEON WARFARE</span>
+              <span class="step-desc">Premium Unity 6/URP/C# tactics game, layered domain-driven architecture (private repo)</span>
+            </div>
+            <div class="pipeline-step">
+              <span class="step-label">Monopoly Madness</span>
+              <span class="step-desc">Full-stack real-time multiplayer web game, React + Firebase</span>
+              <div class="card-actions" style="margin-top:0.25rem">
+                <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">GitHub</a>
+                <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Play →</a>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <span class="step-label">rubix-alg-finder</span>
+              <span class="step-desc">Rubik's cube solver — genetic algorithm + RL (PPO) modes, 3D viz</span>
+              <div class="card-actions" style="margin-top:0.25rem">
+                <a class="link-btn" href="https://github.com/infernalzeus/rubix-alg-finder" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <span class="step-label">fps-mv &amp; asmr-cloth-sphere</span>
+              <span class="step-desc">FPS highlight-reel auto-editor; Blender ASMR render pipeline (private/local)</span>
+            </div>
+            <div class="pipeline-step">
+              <span class="step-label">2048 &amp; Brick-breaker</span>
+              <span class="step-desc">Early terminal C++ and Java games</span>
+              <div class="card-actions" style="margin-top:0.25rem">
+                <a class="link-btn" href="https://github.com/infernalzeus/2048" target="_blank" rel="noopener">2048</a>
+                <a class="link-btn" href="https://github.com/infernalzeus/Brick-breaker" target="_blank" rel="noopener">Brick-breaker</a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1581,6 +1856,14 @@
 
   </ul>
 </footer>
+
+<!-- ─── PROJECT DEEP-DIVE MODAL ────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <div id="modal-content"><!-- populated by JS --></div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -2304,6 +2587,176 @@ function _fireHexButtonSparks() {
     if (link) link.href = c.toDataURL('image/png');
   };
   img.src = 'assets/instagram.jpg';
+})();
+</script>
+
+<!-- ─── PROJECT DEEP-DIVE DATA + MODAL LOGIC ──────────── -->
+<script>
+(function () {
+  var GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg> GitHub';
+
+  var PROJECTS = {
+    'circadian-health-systems': {
+      eyebrow: 'Health & Research Data Systems',
+      title: 'Circadian Health Systems',
+      byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
+      body: [
+        'CHiP-D (Circadian Health in Psychosis and Depression) and the eClocker shift-workers\' cognitive-performance study both depend on the same raw material: multi-week wrist-worn actigraphy and light-logger recordings from clinical participants. Turning that into something a researcher can actually run statistics on takes several distinct transformations, each with its own failure modes — so rather than one growing script, the pipeline is decomposed into separate repositories with an explicit contract between them.',
+        'Raw GENEActiv <code>.bin</code> files are epoched into sample- and epoch-level CSVs, then passed through a device-position calibration stage, then converted into scientifically validated sleep-regularity metrics. A parallel branch does the same for MiEYE light-logger exports, producing per-day luminosity metrics and a compliance verdict. Both branches surface through a single FastAPI compliance dashboard, config-driven so it points at arbitrary data folders rather than hardcoded paths — built deliberately without a JS framework or build step, because the people using it day-to-day are clinical researchers, not developers.',
+        'The eClocker statistical analysis (the "which circadian measures actually predict cognitive performance" question) sits on top of this pipeline\'s output. An earlier pass at that analysis had three bugs — a mis-specified IS formula, PCA run on label-encoded items, and an overfit random forest — since corrected; the metric that actually holds up is the link between schedule regularity and circadian regularity.'
+      ],
+      note: 'Each stage consumes the prior stage\'s CSV/JSON output through an explicit file contract — the pipeline can absorb a new device or a new metric without anyone touching upstream code. That decomposition, plus a dashboard designed for non-technical end users, is the architecture story here as much as the statistics is.',
+      stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'Plain HTML/JS dashboard (no build step)', 'YAML config', 'GENEActiv .bin parser', 'MiEYE parser'],
+      links: [
+        { label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' },
+        { label: 'actigraphy-calibration (private)', url: 'https://github.com/infernalzeus/actigraphy-calibration' },
+        { label: 'actigraphy-sleep-metrics', url: 'https://github.com/infernalzeus/actigraphy-sleep-metrics' },
+        { label: 'luminosity-metrics', url: 'https://github.com/infernalzeus/luminosity-metrics' },
+        { label: 'CD-Compliance-Checks', url: 'https://github.com/infernalzeus/CD-Compliance-Checks' }
+      ]
+    },
+    'agent-hub': {
+      eyebrow: 'AI Systems & Automation',
+      title: 'Agent Hub',
+      byline: 'Aug 2026 – Present · Personal',
+      body: [
+        'Running a growing set of personal AI/ML services — a video clipper, a file browser, a YouTube downloader, an MCP-connected coding assistant — creates a recurring problem: each one needs to be reachable remotely, restarted independently, and monitored without SSH-ing in every time. Agent Hub is the platform that solves that once instead of solving it per-service.',
+        'It sits in front of everything as a reverse proxy over a private Tailscale mesh, with a supervisor that manages process lifecycle for each fronted app. On top of that sits a self-updating project graph (D3.js) that auto-discovers projects on disk, diffs them against git to show sync state, and renders the whole personal portfolio as a live status map rather than a static list.',
+        'The interesting part isn\'t any single feature — it\'s treating "my own collection of projects" as a system with a defined public surface, the same way you\'d architect a proxy layer in front of any set of backend services.'
+      ],
+      note: 'A reverse proxy is itself an architectural decision: define a stable public surface, then let each backend evolve independently behind it. Agent Hub extends that idea into an observability layer over your own systems, not just a router.',
+      stack: ['Python', 'aiohttp', 'Tailscale (mesh VPN)', 'D3.js (project graph)', 'Process lifecycle supervisor', 'Windows platform integration'],
+      links: [
+        { label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }
+      ]
+    },
+    'alphaforge': {
+      eyebrow: 'AI Systems & Automation',
+      title: 'AlphaForge',
+      byline: 'May 2026 · Personal',
+      body: [
+        'AlphaForge is a trading dashboard and an MCP (Model Context Protocol) server at the same time — the MCP layer is what turns a general-purpose coding agent (Claude Code) into a domain-specific systematic market analyst, with tool access to live Binance candle data, configurable technical indicators, and LLM-generated narrative commentary.',
+        'On top of the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard (vanilla JS/HTML, no framework, ~3,700 lines) backed by a FastAPI server (~2,400 lines). Trade, activity, and state history live in SQLite rather than flat CSVs, specifically so a "clear history" action can\'t silently no-op by only touching the CSV.',
+        'Execution has two explicit modes — paper and live — and paper is the default. That split isn\'t a settings toggle bolted on afterward; it\'s the safety boundary between "the agent reasons about the market" and "the agent moves real capital," designed in from the start.'
+      ],
+      note: 'Building an MCP server is, by definition, an architecture decision: you\'re designing the integration contract between a general-purpose reasoning agent and a domain-specific data/execution layer. Paper-vs-live as a first-class mode, not a flag, is the other half of that same instinct.',
+      stack: ['Python', 'FastAPI + uvicorn', 'SQLite (trades / activity / state)', 'Binance REST API + yfinance', 'TradingView widget', 'MCP server', 'Anthropic Claude (narrative generation)'],
+      links: [
+        { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
+      ]
+    },
+    'movie-shorts-clipper': {
+      eyebrow: 'AI Systems & Automation',
+      title: 'movie-shorts-clipper',
+      byline: 'Jul 2026 – Present · Personal, fronted by Agent Hub',
+      body: [
+        'One core pipeline — cut, caption, composite — exposed through three configurable output modes: a classic captioned-clip format, a TTS-narrated format designed to make the output transformative rather than a raw re-upload, and an LLM-driven "plot recap" mode that generates scene narration beats and syncs an outro to them.',
+        'Dialogue captions come from the source movie\'s own subtitle file when available; when they\'re not, the pipeline falls back to a local faster-whisper transcription seeded with the movie title to bias vocabulary toward proper nouns. The LLM used for narration/recap generation defaults to a local model rather than a cloud API — a deliberate choice given bandwidth constraints, not an oversight.',
+        'Voiceover timing, audio ducking, and beat-sync are handled with edge-tts, ffmpeg (libass for burn-in), and librosa/opencv for beat detection — the whole thing runs as a backend service fronted by Agent Hub so it can be triggered from a web form rather than the command line.'
+      ],
+      note: 'The model-selection default (local vs. cloud) is exposed as a considered infra tradeoff, not a hardcoded choice — bandwidth-aware by design, which matters more than the video output itself as an architecture signal.',
+      stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'local-model-default LLM', 'librosa + opencv (beat-sync)'],
+      links: [
+        { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
+      ]
+    },
+    'cadenza': {
+      eyebrow: 'AI Systems & Automation',
+      title: 'Cadenza',
+      byline: 'Jun 2026 – Present · Personal (private repo)',
+      body: [
+        'Cadenza is a generative music pipeline built around a specific design decision: a classifier sorts, it does not create. A categorised MIDI corpus feeds a generator that proposes candidate arrangements, and a separate scikit-learn classifier scores/filters those candidates against a requested genre or mood — the generator\'s job is volume and variety, the classifier\'s job is taste.',
+        'Accepted candidates are written out as LMMS project files, rendered headless, and mastered with ffmpeg. The CLI and a small Flask UI both drive the same pipeline; as of the working MVP it produces real audio end to end, not just MIDI.'
+      ],
+      note: 'Splitting "propose" from "judge" into two models with an explicit interface between them is a small-scale version of the same separation-of-concerns instinct that shows up in the larger pipeline projects — the architecture choice matters more here than the music genre.',
+      stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask UI', 'LMMS (headless render)', 'ffmpeg (mastering)'],
+      links: []
+    },
+    'portable-mri-sim': {
+      eyebrow: 'Health & Research Data Systems',
+      title: 'Portable MRI Simulation',
+      byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
+      body: [
+        'A two-stage discrete-event simulation built to help reason about mobile-MRI appointment scheduling: a demand model estimates patient arrival/need patterns, and a separate scheduling-strategy model tests resourcing policies against that demand — kept as two swappable stages rather than one monolithic simulation so either half can be revised independently as assumptions change.',
+        'Config is schema-driven, and a FastAPI + JS slider UI lets a non-technical stakeholder explore "what if" resourcing scenarios interactively instead of reading simulation output as raw numbers.'
+      ],
+      note: 'Operations-research systems thinking applied to a live NHS resourcing problem — the same instinct to decompose a problem into independently-testable stages that shows up across the other systems work, applied outside a strictly software context.',
+      stack: ['Python', 'FastAPI', 'JS slider UI', 'Schema-driven config', 'Discrete-event simulation'],
+      links: []
+    }
+  };
+
+  var overlay = document.getElementById('modal-overlay');
+  var content = document.getElementById('modal-content');
+  var closeBtn = document.getElementById('modal-close');
+
+  function render(slug) {
+    var p = PROJECTS[slug];
+    if (!p) return false;
+    var html = '';
+    html += '<p class="modal-eyebrow">' + p.eyebrow + '</p>';
+    html += '<h2 id="modal-title">' + p.title + '</h2>';
+    html += '<p class="modal-byline">' + p.byline + '</p>';
+    p.body.forEach(function (para) { html += '<p class="modal-p">' + para + '</p>'; });
+    if (p.note) {
+      html += '<div class="modal-note"><span class="modal-note-label">Architecture Note</span><p>' + p.note + '</p></div>';
+    }
+    if (p.stack && p.stack.length) {
+      html += '<h4 class="modal-h4">Stack</h4><div class="tags">';
+      p.stack.forEach(function (s) { html += '<span class="tag">' + s + '</span>'; });
+      html += '</div>';
+    }
+    if (p.links && p.links.length) {
+      html += '<h4 class="modal-h4">Links</h4><div class="modal-links">';
+      p.links.forEach(function (l) {
+        html += '<a class="link-btn outlined" href="' + l.url + '" target="_blank" rel="noopener">' + l.label + ' →</a>';
+      });
+      html += '</div>';
+    }
+    content.innerHTML = html;
+    return true;
+  }
+
+  function openModal(slug, pushHash) {
+    if (!render(slug)) return;
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (pushHash !== false) history.replaceState(null, '', '#project/' + slug);
+  }
+
+  function closeModal() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+    if (location.hash.indexOf('#project/') === 0) {
+      history.replaceState(null, '', '#projects');
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest && e.target.closest('[data-project]');
+    if (trigger) {
+      e.preventDefault();
+      openModal(trigger.getAttribute('data-project'));
+    }
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !overlay.hidden) closeModal();
+  });
+
+  function checkHash() {
+    var m = location.hash.match(/^#project\/(.+)$/);
+    if (m && PROJECTS[m[1]]) {
+      openModal(m[1], false);
+    } else if (!m && !overlay.hidden) {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+    }
+  }
+  window.addEventListener('hashchange', checkHash);
+  checkHash();
 })();
 </script>
 </body>
