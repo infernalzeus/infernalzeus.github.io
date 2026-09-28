@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=9">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=11">
   <style>
     :root {
       --bg:         #080c28;
@@ -2355,11 +2355,16 @@ function _fireHexButtonSparks() {
       title: 'Circadian Health Systems',
       byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
       body: [
-        'Clinical participants wear a wrist monitor and a light logger for two weeks. What comes off those devices is raw signal — this turns it into the sleep and circadian measures a researcher can actually run statistics on.',
-        'A compliance dashboard sits on top, so the research team can see who wore what, for how long, and whether a participant\'s fortnight is usable before it reaches analysis rather than after. It was built for clinical researchers to use directly, without a developer in the loop.',
-        'Behind it is a research data lake covering 500+ participants across four seasons, multiple device types and several studies, spanning six research-grade activity measures. I am the data controller for it.'
+        'Each clinical participant wears a wrist monitor and a light logger for two weeks, across 500+ participants and four seasons. What comes off those devices is raw signal — this turns it into the sleep and circadian measures a researcher can run statistics on.'
       ],
-      note: 'The work is decomposed into four contracted stages — epoching, calibration, compliance, then validated sleep metrics — each living in its own repository and consuming the previous stage\'s output through an explicit file contract. A new device or a new metric can therefore be absorbed without touching anything upstream, which is what keeps a multi-study pipeline maintainable.',
+      bullets: [
+        '<b>Epoching</b> — raw device files resolved into sample- and epoch-level records.',
+        '<b>Calibration</b> — corrected for where on the body the device actually sat.',
+        '<b>Compliance</b> — who wore what, for how long, and whether a fortnight is usable.',
+        '<b>Validated sleep metrics</b> — published measures rather than ad-hoc transforms.',
+        '<b>Light</b> — a parallel branch producing per-day luminosity metrics.'
+      ],
+      note: 'Each stage lives in its own repository and consumes the previous stage\'s output through an explicit file contract, so a new device or a new metric can be absorbed without touching anything upstream. That is what lets several studies share one pipeline instead of forking it — and it is why I hold data controller responsibility for the lake underneath rather than only the analysis on top.',
       stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'GENEActiv .bin parser', 'MiEYE light-logger parser', 'YAML config', 'Plain HTML/JS dashboard (no build step)'],
       links: [
         { label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' },
@@ -2374,20 +2379,19 @@ function _fireHexButtonSparks() {
       title: 'Agent Hub',
       byline: 'Aug 2026 – Present · Personal',
       body: [
-        'One private address for everything your PC can do, reachable from any device you own. Sign in from a laptop, a phone or a tablet and the machine at home answers — without opening anything to the public internet.',
-        'What sits behind that address is split four ways:'
+        'One private address for everything your PC can do, reachable from any device you own. Sign in from a laptop, a phone or a tablet and the machine at home answers — without opening anything to the public internet.'
       ],
       bullets: [
         '<b>Autonomous LLM</b> — dispatch work to agents, let them work in isolated copies of a repository, review what changed, then apply it.',
         '<b>MCP control</b> — speak to the machine, build up routines it has learned, approve them before they run.',
         '<b>Media vault</b> — download, convert, browse, and receive files from wherever you are.',
-        '<b>Git graph</b> — every repository\'s status and uncommitted diff in one place.'
+        '<b>Git graph</b> — every repository\'s status and uncommitted diff in one place.',
+        '<b>App ingestion</b> — bring in any app you choose and front it through the same hub.'
       ],
       figure: { src: 'assets/diagrams/agent-hub-architecture.svg',
         alt: 'Agent Hub architecture: phone, tablet and laptop connect through Tailscale to the Hub, which feeds the autonomous LLM pipeline, MCP control, the media vault and the git graph.',
         caption: 'The live architecture diagram from the Agent Hub project itself.' },
-      note: 'Access arrives over Tailscale from whichever device you are on and lands on a single entry point; the four capability zones sit behind it, each as an independently supervised process. The hub binds to loopback only — nothing is published to the local network — so the private network is what grants reach, and the application never has to be exposed to grant it.',
-      stack: ['Python', 'aiohttp', 'Tailscale', 'Process lifecycle supervisor', 'D3.js project graph', 'MCP', 'PyInstaller packaging'],
+            stack: ['Python', 'aiohttp', 'Tailscale', 'Process lifecycle supervisor', 'D3.js project graph', 'MCP', 'PyInstaller packaging'],
       links: [
         { label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }
       ]
@@ -2397,11 +2401,16 @@ function _fireHexButtonSparks() {
       title: 'AlphaForge',
       byline: 'May 2026 · Personal',
       body: [
-        'A team of LLM analysts argues a position before you take it. One builds the bull case, another builds the bear case, and what comes back is a reasoned call with the disagreement still visible — rather than a chart for you to interpret alone.',
-        'Nothing has to touch real money to be useful. The same call can be run backwards over historical data to see how it would have done, run forward on simulated funds, or executed for real — three modes of the same engine, with simulation as the default and real execution a deliberate switch.',
-        'All of it reports into one dashboard: open positions, session history, and how each decision was reached.'
+        'An autotrader that runs the argument before it commits the money. It does not hand you a chart to read — it reaches a position, and shows you the reasoning that produced it.'
       ],
-      note: 'Simulated and real execution are modelled as modes rather than a flag, because that is the boundary between an agent reasoning about a market and an agent committing capital. The analyst team is provider-agnostic: it runs against a local model by default, so research costs nothing and leaves the machine only when you choose a hosted one.',
+      bullets: [
+        '<b>Debate</b> — a bull analyst and a bear analyst argue the same instrument until the case resolves into a call.',
+        '<b>Backtest</b> — replay that call across historical data before believing it.',
+        '<b>Paper</b> — run it forward on simulated funds, which is the default.',
+        '<b>Live</b> — real execution, reached only by a deliberate switch.',
+        '<b>Any model</b> — local by default, hosted only if you choose it.'
+      ],
+      note: 'Simulated and real execution are modelled as separate modes rather than one flag, because that is the boundary between an agent reasoning about a market and an agent committing capital — and a boundary drawn at the start is the only kind that survives the feature after next.',
       stack: ['Python', 'FastAPI + uvicorn', 'Any LLM provider — Ollama (default), Anthropic, OpenAI', 'TradingAgents-style bull/bear analyst debate', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
       links: [
         { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
@@ -2410,13 +2419,16 @@ function _fireHexButtonSparks() {
     'movie-shorts-clipper': {
       eyebrow: 'AI Systems & Automation',
       title: 'Movie Shorts Clipper',
-      byline: 'Jul 2026 – Present · Personal, fronted by Agent Hub',
+      byline: 'Jul 2026 – Present · Personal',
       body: [
-        'A film goes in and captioned vertical clips come out, ready to post. Dialogue is captioned from the film\'s own subtitles where they exist, and transcribed locally where they do not.',
-        'Three things are yours to choose: which moments get cut, whether anyone speaks over them, and the shape of the finished clip. A narrated recap and a straight captioned scene come out of the same run — it is the same pipeline either way, set differently.',
-        'Where a clip is narrated, the script leads: the spoken line decides how long the shot stays on screen, rather than the narration being squeezed into a cut that was already fixed.'
+        'A film goes in and captioned vertical clips come out, ready to post. Dialogue is captioned from the film\'s own subtitles where they exist, and transcribed locally where they do not.'
       ],
-      note: 'The three settings were originally one combined mode with three values, which meant only the three combinations someone had named were reachable. Separating them into independent choices made every combination expressible, and the old mode names survive only as presets over the new settings.',
+      bullets: [
+        '<b>Selection</b> — which moments get cut, by hand, by scene, by story spine, or from a script.',
+        '<b>Voice</b> — whether anyone speaks over them, and in what register.',
+        '<b>Shape</b> — the format the finished clip takes.'
+      ],
+      note: 'Those three were originally a single mode with three values, which meant only the three combinations someone had already named were reachable. Splitting them made every combination expressible; the old mode names survive as presets over the new settings rather than as the settings themselves.',
       stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'Per-stage local or cloud model selection'],
       links: [
         { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
@@ -2427,11 +2439,14 @@ function _fireHexButtonSparks() {
       title: 'Cadenza',
       byline: 'Jun 2026 – Present · Personal (private repo)',
       body: [
-        'Describe a genre or a mood and get a finished track back — mastered audio, not a MIDI file you still have to render yourself.',
-        'It works because two models split the job. One writes candidate arrangements and is free to be prolific; a second one listens to them and keeps only what actually fits the brief. Volume is the first model\'s problem, taste is the second\'s.',
-        'Tracks in the library can also be matched to each other by key and tempo, so two that sit well together can be blended toward a shared target rather than picked by ear.'
+        'Describe a genre or a mood and get a finished track back — mastered audio, not a MIDI file you still have to render yourself.'
       ],
-      note: 'Proposal and judgement are two separate models with an explicit interface between them, so either half can be replaced or retrained without disturbing the other — the same separation that shows up in the larger pipeline work, at a smaller scale.',
+      bullets: [
+        '<b>Generator</b> — writes candidate arrangements, and is free to be prolific.',
+        '<b>Classifier</b> — listens to them and keeps only what fits the brief.',
+        '<b>Matching</b> — blends two tracks toward a shared key and tempo rather than by ear.'
+      ],
+      note: 'Volume is the first model\'s problem and taste is the second\'s, with an explicit interface between them — so either half can be replaced or retrained without disturbing the other. The same separation shows up in the larger pipeline work, at a smaller scale.',
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
       links: [
         { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
@@ -2442,11 +2457,15 @@ function _fireHexButtonSparks() {
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
       body: [
-        'How many mobile MRI units, sent where, clears the backlog fastest? This answers that question before anyone commits a vehicle to it.',
-        'Demand is built once and held fixed — referrals arriving across Kent\'s GP practices, with units setting out each day from six hubs. Serving strategies are then raced against that same demand, so the difference you see between them is the strategy and nothing else. Three are implemented: a fast greedy allocator that scales to five-year runs, a genetic search, and a Monte-Carlo tree search that looks ahead.',
-        'A stakeholder can move the sliders — units, working hours, referral growth — and watch the backlog build or clear month by month.'
+        'How many mobile MRI units, sent where, clears the backlog fastest? This answers that before anyone commits a vehicle to it. Units set out daily from six hubs to GP practices across Kent, and demand is held fixed so the only thing varying between runs is the strategy.'
       ],
-      note: 'Holding demand fixed while strategies vary is what turns a simulation into a controlled comparison rather than a demonstration. Every tunable parameter is declared once in a single schema, and both the command-line flags and the web sliders are generated from it, so the two interfaces cannot drift apart as the model grows.',
+      bullets: [
+        '<b>Greedy</b> — fast, and the only one that scales to a five-year horizon.',
+        '<b>Genetic</b> — a full evolutionary pass per simulated day.',
+        '<b>MCTS (UCT)</b> — look-ahead search with a per-day iteration budget.',
+        '<b>Sliders</b> — units, working hours and referral growth, moved by a stakeholder directly.'
+      ],
+      note: 'Fixing demand before varying strategy is what makes the comparison a controlled experiment rather than a demonstration. Separately, every tunable parameter is declared once in a single schema from which both the command-line flags and the web sliders are generated — so the two interfaces cannot drift apart as the model grows.',
       stack: ['Python', 'FastAPI + slider UI', 'Schema-driven config (CLI + UI from one source)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
@@ -2632,7 +2651,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=9"></script>
+<script src="assets/stack-graph/stack-graph.js?v=11"></script>
 </body>
 </html>
 
