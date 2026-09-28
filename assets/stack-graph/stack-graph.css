@@ -138,7 +138,14 @@
 }
 
 /* View toggle: swap the graph for the same projects as a plain list. */
-#stackgraph.listmode .stage{display:none!important}
+/* The HUD sits inside .stage, so the stage must stay in the flow or the toggle
+   hides itself. Collapse the graph layers and let the list take the space. */
+#stackgraph.listmode .stage{height:auto;min-height:0;overflow:visible;background:none}
+#stackgraph.listmode .list,
+#stackgraph.listmode .caps,
+#stackgraph.listmode .wires,
+#stackgraph.listmode .column-label{display:none}
+#stackgraph.listmode .hud{position:static;padding:0 0 10px;justify-content:flex-end}
 #stackgraph.listmode .mobile{display:block!important}
 #stackgraph.listmode{min-height:0}
 #stackgraph .mobile{max-height:none}
@@ -147,3 +154,7 @@
   #stackgraph.listmode .mobile{columns:2;column-gap:34px;padding:8px 0 70px}
   #stackgraph.listmode .mobile article{break-inside:avoid}
 }
+
+/* list mode at any width: the action links must be usable, not just present */
+#stackgraph.listmode .mobile .actions{display:flex;margin-top:14px}
+#stackgraph.listmode .mobile .actions:empty{display:none!important}
