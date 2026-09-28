@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css">
   <style>
     :root {
       --bg:         #080c28;
@@ -1300,295 +1301,25 @@
     <h2 class="panel-title">Projects</h2>
     <p class="panel-desc">AI systems, health-data architecture, and full-stack builds.</p>
 
-    <div class="carousel">
-      <div class="carousel-nav">
-        <button class="carousel-btn" id="proj-prev" aria-label="Previous projects">&#8592;</button>
-        <button class="carousel-btn" id="proj-next" aria-label="Next projects">&#8594;</button>
-        <div class="carousel-dots" id="proj-dots"></div>
+    <div id="stackgraph" class="embedded">
+      <div class="stage" role="group" aria-label="Interactive project graph">
+        <svg class="wires" aria-hidden="true"></svg>
+        <div class="list"></div>
+        <div class="caps"></div>
+        <div class="column-label group-label">GROUPS</div>
+        <div class="column-label project-label">PROJECTS</div>
+        <div class="column-label stack-label">TECH STACK</div>
+        <div class="hud">
+          <div class="status" aria-live="polite"></div>
+          <div class="controls">
+            <span class="hint">Scroll through all projects &middot; Click a node to explore</span>
+            <button id="back" hidden>&larr; Clear selection</button>
+            <button id="prev" aria-label="Previous project">&uarr;</button>
+            <button id="next" aria-label="Next project">&darr;</button>
+          </div>
+        </div>
       </div>
-      <div class="grid" id="projects-grid">
-
-        <!-- Circadian Health Systems (consolidated 2026-08-16) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>Circadian Health Systems</h3>
-            <span class="badge collab">Collab</span>
-          </div>
-          <p>Data-pipeline architecture and statistical analysis for a circadian-health research programme (NHS &amp; Wellcome Trust) — wrist-worn device data flows through interface-contracted stages into a config-driven compliance dashboard built for non-technical clinical researchers.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">FastAPI</span>
-            <span class="tag">Pandas</span><span class="tag">NumPy</span>
-            <span class="tag">GENEActiv</span><span class="tag">Data Pipelines</span>
-            <span class="tag">Compliance Dashboard</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">March 2024 – Present</p>
-            <p class="card-affil">Kent &amp; Medway NHS / University of Kent — CHiP-D, eClocker</p>
-            <p style="font-size:0.72rem; color:var(--text-faint); line-height:1.7; margin-top:0.4rem;">
-              Epoching → Calibration <span style="opacity:.7">(private)</span> → Sleep Metrics &nbsp;·&nbsp; parallel: Luminosity Metrics &nbsp;·&nbsp; surfaced via Compliance Dashboard
-            </p>
-            <div class="card-actions" style="margin-top:0.9rem">
-              <a class="link-btn outlined" href="#project/circadian-health-systems" data-project="circadian-health-systems">Full Write-Up + All Links →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent Hub (Aug 2026) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>Agent Hub</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>Always-on reverse-proxy and orchestration platform for my own project portfolio — fronts multiple services over a private mesh network, with a self-updating dependency graph that auto-discovers projects and tracks their git sync state.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">aiohttp</span>
-            <span class="tag">Tailscale</span><span class="tag">D3.js</span>
-            <span class="tag">Orchestration</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Aug 2026 – Present</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/Agent-Hub" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-              <a class="link-btn outlined" href="Agent-Hub/">Download →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- AlphaForge (May 2026) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>AlphaForge</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>AI-powered trading intelligence platform and MCP server — turns Claude Code into a systematic market analyst with live Binance data, configurable indicators, LLM-generated narratives, and a full auto-trader with backtesting and paper/live execution modes.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">FastAPI</span>
-            <span class="tag">MCP</span><span class="tag">Binance API</span>
-            <span class="tag">SQLite</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">May 2026</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/AlphaForge" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-              <a class="link-btn outlined" href="#project/alphaforge" data-project="alphaforge">Full Write-Up →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- movie-shorts-clipper (Jul 2026) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>movie-shorts-clipper</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>One pipeline, three configurable output formats for turning long-form video into vertical shorts — classic captioned clips, TTS-narrated clips, and LLM-generated plot-recap clips with beat-synced audio.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">ffmpeg</span>
-            <span class="tag">Whisper</span><span class="tag">LLM</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Jul 2026 – Present</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/movie-shorts-clipper" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-              <a class="link-btn outlined" href="#project/movie-shorts-clipper" data-project="movie-shorts-clipper">Full Write-Up →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cadenza (Jun 2026) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>Cadenza</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>ML-driven generative music pipeline — a categorised MIDI corpus feeds a generator + classifier pair; the classifier's job is taste, not composition, scoring candidates against a requested genre/mood before rendering through LMMS.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">scikit-learn</span>
-            <span class="tag">MIDI</span><span class="tag">Flask</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Jun 2026 – Present</p>
-            <div class="card-actions">
-              <span class="link-btn outlined" style="cursor:default;opacity:.55">Private repo</span>
-              <a class="link-btn outlined" href="#project/cadenza" data-project="cadenza">Full Write-Up →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Portable MRI Simulation (2026) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>Portable MRI Simulation</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>Two-stage discrete-event simulation for NHS mobile-MRI appointment scheduling — a schema-driven demand model feeds a scheduling-strategy model, with a FastAPI + JS slider UI for exploring resourcing scenarios.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">FastAPI</span>
-            <span class="tag">Discrete-Event Simulation</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">2026</p>
-            <p class="card-affil">Kent mobile-MRI resourcing project</p>
-            <div class="card-actions">
-              <span class="link-btn outlined" style="cursor:default;opacity:.55">Private repo</span>
-              <a class="link-btn outlined" href="#project/portable-mri-sim" data-project="portable-mri-sim">Full Write-Up →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3 — SHA256 Encryptor (Jan 2025) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>SHA256 Encryptor</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>Modular passkey management tool built around SHA-256 hashing. Structured CLI with configurable service layers, interface adapters, and a utility layer for cryptographic operations.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">CLI</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Jan 2025</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/SHA256-Encryptor" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4 — ML Reference Notebooks (Dec 2023) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>ML Reference Notebooks</h3>
-            <span class="badge academic">Academic</span>
-          </div>
-          <p>Comprehensive collection of Jupyter notebooks covering classical ML tasks — EDA, classification, regression, and clustering. Bank data analysis, scikit-learn workflows, and a variety of supervised and unsupervised techniques.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">Jupyter</span>
-            <span class="tag">Machine Learning</span><span class="tag">EDA</span>
-            <span class="tag">Scikit-learn</span><span class="tag">Data Analysis</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">2021 – 2023</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/Jupyter-Notebooks" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 — BM25 IR Search Engine (Apr 2023) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>BM25 Information Retrieval Engine</h3>
-            <span class="badge academic">Academic</span>
-          </div>
-          <p>Full-stack search engine using BM25 ranking over the MIND (Microsoft News) dataset of 100K+ articles. Flask backend with a web UI and Docker containerisation for deployment.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">Flask</span>
-            <span class="tag">BM25</span><span class="tag">Information Retrieval</span>
-            <span class="tag">NLP</span><span class="tag">Docker</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Mar 2023 – Apr 2023</p>
-            <div class="card-actions">
-              <a class="link-btn" href="https://github.com/infernalzeus/BM-IR-Search-Engine" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6 — RL Agent for VR (Aug 2021–Aug 2022) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>RL Agent for VR Cognitive Assessment</h3>
-            <span class="badge collab">Collab</span>
-          </div>
-          <p>Designed a TD3-DDPG Double Q-learning agent to analyse Virtual Reality heatmaps of clinical cognitive assessments in healthy volunteers and individuals with psychosis. Improved agent task completion from <strong style="color:var(--accent)">58.33% to 100%</strong> by redefining gym architecture, reward functions, and percept sequences.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">Reinforcement Learning</span>
-            <span class="tag">TD3-DDPG</span><span class="tag">OpenAI Gym</span><span class="tag">VR</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Aug 2021 – Aug 2022</p>
-            <p class="card-affil">King's College London, IOPPN</p>
-          </div>
-        </div>
-
-        <!-- 7 — 3D Bounding Box (Jan–May 2021) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>3D Bounding Box Annotation</h3>
-            <span class="badge academic">Academic</span>
-          </div>
-          <p>Achieved <strong style="color:var(--accent)">90.28% IoU confidence score</strong> for 3D bounding box recognition in self-driving car data. Used OpenCV Camera Calibration, YOLOv3/v5, and LiDAR Imaging on Lyft and KITTI datasets.</p>
-          <div class="tags">
-            <span class="tag">Python</span><span class="tag">YOLOv3/v5</span>
-            <span class="tag">OpenCV</span><span class="tag">LiDAR</span><span class="tag">Computer Vision</span>
-          </div>
-          <div class="card-footer">
-            <p class="card-byline">Jan 2021 – May 2021</p>
-            <p class="card-affil">BITS Pilani, Goa</p>
-          </div>
-        </div>
-
-        <!-- Also Built (games & hobby builds, collapsed 2026-08-16) -->
-        <div class="card">
-          <div class="card-top">
-            <h3>Also Built</h3>
-            <span class="badge">Personal</span>
-          </div>
-          <p>Games and interactive builds — kept lighter-weight here so they read as range rather than crowding out the systems work above.</p>
-          <div class="pipeline">
-            <div class="pipeline-step">
-              <span class="step-label">NEON WARFARE</span>
-              <span class="step-desc">Premium Unity 6/URP/C# tactics game, layered domain-driven architecture (private repo)</span>
-            </div>
-            <div class="pipeline-step">
-              <span class="step-label">Monopoly Madness</span>
-              <span class="step-desc">Full-stack real-time multiplayer web game, React + Firebase</span>
-              <div class="card-actions" style="margin-top:0.25rem">
-                <a class="link-btn" href="https://github.com/infernalzeus/Monopoly-Madness" target="_blank" rel="noopener">GitHub</a>
-                <a class="link-btn outlined" href="https://monopoly-madness.vercel.app/" target="_blank" rel="noopener">Play →</a>
-              </div>
-            </div>
-            <div class="pipeline-step">
-              <span class="step-label">rubix-alg-finder</span>
-              <span class="step-desc">Rubik's cube solver — genetic algorithm + RL (PPO) modes, 3D viz</span>
-              <div class="card-actions" style="margin-top:0.25rem">
-                <a class="link-btn" href="https://github.com/infernalzeus/rubix-alg-finder" target="_blank" rel="noopener">GitHub</a>
-              </div>
-            </div>
-            <div class="pipeline-step">
-              <span class="step-label">fps-mv &amp; asmr-cloth-sphere</span>
-              <span class="step-desc">FPS highlight-reel auto-editor; Blender ASMR render pipeline (private/local)</span>
-            </div>
-            <div class="pipeline-step">
-              <span class="step-label">2048 &amp; Brick-breaker</span>
-              <span class="step-desc">Early terminal C++ and Java games</span>
-              <div class="card-actions" style="margin-top:0.25rem">
-                <a class="link-btn" href="https://github.com/infernalzeus/2048" target="_blank" rel="noopener">2048</a>
-                <a class="link-btn" href="https://github.com/infernalzeus/Brick-breaker" target="_blank" rel="noopener">Brick-breaker</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <div class="mobile" aria-label="Project list"></div>
     </div>
   </div>
 </section>
@@ -2715,6 +2446,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
+<script src="assets/stack-graph/stack-graph.js"></script>
 </body>
 </html>
 

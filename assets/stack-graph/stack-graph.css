@@ -1,0 +1,105 @@
+/* Stack Graph — shared by index.html (#projects) and docs/stack-graph/.
+   Generated from the accepted standalone page; scoped under #stackgraph so it
+   cannot touch the rest of the site. Vertical offsets are variables because the
+   embedded copy sits under a panel heading and needs less headroom than the
+   full-page copy. */
+#stackgraph{--sg-top:195px;--sg-bottom:90px;--sg-label-top:160px;--sg-min-h:600px;
+  position:relative;flex:1;min-height:var(--sg-min-h);
+  color:#e0eee9;font-family:Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#stackgraph *{box-sizing:border-box}
+#stackgraph button{font:inherit;color:inherit;cursor:pointer}
+#stackgraph [hidden]{display:none!important}
+#stackgraph button{font:inherit;color:inherit;cursor:pointer}
+#stackgraph button:focus-visible{outline:2px solid #00e676;outline-offset:6px}
+#stackgraph .eyebrow{font:10px Orbitron,monospace;letter-spacing:3px;color:#00e676}
+#stackgraph .stage{height:100%;min-height:var(--sg-min-h);position:relative;overflow:hidden;background:radial-gradient(ellipse at 35% 50%,#101a3c,transparent 65%)}
+#stackgraph .list{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
+#stackgraph .wires{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
+#stackgraph .list,#stackgraph .caps{position:absolute;inset:0;pointer-events:none}
+#stackgraph .project{position:absolute;width:340px;padding:0 20px;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;pointer-events:auto;overflow:hidden;opacity:.35}
+#stackgraph .project.active{background:#0c1630;border-color:var(--accent);opacity:1;box-shadow:0 20px 70px #0004}
+#stackgraph .project.match{opacity:.8}
+#stackgraph .project.unmatched{opacity:.14}
+#stackgraph .title{display:block;font:700 12px/1.5 Orbitron,monospace;letter-spacing:1px}
+#stackgraph .year{display:block;font-size:11px;color:#94a0b5;margin-top:7px}
+#stackgraph .body{display:block;font-size:15px;line-height:1.65;color:#a9b4c9;margin-top:16px}
+#stackgraph .project.active .title{color:var(--accent);font-size:17px}
+#stackgraph .project:not(.active) .body{visibility:hidden}
+#stackgraph .cap{position:absolute;border:0;background:transparent;padding:5px 0;text-align:left;color:#8490a5;font-size:14px;line-height:1.5;pointer-events:auto;touch-action:none;user-select:none;max-width:240px}
+#stackgraph .cap:hover,#stackgraph .cap.selected{color:#dce8e3}
+#stackgraph .cap.selected{font-size:19px}
+#stackgraph .cap.unique{opacity:.55}
+#stackgraph .cap small{font:9px Orbitron,monospace;margin-left:10px;opacity:.55}
+#stackgraph .wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#stackgraph .wire{fill:none;stroke:#8498b2;stroke-opacity:.3;stroke-width:1}
+#stackgraph .wire.primary{stroke:#00e676;stroke-opacity:.42}
+#stackgraph .wire.lit{stroke:#00e676;stroke-opacity:.85}
+#stackgraph .wire.dim{stroke-opacity:.06}
+#stackgraph .hud{position:absolute;bottom:28px;left:40px;right:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;z-index:3}
+#stackgraph .status{font:10px Orbitron,monospace;letter-spacing:2px;color:#8291aa}
+#stackgraph .status strong{color:#00e676}
+#stackgraph .controls{display:flex;gap:10px;align-items:center}
+#stackgraph .controls button{background:#0c1430;border:1px solid #29364d;border-radius:7px;padding:10px 15px;font-size:12px}
+#stackgraph .controls button:disabled{opacity:.3;cursor:default}
+#stackgraph .hint{font-size:12px;color:#77859c;margin-right:14px}
+#stackgraph .mobile{display:none}
+#stackgraph [hidden]{display:none!important}
+@media(max-width:759px){#stackgraph .stage{display:none}
+#stackgraph .mobile{display:block;padding:10px 24px}
+#stackgraph .mobile article{padding:28px 0;border-bottom:1px solid #24304a}
+#stackgraph .mobile h2{font:700 16px Orbitron,monospace;color:var(--accent);line-height:1.6}
+#stackgraph .mobile p{color:#a9b4c9;line-height:1.7}
+#stackgraph .mobile .inline{color:#8791a5;font-size:13px}}
+#stackgraph .project{border-color:#61728f;background:#0a122c;opacity:.46;transition:opacity .25s,border-color .25s}
+#stackgraph .project.match{opacity:.95;border-color:#8b9bb6}
+#stackgraph .project.unmatched{opacity:.12}
+#stackgraph .project:hover{opacity:1;border-color:var(--accent)}
+#stackgraph .wire{stroke-opacity:.12}
+#stackgraph .wire.primary{stroke-opacity:.8;stroke-width:1.4}
+#stackgraph .wire.lit{stroke-opacity:.9;stroke-width:1.5}
+#stackgraph .wire.dim{stroke-opacity:.035}
+#stackgraph .cap{color:#9aa6bb;max-width:210px}
+#stackgraph .cap.selected{color:#00e676;font-size:15px}
+#stackgraph .cap.inactive{opacity:.32}
+#stackgraph .cap.group{font-family:Orbitron,monospace;font-size:12px;letter-spacing:1px}
+#stackgraph .column-label{position:absolute;top:var(--sg-label-top);font:9px Orbitron,monospace;letter-spacing:2.5px;color:#60738f;pointer-events:none}
+#stackgraph .group-label{left:7%}
+#stackgraph .project-label{left:calc(50% - 170px)}
+#stackgraph .stack-label{left:75%}
+#stackgraph .list,#stackgraph .wires{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
+@media(max-width:1000px) and (min-width:760px){#stackgraph .project{width:290px}
+#stackgraph .cap{font-size:12px;max-width:155px}
+#stackgraph .cap.group{font-size:10px}
+#stackgraph .project-label{left:calc(50% - 145px)}
+#stackgraph .group-label{left:3%}
+#stackgraph .stack-label{left:76%}
+#stackgraph .hint{display:none}}
+#stackgraph .project{transition:opacity .55s ease,border-color .55s ease,background-color .55s ease,box-shadow .55s ease}
+#stackgraph .project .title{transition:color .45s ease}
+#stackgraph .cap.group.selected{color:var(--group-color)}
+#stackgraph .group-selection .project.match .title{color:var(--accent)}
+#stackgraph .group-selection .project.match{border-color:var(--accent)}
+#stackgraph .group-selection .status strong{color:var(--selection-color)}
+#stackgraph .wire{transition:stroke .45s ease,stroke-opacity .45s ease,stroke-width .45s ease}
+#stackgraph .wire[data-kind="group"].primary,#stackgraph .wire[data-kind="group"].lit{stroke:var(--group-color)}
+@media(prefers-reduced-motion:reduce){#stackgraph .project,#stackgraph .project .title,#stackgraph .wire{transition:none}}
+#stackgraph .project{cursor:default}
+#stackgraph .focus-btn{display:block;width:100%;margin:0;padding:0;background:transparent;border:0;text-align:left;cursor:pointer}
+#stackgraph .actions{display:none;flex-wrap:wrap;gap:8px;margin-top:16px}
+#stackgraph .project.active .actions{display:flex}
+#stackgraph .actions:empty{display:none!important;margin-top:0!important}
+#stackgraph .action{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#00e676;
+  border:1px solid #235e42;border-radius:7px;padding:8px 11px;
+  font:700 9.5px Orbitron,monospace;letter-spacing:1.4px;white-space:nowrap;
+  transition:background .15s ease,border-color .15s ease}
+#stackgraph .action:hover{background:rgba(0,230,118,.13);border-color:var(--accent)}
+#stackgraph .action:focus-visible{outline:2px solid #00e676;outline-offset:3px}
+#stackgraph .action svg{width:12px;height:12px;fill:currentColor;flex:none}
+@media(max-width:1000px) and (min-width:760px){#stackgraph .action{font-size:9px;padding:7px 9px}}
+@media(max-width:759px){#stackgraph .mobile .actions{display:flex;margin-top:16px}}
+@media(prefers-reduced-motion:reduce){#stackgraph .action{transition:none}}
+/* embedded copy: the page already shows a panel heading above the graph,
+   so it needs far less headroom than the full-page copy. */
+#stackgraph.embedded{--sg-top:56px;--sg-label-top:16px;--sg-min-h:540px}
+#stackgraph.embedded .hud{left:0;right:0;bottom:6px}
+#stackgraph.embedded .column-label.group-label{left:0}
