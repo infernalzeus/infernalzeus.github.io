@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=2">
   <style>
     :root {
       --bg:         #080c28;
@@ -1306,7 +1306,7 @@
         <svg class="wires" aria-hidden="true"></svg>
         <div class="list"></div>
         <div class="caps"></div>
-        <div class="column-label group-label">GROUPS</div>
+        <div class="column-label group-label">DOMAINS</div>
         <div class="column-label project-label">PROJECTS</div>
         <div class="column-label stack-label">TECH STACK</div>
         <div class="hud">
@@ -1341,17 +1341,16 @@
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
-        <h3>Myocarditis Monitoring During Clozapine Initiation: Audit of Practice in an NHS Trust</h3>
-        <p class="rcard-author"></p>
-        <p>Clozapine is the only antipsychotic licensed for treatment-resistant schizophrenia, but carries a risk of myocarditis during the initiation period, which is why guidance calls for structured cardiac monitoring. This audit examined how that monitoring is carried out in practice across an NHS trust, and where recorded practice diverges from the guidance it is measured against.</p>
+        <h3>Myocarditis monitoring during clozapine initiation: audit of practice in an NHS trust</h3>
+        <p class="rcard-author">Co-author</p>
+        <p>A review of 219 patients starting clozapine at an NHS trust. Baseline ECGs were done in 80% of cases, but troponin was never routinely monitored — so the tests that catch myocarditis early were largely missing from practice.</p>
         <div class="card-footer">
           <div class="card-actions">
             <a class="link-btn" href="https://doi.org/10.1192/bjo.2026.12079" target="_blank" rel="noopener">BJPsych Open &rarr;</a>
           </div>
-          <p class="card-byline">BJPsych Open, 2026</p>
-          <p class="venue">Kent &amp; Medway NHS and Social Care Partnership Trust</p>
+          <p class="card-byline">BJPsych Open, September 2026 (open access)</p>
+          <p class="venue">Kent &amp; Medway Mental Health NHS Trust</p>
         </div>
-      </div>
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
@@ -2371,7 +2370,9 @@ function _fireHexButtonSparks() {
       ],
       note: 'Splitting "propose" from "judge" into two models with an explicit interface between them is a small-scale version of the same separation-of-concerns instinct that shows up in the larger pipeline projects — the architecture choice matters more here than the music genre.',
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask UI', 'LMMS (headless render)', 'ffmpeg (mastering)'],
-      links: []
+      links: [
+        { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
+      ]
     },
     'portable-mri-sim': {
       eyebrow: 'Health & Research Data Systems',
@@ -2390,11 +2391,10 @@ function _fireHexButtonSparks() {
       title: 'RL / VR Agent',
       byline: 'Aug 2021 – Aug 2022 · King\'s College London (IoPPN, CSI Lab)',
       body: [
-        'Clinical cognitive assessments delivered in virtual reality produce spatial heatmaps of where a participant looked and moved. The question was whether a reinforcement-learning agent could be trained to perform those same assessment tasks well enough that its behaviour became a usable model of the task itself.',
-        'The agent is a TD3-DDPG double Q-learning design running against a custom OpenAI Gym environment. The gain did not come from the learning algorithm — it came from redefining the environment around it: the gym architecture, the reward functions, and the percept sequence, which uses a quantised Moore neighbourhood together with a Lyapunov function to give the agent a stable notion of progress.',
-        'Behavioural simulation task completion went from 58.33% to 100% after those changes.'
+        'Cognitive assessments delivered in virtual reality record where a person looks and moves as a heatmap. The question here was whether an AI agent could learn to carry out the same assessment task well enough that its behaviour became a usable model of how the task gets solved.',
+        'The agent learns by trial and error. Almost all of the work went into the environment around it rather than the learning algorithm itself — how the task is presented, what counts as progress, and how the agent perceives what is around it. After those changes, task completion went from 58% to 100%.'
       ],
-      note: 'The headline result is an environment-design result, not an algorithm result. Nothing about the learner changed; what changed was the representation it was given. That distinction is the reason the work transfers to other assessment tasks.',
+      note: 'Nothing about the learning algorithm changed. What changed was how the problem was described to it, which is usually where the difference actually lies.',
       stack: ['Python', 'OpenAI Gym', 'TD3-DDPG double Q-learning', 'Virtual Reality heatmaps'],
       links: []
     },
@@ -2403,10 +2403,10 @@ function _fireHexButtonSparks() {
       title: '3D Bounding Box Annotation',
       byline: 'Jan – May 2021 · Academic',
       body: [
-        'Autonomous-driving datasets ship camera frames and LiDAR point clouds that describe the same scene from different geometries. Fusing them into consistent 3D bounding boxes is what makes the data usable as training material rather than raw capture.',
-        'The pipeline combines OpenCV camera calibration with YOLOv3/v5 detection and LiDAR imaging, evaluated across the Lyft and KITTI datasets, reaching 90.28% IoU confidence.'
+        'Self-driving datasets record the same scene twice: once through a camera, once through LiDAR. Combining them into accurate 3D boxes around cars and pedestrians is what turns raw capture into usable training data.',
+        'This pipeline aligns the two sources, detects objects with YOLO, and places the boxes in 3D, reaching 90.28% overlap accuracy against the Lyft and KITTI benchmarks.'
       ],
-      note: 'Calibration is the load-bearing stage. Detection quality sets a ceiling, but a camera-to-LiDAR transform that is even slightly wrong moves every box in the scene — so the calibration step is treated as its own contract rather than a preprocessing detail.',
+      note: 'Aligning the camera and the LiDAR matters more than the detector does. If that alignment is even slightly off, every box in the scene moves with it.',
       stack: ['Python', 'OpenCV camera calibration', 'YOLOv3 / YOLOv5', 'LiDAR imaging', 'Lyft + KITTI datasets'],
       links: []
     },
@@ -2415,10 +2415,10 @@ function _fireHexButtonSparks() {
       title: 'BM25 Search Engine',
       byline: 'Mar – Apr 2023 · Academic',
       body: [
-        'A full-stack search engine over the MIND (Microsoft News) dataset of 100,000+ articles, ranking with BM25 rather than a vector model — a deliberate choice, since BM25 gives an inspectable scoring function whose behaviour can be reasoned about term by term.',
-        'A Flask backend serves the index behind a web UI, and the whole thing is containerised so the index and its runtime move together.'
+        'A search engine over 100,000+ news articles that ranks results using BM25 — a classical method that scores documents on word matching rather than through a neural model.',
+        'That was a deliberate choice: you can trace exactly why a document ranked where it did. A Flask backend serves it behind a simple web interface, packaged with Docker so the index and the application always travel together.'
       ],
-      note: 'Classical lexical ranking remains the right default when you need to explain why a document scored where it did. The Docker packaging matters for the same reason: a retrieval system that cannot be reproduced cannot really be evaluated.',
+      note: 'When you need to explain a ranking rather than just produce one, a scoring function you can read beats a model you cannot.',
       stack: ['Python', 'BM25 ranking', 'Flask', 'Docker', 'MIND news dataset'],
       links: [
         { label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }
@@ -2429,10 +2429,10 @@ function _fireHexButtonSparks() {
       title: 'ML Reference Notebooks',
       byline: '2021 – 2023 · Academic',
       body: [
-        'A working reference collection across classical machine learning — exploratory data analysis, classification, regression and clustering — built on real bank data with scikit-learn workflows rather than toy examples.',
-        'Kept as notebooks on purpose: the value is in the intermediate output at each step, which is what makes them reusable as a reference rather than as a library.'
+        'A working reference across classical machine learning — exploring data, classification, regression and clustering — built on real bank data rather than tidy textbook examples.',
+        'Kept as notebooks on purpose: the value is in seeing each intermediate step and its output, which is what makes them worth coming back to.'
       ],
-      note: 'Supervised and unsupervised techniques are kept side by side against the same dataset, so the comparison is between methods rather than between datasets.',
+      note: 'Supervised and unsupervised methods run against the same dataset, so what you are comparing is the methods rather than the data.',
       stack: ['Python', 'scikit-learn', 'pandas / NumPy', 'Jupyter'],
       links: [
         { label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }
@@ -2443,10 +2443,10 @@ function _fireHexButtonSparks() {
       title: 'NEON WARFARE',
       byline: '2026 – Present · Personal (private repo)',
       body: [
-        'A real-time lane-based tactical auto-battler built in Unity 6, where the economy is driven by a match-token core board rather than a conventional resource tick — so board play and lane combat feed each other instead of running as separate systems.',
-        'Competitive play is served by a segmented leaderboard that works offline. Runs are recorded and replayed as ghosts, which means a player always has an opponent to race without needing a live session, and the whole ranking layer sits behind a swappable backend interface with a local fallback.'
+        'A real-time tactical auto-battler built in Unity. Units fight along lanes while you play a match-token board that drives your economy, so the puzzle and the battle feed each other instead of running as two separate games.',
+        'Competitive play works without a connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and rankings work offline with an online backend as an optional extra rather than a requirement.'
       ],
-      note: 'The leaderboard is defined by an interface with a local implementation behind it, so the game is fully playable and rankable with no backend at all. A hosted backend becomes an upgrade rather than a dependency — the same instinct as paper-vs-live in AlphaForge.',
+      note: 'The leaderboard sits behind a swappable interface with a local version underneath, so the game stays fully playable and rankable with no server at all.',
       stack: ['Unity 6 / URP', 'C#', 'Firebase (Auth + Firestore)', 'Ghost replay recording', 'Elo ranking'],
       links: [
         { label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }
@@ -2457,10 +2457,10 @@ function _fireHexButtonSparks() {
       title: 'Monopoly Madness',
       byline: '2026 · Personal',
       body: [
-        'Full-stack real-time multiplayer Monopoly with a live auction and trading system, plus game modifiers that change the rules of a match.',
-        'The hard part of a board game online is not the board, it is agreement: every client has to see the same auction at the same moment, and a trade has to either complete for both parties or not happen at all. State is synchronised through Firebase so those transitions stay consistent across clients.'
+        'Multiplayer Monopoly you can play in a browser, with live auctions, player-to-player trading, and modifiers that change the rules of a match.',
+        'The hard part of a board game online is not the board, it is agreement: everyone has to see the same auction at the same moment, and a trade has to either complete for both players or not happen at all.'
       ],
-      note: 'Auctions and trades are the only places where two players act on the same object at once, so they are the parts that define the synchronisation model. The rest of the game is comparatively forgiving.',
+      note: 'Auctions and trades are the only moments when two players act on the same thing at once, so they are what set the design for keeping game state in sync.',
       stack: ['React', 'TypeScript', 'Firebase', 'Vercel'],
       links: [
         { label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' },
@@ -2472,10 +2472,10 @@ function _fireHexButtonSparks() {
       title: 'SHA256 Vault',
       byline: 'Jan 2025 · Personal',
       body: [
-        'A local credential manager structured as layers rather than a script: configurable service layers, interface adapters, and a separate utility layer for the cryptographic operations, so the storage backend and the interface can change independently of the crypto.',
-        'SHA-256 is used for hashing — identifiers and password verification — and is not a reversible operation; stored secrets are encrypted separately. The published repository holds the earlier command-line version, and a later local build moves the same layering behind a web interface.'
+        'A credential manager that runs on your own machine rather than as a service. Secrets are stored encrypted locally, and the tool is built in layers so the storage and the interface can change without touching the cryptography.',
+        'SHA-256 is used for hashing — checking a password without storing it — while the stored secrets themselves are encrypted separately. The public repository holds the original command-line version; a later local build puts the same structure behind a web interface.'
       ],
-      note: 'Separating the cryptographic utility layer from the service layer is what keeps the interface replaceable. It also keeps the distinction between hashing and encryption explicit in the code rather than implied by naming.',
+      note: 'Hashing and encryption do different jobs, and the code keeps them in separate layers rather than blurring the two together.',
       stack: ['Python', 'SHA-256 hashing', 'Fernet encryption', 'Structured CLI', 'Flask (later build)'],
       links: [
         { label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }
@@ -2556,7 +2556,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js"></script>
+<script src="assets/stack-graph/stack-graph.js?v=2"></script>
 </body>
 </html>
 

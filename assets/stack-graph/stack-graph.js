@@ -8,27 +8,27 @@ function sgTop(){return cssVar('--sg-top')||195}
 function sgBottom(){return cssVar('--sg-bottom')||90}
 var P=[
  {id:'agenthub',t:'AGENT HUB',cat:'systems',y:'Aug 2026 — Present',
-  b:'Run PC tools, AI agents, and file browsing from one private hub.',
+  b:'Your most powerful PC tools, at your fingertips on any device.',
   caps:['Orchestration & Infra','LLM & Agents','Developer Tooling','Dashboards & UI'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Agent-Hub',icon:'gh'},{label:'DOWNLOAD',href:'/Agent-Hub/'},{label:'OVERVIEW',href:'/#project/agent-hub'}]},
  {id:'alphaforge',t:'ALPHAFORGE',cat:'systems',y:'May 2026',
-  b:'Analyse markets, backtest strategies, and manage trades in one dashboard.',
+  b:'Test the strategy before you risk the capital.',
   caps:['LLM & Agents','Orchestration & Infra','Simulation & Modelling','Dashboards & UI'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/AlphaForge',icon:'gh'},{label:'OVERVIEW',href:'/#project/alphaforge'}]},
  {id:'clipper',t:'SHORTS CLIPPER',cat:'systems',y:'Jul 2026 — Present',
-  b:'Turn movie scenes into captioned vertical clips with optional AI narration.',
+  b:'Feature-length in, scroll-ready shorts out.',
   caps:['Media Generation','LLM & Agents','Developer Tooling'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/movie-shorts-clipper',icon:'gh'},{label:'OVERVIEW',href:'/#project/movie-shorts-clipper'}]},
  {id:'cadenza',t:'CADENZA',cat:'ml',y:'Jun 2026 — Present',
-  b:'Generate arrangements, then rank them by genre or mood before rendering.',
+  b:'Describe a mood, get an arrangement that fits it.',
   caps:['Media Generation','Machine Learning Models'],
-  links:[{label:'OVERVIEW',href:'/#project/cadenza'}]},
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Cadenza',icon:'gh'},{label:'OVERVIEW',href:'/#project/cadenza'}]},
  {id:'circadian',t:'CIRCADIAN HEALTH SYSTEMS',cat:'research',y:'Mar 2024 — Present · NHS / Univ. of Kent',
-  b:'Turn wearable activity and light data into research-grade metrics.',
+  b:'Weeks of wrist data, made readable for research.',
   caps:['Data Pipelines','Research Instrumentation','Statistical Analysis','Dashboards & UI'],
   links:[{label:'OVERVIEW',href:'/#project/circadian-health-systems'}]},
  {id:'mri',t:'MRI SIMULATION',cat:'research',y:'2026 · Kent mobile-MRI resourcing',
-  b:'Compare mobile-MRI scheduling strategies against shared demand scenarios.',
+  b:'Plan a mobile scanner\'s week before it leaves the depot.',
   caps:['Simulation & Modelling','Research Instrumentation','Data Pipelines','Dashboards & UI'],
   links:[{label:'OVERVIEW',href:'/#project/portable-mri-sim'}]},
  {id:'rlvr',t:'RL / VR AGENT',cat:'ml',y:'Aug 2021 — Aug 2022 · KCL IoPPN, CSI Lab',
@@ -40,23 +40,23 @@ var P=[
   caps:['Computer Vision','Machine Learning Models'],
   links:[{label:'OVERVIEW',href:'/#project/3d-bounding-box'}]},
  {id:'bm25',t:'BM25 SEARCH',cat:'ml',y:'Mar — Apr 2023',
-  b:'Search over 100,000 news articles using BM25 ranking and a web interface.',
+  b:'100,000 news articles, and the one you meant comes first.',
   caps:['Information Retrieval','Machine Learning Models','Dashboards & UI'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/BM-IR-Search-Engine',icon:'gh'},{label:'OVERVIEW',href:'/#project/bm25-search'}]},
  {id:'notebooks',t:'ML NOTEBOOKS',cat:'ml',y:'2021 — 2023',
-  b:'Classification, regression, and clustering in practical ML notebooks.',
+  b:'Classical machine learning, worked end to end on real data.',
   caps:['Machine Learning Models','Statistical Analysis'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Jupyter-Notebooks',icon:'gh'},{label:'OVERVIEW',href:'/#project/ml-notebooks'}]},
  {id:'neon',t:'NEON WARFARE',cat:'game',y:'2026 — Present',
-  b:'A real-time lane-based auto-battler with a match-token core board.',
+  b:'Match tokens, command lanes, take the board.',
   caps:['Game Systems','Real-Time Multiplayer'],
   links:[{label:'LANDING PAGE',href:'https://infernalzeus.github.io/neon-warfare/'},{label:'OVERVIEW',href:'/#project/neon-warfare'}]},
  {id:'monopoly',t:'MONOPOLY MADNESS',cat:'game',y:'2026',
-  b:'Play multiplayer Monopoly with live auctions, trading, and custom game modes.',
+  b:'Monopoly with friends, live auctions, and rules that bite.',
   caps:['Game Systems','Real-Time Multiplayer'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Monopoly-Madness',icon:'gh'},{label:'PLAY',href:'https://monopoly-madness.vercel.app/'},{label:'OVERVIEW',href:'/#project/monopoly-madness'}]},
  {id:'sha256',t:'SHA256 VAULT',cat:'systems',y:'Jan 2025',
-  b:'Manage account credentials through a local password-vault interface.',
+  b:'Every password kept on your machine and nowhere else.',
   caps:['Developer Tooling'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/SHA256-Encryptor',icon:'gh'},{label:'OVERVIEW',href:'/#project/sha256-vault'}]}
 ];
@@ -82,7 +82,19 @@ function selectNode(n){if(pivot&&pivot.id===n.c&&pivot.kind===n.kind){clearSelec
 function buildCaps(){let previousNodes=new Map(capNodes.map(n=>[n.kind+':'+n.c,n.el]));let stack=pivot&&pivot.kind==='stack'?[pivot.id]:P[index].caps;capNodes=[...Object.keys(groupNames).map(c=>({c,kind:'group'})),...stack.map(c=>({c,kind:'stack'}))].map(n=>{let key=n.kind+':'+n.c,el=previousNodes.get(key)||document.createElement('button'),fresh=!previousNodes.has(key);previousNodes.delete(key);let selected=pivot&&pivot.id===n.c&&pivot.kind===n.kind;el.className='cap '+(n.kind==='group'?'group ':'')+(selected?'selected ':'')+(n.kind==='group'&&P[index].cat!==n.c&&!selected?'inactive':'');if(n.kind==='group')el.style.setProperty('--group-color',colors[n.c]);el.dataset.node=n.c;el.dataset.kind=n.kind;el.setAttribute('aria-pressed',String(!!selected));el.textContent=n.kind==='group'?groupNames[n.c]:n.c;el.onclick=()=>{if(!ignoreClick)selectNode(n)};el.onpointerenter=()=>{hover={kind:n.kind,id:n.c};draw()};el.onpointerleave=()=>{hover=null;draw()};caps.append(el);if(fresh&&!reduced.matches)el.animate([{opacity:0},{opacity:1}],{duration:450,easing:'ease-out'});return {...n,el,x:0,y:0}});previousNodes.forEach(el=>{el.style.pointerEvents='none';el.setAttribute('aria-hidden','true');el.tabIndex=-1;if(reduced.matches){el.remove();return}el.animate([{opacity:getComputedStyle(el).opacity},{opacity:0}],{duration:350,easing:'ease-out',fill:'forwards'}).finished.then(()=>el.remove())})}
 function rowWidth(){return innerWidth<=1000?290:340}
 function listX(){return stage.clientWidth/2-rowWidth()/2}
-function placeCaps(){let w=stage.clientWidth,h=stage.clientHeight;for(let side of ['group','stack']){let ns=capNodes.filter(n=>n.kind===side),total=ns.reduce((s,n)=>s+n.el.offsetHeight,0)+32*(ns.length-1),y=Math.max(sgTop()+20,(h-total)/2);ns.forEach(n=>{n.x=side==='group'?Math.max(22,w*.07):Math.max(listX()+rowWidth()+40,w*.75);if(side==='group')n.x=Math.min(n.x,listX()-n.el.offsetWidth-32);else n.x=Math.min(n.x,w-n.el.offsetWidth-20);n.y=y;n.el.style.left=n.x+'px';n.el.style.top=y+'px';y+=n.el.offsetHeight+32})}}
+// The labels used to sit at fixed percentages, so they drifted away from the
+// columns they name. Derive them from where the columns actually ended up:
+// left/right labels align to their node edge, PROJECTS centres over the cards.
+function placeLabels(){
+  var gl=$('.group-label'),pl=$('.project-label'),sl=$('.stack-label');
+  if(!gl||!pl||!sl)return;
+  var g=capNodes.filter(n=>n.kind==='group'),s=capNodes.filter(n=>n.kind==='stack');
+  if(g.length)gl.style.left=Math.round(Math.min.apply(null,g.map(n=>n.x)))+'px';
+  if(s.length)sl.style.left=Math.round(Math.min.apply(null,s.map(n=>n.x)))+'px';
+  pl.style.left=Math.round(listX()+rowWidth()/2)+'px';
+  pl.style.transform='translateX(-50%)';
+}
+function placeCaps(){let w=stage.clientWidth,h=stage.clientHeight;for(let side of ['group','stack']){let ns=capNodes.filter(n=>n.kind===side),total=ns.reduce((s,n)=>s+n.el.offsetHeight,0)+32*(ns.length-1),y=Math.max(sgTop()+20,(h-total)/2);ns.forEach(n=>{n.x=side==='group'?Math.max(22,w*.07):Math.max(listX()+rowWidth()+40,w*.75);if(side==='group')n.x=Math.min(n.x,listX()-n.el.offsetWidth-32);else n.x=Math.min(n.x,w-n.el.offsetWidth-20);n.y=y;n.el.style.left=n.x+'px';n.el.style.top=y+'px';y+=n.el.offsetHeight+32})}placeLabels()}
 function update(animate=true){if(scrolling)stopWheel();clearTimeout(snapTimer);scrolling=false;cancelAnimationFrame(raf);hover=null;stage.classList.toggle('group-selection',pivot?.kind==='group');stage.style.setProperty('--selection-color',pivot?.kind==='group'?colors[pivot.id]:'#00e676');list.querySelectorAll('.outgoing-body').forEach(e=>e.remove());let outgoing=null;const previous=rows.find(r=>r.classList.contains('active'));if(animate&&!pivot&&!reduced.matches&&previous&&previous!==rows[index]){let body=previous.querySelector('.body');outgoing=body.cloneNode(true);outgoing.classList.add('outgoing-body');outgoing.style.cssText='position:absolute;left:20px;right:20px;top:'+body.offsetTop+'px;margin:0;visibility:visible;pointer-events:none';}let oldHeights=rows.map(r=>r.offsetHeight),oldTop=parseFloat(rows[0].style.top)||0;let ids=linked();rows.forEach((r,i)=>{let active=expanded&&i===index;r.classList.toggle('active',active);r.classList.toggle('match',!!pivot&&ids.includes(i));r.classList.toggle('unmatched',!!pivot&&!ids.includes(i));r.querySelector('.focus-btn').setAttribute('aria-expanded',String(active));r.style.height='auto';r.style.paddingTop=(active?24:10)+'px';r.style.paddingBottom=(active?24:10)+'px';r.querySelector('.body').style.display=active?'block':'none';actionsOf(r).style.cssText=active?'':'display:none';setActionsFocusable(r,active);r.querySelector('.year').style.display=pivot&&!active?'none':'block'});let heights=rows.map(r=>r.offsetHeight);if(outgoing){previous.append(outgoing);outgoing.animate([{opacity:1},{opacity:0}],{duration:240,easing:'ease-out',fill:'forwards'}).finished.then(()=>outgoing.remove())}if(animate&&!pivot&&!reduced.matches){let body=rows[index].querySelector('.body');body.getAnimations().forEach(a=>a.cancel());body.animate([{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:480,delay:100,fill:'backwards',easing:'ease-out'})}let ys=Array(P.length),gap=24;
 if(pivot){let total=ids.reduce((s,i)=>s+heights[i],0)+gap*(ids.length-1),y=Math.max(sgTop()+10,(stage.clientHeight-total)/2);if(expanded){y=stage.clientHeight/2-heights[index]/2;for(let i of ids){if(i===index)break;y-=heights[i]+gap}}let top=y;ids.forEach(i=>{ys[i]=y;y+=heights[i]+gap});let rest=P.map((_,i)=>i).filter(i=>!ids.includes(i)),split=Math.ceil(rest.length/2),up=top-gap;rest.slice(0,split).reverse().forEach(i=>{up-=heights[i];ys[i]=up;up-=gap});rest.slice(split).forEach(i=>{ys[i]=y;y+=heights[i]+gap})}
 else{let y=stage.clientHeight/2-heights[index]/2;for(let i=0;i<index;i++)y-=heights[i]+gap;rows.forEach((r,i)=>{ys[i]=y;y+=heights[i]+gap})}

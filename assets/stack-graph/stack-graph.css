@@ -109,3 +109,6 @@
 #stackgraph .actions{justify-content:center}
 #stackgraph .mobile article{text-align:center}
 #stackgraph .mobile .actions{justify-content:center}
+
+/* embedded copy sits directly on the page background: no panel of its own */
+#stackgraph.embedded .stage{background:none}
