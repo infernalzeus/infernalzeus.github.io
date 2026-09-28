@@ -1343,12 +1343,12 @@
         <p class="rcard-type">Publication</p>
         <h3>Myocarditis monitoring during clozapine initiation: audit of practice in an NHS trust</h3>
         <p class="rcard-author">Co-author</p>
-        <p>A review of 219 patients starting clozapine at an NHS trust. Baseline ECGs were done in 80% of cases, but troponin was never routinely monitored — so the tests that catch myocarditis early were largely missing from practice.</p>
+        <p>A retrospective review of 219 patients starting clozapine, assessing cardiac monitoring practice against the evidence for routine troponin and CRP testing to detect myocarditis during the initiation period.</p>
         <div class="card-footer">
           <div class="card-actions">
             <a class="link-btn" href="https://doi.org/10.1192/bjo.2026.12079" target="_blank" rel="noopener">BJPsych Open &rarr;</a>
           </div>
-          <p class="card-byline">BJPsych Open, September 2026 (open access)</p>
+          <p class="card-byline">BJPsych Open, September 2026</p>
           <p class="venue">Kent &amp; Medway Mental Health NHS Trust</p>
         </div>
       </div>
@@ -1362,6 +1362,7 @@
           
           <div class="card-actions">
             <a class="link-btn" href="https://dl.acm.org/doi/10.1145/3556223.3556234" target="_blank" rel="noopener">ACM Digital Library →</a>
+            <a class="link-btn outlined" href="https://youtu.be/v75JzkTXobA" target="_blank" rel="noopener">Presentation →</a>
           </div>
           <p class="card-byline">Presented at ICCAI 2022</p>
           <p class="venue">Researched at BITS Pilani, Goa.</p>
@@ -2337,7 +2338,7 @@ function _fireHexButtonSparks() {
       byline: 'May 2026 · Personal',
       body: [
         'AlphaForge is a trading dashboard and an MCP (Model Context Protocol) server at the same time — the MCP layer is what turns a general-purpose coding agent (Claude Code) into a domain-specific systematic market analyst, with tool access to live Binance candle data, configurable technical indicators, and LLM-generated narrative commentary.',
-        'On top of the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard (vanilla JS/HTML, no framework, ~3,700 lines) backed by a FastAPI server (~2,400 lines). Trade, activity, and state history live in SQLite rather than flat CSVs, specifically so a "clear history" action can\'t silently no-op by only touching the CSV.',
+        'On top of the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard in vanilla JS/HTML with no framework, backed by a FastAPI server. Trade, activity, and state history live in SQLite rather than flat CSVs, specifically so a "clear history" action can\'t silently no-op by only touching the CSV.',
         'Execution has two explicit modes — paper and live — and paper is the default. That split isn\'t a settings toggle bolted on afterward; it\'s the safety boundary between "the agent reasons about the market" and "the agent moves real capital," designed in from the start.'
       ],
       note: 'Building an MCP server is, by definition, an architecture decision: you\'re designing the integration contract between a general-purpose reasoning agent and a domain-specific data/execution layer. Paper-vs-live as a first-class mode, not a flag, is the other half of that same instinct.',
@@ -2498,7 +2499,7 @@ function _fireHexButtonSparks() {
     html += '<p class="modal-byline">' + p.byline + '</p>';
     p.body.forEach(function (para) { html += '<p class="modal-p">' + para + '</p>'; });
     if (p.note) {
-      html += '<div class="modal-note"><span class="modal-note-label">Architecture</span><p>' + p.note + '</p></div>';
+      html += '<div class="modal-note"><span class="modal-note-label">Design note</span><p>' + p.note + '</p></div>';
     }
     if (p.stack && p.stack.length) {
       html += '<h4 class="modal-h4">Stack</h4><div class="tags">';
