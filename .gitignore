@@ -1,0 +1,8 @@
+# Agent and design working files — not part of the published site.
+# The only tracked file under docs/stack-graph is stack-graph.html itself.
+AGENTS.md
+docs/stack-graph/*.md
+docs/stack-graph/*.cjs
+docs/stack-graph/*.json
+docs/stack-graph/*.png
+docs/stack-graph/reference-prior-attempt.html
