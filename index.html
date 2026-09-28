@@ -2303,12 +2303,12 @@ function _fireHexButtonSparks() {
       title: 'Circadian Health Systems',
       byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
       body: [
-        'CHiP-D (Circadian Health in Psychosis and Depression) and the eClocker shift-workers\' cognitive-performance study both depend on the same raw material: multi-week wrist-worn actigraphy and light-logger recordings from clinical participants. Turning that into something a researcher can actually run statistics on takes several distinct transformations, each with its own failure modes — so rather than one growing script, the pipeline is decomposed into separate repositories with an explicit contract between them.',
-        'Raw GENEActiv <code>.bin</code> files are epoched into sample- and epoch-level CSVs, then passed through a device-position calibration stage, then converted into scientifically validated sleep-regularity metrics. A parallel branch does the same for MiEYE light-logger exports, producing per-day luminosity metrics and a compliance verdict. Both branches surface through a single FastAPI compliance dashboard, config-driven so it points at arbitrary data folders rather than hardcoded paths — built deliberately without a JS framework or build step, because the people using it day-to-day are clinical researchers, not developers.',
-        'The eClocker statistical analysis (the "which circadian measures actually predict cognitive performance" question) sits on top of this pipeline\'s output. An earlier pass at that analysis had three bugs — a mis-specified IS formula, PCA run on label-encoded items, and an overfit random forest — since corrected; the metric that actually holds up is the link between schedule regularity and circadian regularity.'
+        'CHiP-D (Circadian Health in Psychosis and Depression) and the eClocker shift-worker study run on the same raw material: multi-week wrist-worn actigraphy and light-logger recordings from clinical participants. Turning that into something a researcher can run statistics on takes several distinct transformations, each with its own failure modes — so the work is decomposed into separate repositories with an explicit file contract between stages rather than one growing script.',
+        'Raw GENEActiv .bin files are epoched into sample- and epoch-level CSVs, passed through a device-position calibration stage, then converted into validated sleep-regularity metrics. A parallel branch does the same for MiEYE light-logger exports, producing per-day luminosity metrics and a compliance verdict. Both surface through a single FastAPI compliance dashboard, config-driven so it points at arbitrary data folders, and built deliberately without a JS framework or build step because the people using it daily are clinical researchers rather than developers.',
+        'Underneath sits a Medallion-structured research data lake covering 500+ participants across four seasons, multiple device types and multiple studies, for which I am data controller, supporting correlation across six research-grade activity-monitoring measures.'
       ],
-      note: 'Each stage consumes the prior stage\'s CSV/JSON output through an explicit file contract — the pipeline can absorb a new device or a new metric without anyone touching upstream code. That decomposition, plus a dashboard designed for non-technical end users, is the architecture story here as much as the statistics is.',
-      stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'Plain HTML/JS dashboard (no build step)', 'YAML config', 'GENEActiv .bin parser', 'MiEYE parser'],
+      note: 'Each stage consumes the previous stage\'s CSV or JSON output through an explicit contract, so the pipeline can absorb a new device or a new metric without anyone touching upstream code. That decomposition is as much the result here as the statistics are.',
+      stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'GENEActiv .bin parser', 'MiEYE light-logger parser', 'YAML config', 'Plain HTML/JS dashboard (no build step)'],
       links: [
         { label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' },
         { label: 'actigraphy-calibration (private)', url: 'https://github.com/infernalzeus/actigraphy-calibration' },
@@ -2322,12 +2322,12 @@ function _fireHexButtonSparks() {
       title: 'Agent Hub',
       byline: 'Aug 2026 – Present · Personal',
       body: [
-        'Running a growing set of personal AI/ML services — a video clipper, a file browser, a YouTube downloader, an MCP-connected coding assistant — creates a recurring problem: each one needs to be reachable remotely, restarted independently, and monitored without SSH-ing in every time. Agent Hub is the platform that solves that once instead of solving it per-service.',
-        'It sits in front of everything as a reverse proxy over a private Tailscale mesh, with a supervisor that manages process lifecycle for each fronted app. On top of that sits a self-updating project graph (D3.js) that auto-discovers projects on disk, diffs them against git to show sync state, and renders the whole personal portfolio as a live status map rather than a static list.',
-        'The interesting part isn\'t any single feature — it\'s treating "my own collection of projects" as a system with a defined public surface, the same way you\'d architect a proxy layer in front of any set of backend services.'
+        'A reverse-proxy and orchestration platform fronting a portfolio of personal AI/ML services — a video clipper, a file browser, a media downloader, an MCP-connected coding assistant — behind one address on a private Tailscale mesh. Each fronted app keeps its own process; the hub owns routing, lifecycle and the public surface.',
+        'A supervisor handles start, stop and restart per service. The process binds to loopback and Tailscale Serve terminates from outside, so nothing is published to the LAN. Access control is layered rather than binary: CSRF on state-changing routes, scoped integration tokens for machine callers, and an optional PBKDF2-hashed power PIN gating privileged actions.',
+        'Above that sits a self-updating project graph in D3 that auto-discovers repositories on disk and diffs each against its remote to report sync state — treating the portfolio itself as an observable system rather than a list of links.'
       ],
-      note: 'A reverse proxy is itself an architectural decision: define a stable public surface, then let each backend evolve independently behind it. Agent Hub extends that idea into an observability layer over your own systems, not just a router.',
-      stack: ['Python', 'aiohttp', 'Tailscale (mesh VPN)', 'D3.js (project graph)', 'Process lifecycle supervisor', 'Windows platform integration'],
+      note: 'A reverse proxy is an architectural commitment rather than a convenience: it fixes a stable public surface so each backend can evolve independently behind it. Binding to loopback and letting the mesh terminate externally makes network exposure a property of the deployment, not of the application.',
+      stack: ['Python', 'aiohttp', 'Tailscale (mesh + Serve)', 'Process lifecycle supervisor', 'D3.js project graph', 'CSRF, scoped tokens, PBKDF2 power PIN', 'MCP', 'PyInstaller packaging'],
       links: [
         { label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }
       ]
@@ -2337,27 +2337,27 @@ function _fireHexButtonSparks() {
       title: 'AlphaForge',
       byline: 'May 2026 · Personal',
       body: [
-        'AlphaForge is a trading dashboard and an MCP (Model Context Protocol) server at the same time — the MCP layer is what turns a general-purpose coding agent (Claude Code) into a domain-specific systematic market analyst, with tool access to live Binance candle data, configurable technical indicators, and LLM-generated narrative commentary.',
-        'On top of the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard in vanilla JS/HTML with no framework, backed by a FastAPI server. Trade, activity, and state history live in SQLite rather than flat CSVs, specifically so a "clear history" action can\'t silently no-op by only touching the CSV.',
-        'Execution has two explicit modes — paper and live — and paper is the default. That split isn\'t a settings toggle bolted on afterward; it\'s the safety boundary between "the agent reasons about the market" and "the agent moves real capital," designed in from the start.'
+        'A trading platform and an MCP (Model Context Protocol) server in one process. The MCP layer is the integration contract: it exposes live Binance candle data, configurable technical indicators and narrative generation as tools, which is what turns a general-purpose coding agent into a domain-specific systematic market analyst rather than a chat wrapper over a chart.',
+        'Above the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard in vanilla JS/HTML with no framework, backed by a FastAPI server. Trade, activity and state history live in SQLite rather than flat files, so a \'clear history\' action cannot silently no-op by clearing only one of several stores.',
+        'Execution has two first-class modes, paper and live, with paper as the default.'
       ],
-      note: 'Building an MCP server is, by definition, an architecture decision: you\'re designing the integration contract between a general-purpose reasoning agent and a domain-specific data/execution layer. Paper-vs-live as a first-class mode, not a flag, is the other half of that same instinct.',
-      stack: ['Python', 'FastAPI + uvicorn', 'SQLite (trades / activity / state)', 'Binance REST API + yfinance', 'TradingView widget', 'MCP server', 'Anthropic Claude (narrative generation)'],
+      note: 'Paper-versus-live is modelled as a mode rather than a flag because it is the boundary between an agent reasoning about a market and an agent moving capital. Designing that boundary in from the start is what makes the autonomy safe to extend later.',
+      stack: ['Python', 'FastAPI + uvicorn', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget', 'Anthropic Claude (narrative generation)'],
       links: [
         { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
       ]
     },
     'movie-shorts-clipper': {
       eyebrow: 'AI Systems & Automation',
-      title: 'movie-shorts-clipper',
+      title: 'Movie Shorts Clipper',
       byline: 'Jul 2026 – Present · Personal, fronted by Agent Hub',
       body: [
-        'One core pipeline — cut, caption, composite — exposed through three configurable output modes: a classic captioned-clip format, a TTS-narrated format designed to make the output transformative rather than a raw re-upload, and an LLM-driven "plot recap" mode that generates scene narration beats and syncs an outro to them.',
-        'Dialogue captions come from the source movie\'s own subtitle file when available; when they\'re not, the pipeline falls back to a local faster-whisper transcription seeded with the movie title to bias vocabulary toward proper nouns. The LLM used for narration/recap generation defaults to a local model rather than a cloud API — a deliberate choice given bandwidth constraints, not an oversight.',
-        'Voiceover timing, audio ducking, and beat-sync are handled with edge-tts, ffmpeg (libass for burn-in), and librosa/opencv for beat detection — the whole thing runs as a backend service fronted by Agent Hub so it can be triggered from a web form rather than the command line.'
+        'One cut, caption and composite pipeline for turning long-form film into vertical shorts. Configuration was originally a three-value mode enum; it was rebuilt around orthogonal axes — selection (manual, scene, spine, script), voice (none, commentary, storytelling, music) and shape — so combinations the enum had no name for became expressible. The mode flag now only names a preset over those axes.',
+        'Dialogue captions come from the source subtitle track where one exists, falling back to local faster-whisper transcription seeded with the film title to bias vocabulary toward proper nouns. Burn-in runs through ffmpeg with libass; narration is generated with edge-tts, with audio ducking and beat synchronisation via librosa and OpenCV.',
+        'The storytelling recap format is narration-led rather than clip-led: the spoken script\'s duration sets each clip\'s length, instead of narration being fitted into a cut that was already fixed.'
       ],
-      note: 'The model-selection default (local vs. cloud) is exposed as a considered infra tradeoff, not a hardcoded choice — bandwidth-aware by design, which matters more than the video output itself as an architecture signal.',
-      stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'local-model-default LLM', 'librosa + opencv (beat-sync)'],
+      note: 'Collapsing a mode enum into named axes is the difference between a pipeline that supports the combinations someone thought of and one that supports the combinations that exist. Model selection is exposed per stage rather than globally, so bandwidth cost is a deliberate choice rather than a hidden default.',
+      stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'Per-stage local or cloud model selection'],
       links: [
         { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
       ]
@@ -2367,11 +2367,11 @@ function _fireHexButtonSparks() {
       title: 'Cadenza',
       byline: 'Jun 2026 – Present · Personal (private repo)',
       body: [
-        'Cadenza is a generative music pipeline built around a specific design decision: a classifier sorts, it does not create. A categorised MIDI corpus feeds a generator that proposes candidate arrangements, and a separate scikit-learn classifier scores/filters those candidates against a requested genre or mood — the generator\'s job is volume and variety, the classifier\'s job is taste.',
-        'Accepted candidates are written out as LMMS project files, rendered headless, and mastered with ffmpeg. The CLI and a small Flask UI both drive the same pipeline; as of the working MVP it produces real audio end to end, not just MIDI.'
+        'A generative music pipeline built on a single separation: the generator proposes, the classifier judges. A categorised MIDI corpus feeds candidate arrangement generation, and a separate scikit-learn classifier scores those candidates against a requested genre or mood and filters them. Volume and variety are the generator\'s job; taste is the classifier\'s.',
+        'Accepted candidates are written out as LMMS project files, rendered headless and mastered through ffmpeg, so the output is finished audio rather than MIDI. A CLI and a Flask UI drive the same pipeline, and the library supports Camelot-wheel harmonic and BPM matching, so two tracks can be blended toward a shared key and tempo target.'
       ],
-      note: 'Splitting "propose" from "judge" into two models with an explicit interface between them is a small-scale version of the same separation-of-concerns instinct that shows up in the larger pipeline projects — the architecture choice matters more here than the music genre.',
-      stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask UI', 'LMMS (headless render)', 'ffmpeg (mastering)'],
+      note: 'Splitting proposal from judgement into two models with an explicit interface between them means either half can be replaced without retraining the other — the same separation of concerns that shows up in the larger pipeline work, at a smaller scale.',
+      stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
       links: [
         { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
       ]
@@ -2381,11 +2381,12 @@ function _fireHexButtonSparks() {
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
       body: [
-        'A two-stage discrete-event simulation built to help reason about mobile-MRI appointment scheduling: a demand model estimates patient arrival/need patterns, and a separate scheduling-strategy model tests resourcing policies against that demand — kept as two swappable stages rather than one monolithic simulation so either half can be revised independently as assumptions change.',
-        'Config is schema-driven, and a FastAPI + JS slider UI lets a non-technical stakeholder explore "what if" resourcing scenarios interactively instead of reading simulation output as raw numbers.'
+        'A two-stage discrete-event simulation for a mobile MRI service across Kent. Units launch daily from six Memory Assessment Service hubs and visit GP practices to clear MRI referrals; the tool synthesises a demand population, then runs serving strategies against it and shows how backlog builds and clears over a multi-year horizon.',
+        'The two stages are deliberately decoupled. Population generation is reproducible from a seed and independent of any strategy, so several strategies can be raced against identical demand — which is the only condition under which comparing them means anything. Three are implemented: greedy, a genetic search running a full evolutionary pass per simulated day, and an MCTS (UCT) look-ahead with a per-day iteration budget. Greedy scales to five-year runs; the search strategies are for short windows.',
+        'Every tunable parameter is declared once in a PARAM_SCHEMA, and both the CLI flags and the web UI sliders are generated from it, so the two interfaces cannot drift apart.'
       ],
-      note: 'Operations-research systems thinking applied to a live NHS resourcing problem — the same instinct to decompose a problem into independently-testable stages that shows up across the other systems work, applied outside a strictly software context.',
-      stack: ['Python', 'FastAPI', 'JS slider UI', 'Schema-driven config', 'Discrete-event simulation'],
+      note: 'Decoupling demand from strategy turns the simulation into a controlled experiment rather than a demonstration. Generating both interfaces from one schema means a new parameter appears in both without a second edit, and practice filtering — roughly 184 active GP nodes plus six hubs — is an explicit modelling assumption rather than a silent default.',
+      stack: ['Python', 'FastAPI + slider UI', 'PARAM_SCHEMA-driven config (CLI + UI)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
     'rl-vr-agent': {
