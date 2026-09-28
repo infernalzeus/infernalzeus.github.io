@@ -1341,6 +1341,20 @@
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
+        <h3>Myocarditis Monitoring During Clozapine Initiation: Audit of Practice in an NHS Trust</h3>
+        <p class="rcard-author"></p>
+        <p>Clozapine is the only antipsychotic licensed for treatment-resistant schizophrenia, but carries a risk of myocarditis during the initiation period, which is why guidance calls for structured cardiac monitoring. This audit examined how that monitoring is carried out in practice across an NHS trust, and where recorded practice diverges from the guidance it is measured against.</p>
+        <div class="card-footer">
+          <div class="card-actions">
+            <a class="link-btn" href="https://doi.org/10.1192/bjo.2026.12079" target="_blank" rel="noopener">BJPsych Open &rarr;</a>
+          </div>
+          <p class="card-byline">BJPsych Open, 2026</p>
+          <p class="venue">Kent &amp; Medway NHS and Social Care Partnership Trust</p>
+        </div>
+      </div>
+
+      <div class="rcard">
+        <p class="rcard-type">Publication</p>
         <h3>ML-based Analysis to Identify Speech Features Relevant in Predicting Alzheimer's</h3>
         <p class="rcard-author">Primary Author</p>
         <p>Analysed speech patterns across clinical datasets to identify acoustic and linguistic features strongly associated with Alzheimer's disease. Demonstrated ML approaches for early-stage detection from spontaneous speech.</p>
@@ -2370,6 +2384,102 @@ function _fireHexButtonSparks() {
       note: 'Operations-research systems thinking applied to a live NHS resourcing problem — the same instinct to decompose a problem into independently-testable stages that shows up across the other systems work, applied outside a strictly software context.',
       stack: ['Python', 'FastAPI', 'JS slider UI', 'Schema-driven config', 'Discrete-event simulation'],
       links: []
+    },
+    'rl-vr-agent': {
+      eyebrow: 'Machine Learning & Research',
+      title: 'RL / VR Agent',
+      byline: 'Aug 2021 – Aug 2022 · King\'s College London (IoPPN, CSI Lab)',
+      body: [
+        'Clinical cognitive assessments delivered in virtual reality produce spatial heatmaps of where a participant looked and moved. The question was whether a reinforcement-learning agent could be trained to perform those same assessment tasks well enough that its behaviour became a usable model of the task itself.',
+        'The agent is a TD3-DDPG double Q-learning design running against a custom OpenAI Gym environment. The gain did not come from the learning algorithm — it came from redefining the environment around it: the gym architecture, the reward functions, and the percept sequence, which uses a quantised Moore neighbourhood together with a Lyapunov function to give the agent a stable notion of progress.',
+        'Behavioural simulation task completion went from 58.33% to 100% after those changes.'
+      ],
+      note: 'The headline result is an environment-design result, not an algorithm result. Nothing about the learner changed; what changed was the representation it was given. That distinction is the reason the work transfers to other assessment tasks.',
+      stack: ['Python', 'OpenAI Gym', 'TD3-DDPG double Q-learning', 'Virtual Reality heatmaps'],
+      links: []
+    },
+    '3d-bounding-box': {
+      eyebrow: 'Computer Vision',
+      title: '3D Bounding Box Annotation',
+      byline: 'Jan – May 2021 · Academic',
+      body: [
+        'Autonomous-driving datasets ship camera frames and LiDAR point clouds that describe the same scene from different geometries. Fusing them into consistent 3D bounding boxes is what makes the data usable as training material rather than raw capture.',
+        'The pipeline combines OpenCV camera calibration with YOLOv3/v5 detection and LiDAR imaging, evaluated across the Lyft and KITTI datasets, reaching 90.28% IoU confidence.'
+      ],
+      note: 'Calibration is the load-bearing stage. Detection quality sets a ceiling, but a camera-to-LiDAR transform that is even slightly wrong moves every box in the scene — so the calibration step is treated as its own contract rather than a preprocessing detail.',
+      stack: ['Python', 'OpenCV camera calibration', 'YOLOv3 / YOLOv5', 'LiDAR imaging', 'Lyft + KITTI datasets'],
+      links: []
+    },
+    'bm25-search': {
+      eyebrow: 'Information Retrieval',
+      title: 'BM25 Search Engine',
+      byline: 'Mar – Apr 2023 · Academic',
+      body: [
+        'A full-stack search engine over the MIND (Microsoft News) dataset of 100,000+ articles, ranking with BM25 rather than a vector model — a deliberate choice, since BM25 gives an inspectable scoring function whose behaviour can be reasoned about term by term.',
+        'A Flask backend serves the index behind a web UI, and the whole thing is containerised so the index and its runtime move together.'
+      ],
+      note: 'Classical lexical ranking remains the right default when you need to explain why a document scored where it did. The Docker packaging matters for the same reason: a retrieval system that cannot be reproduced cannot really be evaluated.',
+      stack: ['Python', 'BM25 ranking', 'Flask', 'Docker', 'MIND news dataset'],
+      links: [
+        { label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }
+      ]
+    },
+    'ml-notebooks': {
+      eyebrow: 'Machine Learning',
+      title: 'ML Reference Notebooks',
+      byline: '2021 – 2023 · Academic',
+      body: [
+        'A working reference collection across classical machine learning — exploratory data analysis, classification, regression and clustering — built on real bank data with scikit-learn workflows rather than toy examples.',
+        'Kept as notebooks on purpose: the value is in the intermediate output at each step, which is what makes them reusable as a reference rather than as a library.'
+      ],
+      note: 'Supervised and unsupervised techniques are kept side by side against the same dataset, so the comparison is between methods rather than between datasets.',
+      stack: ['Python', 'scikit-learn', 'pandas / NumPy', 'Jupyter'],
+      links: [
+        { label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }
+      ]
+    },
+    'neon-warfare': {
+      eyebrow: 'Games & Interactive',
+      title: 'NEON WARFARE',
+      byline: '2026 – Present · Personal (private repo)',
+      body: [
+        'A real-time lane-based tactical auto-battler built in Unity 6, where the economy is driven by a match-token core board rather than a conventional resource tick — so board play and lane combat feed each other instead of running as separate systems.',
+        'Competitive play is served by a segmented leaderboard that works offline. Runs are recorded and replayed as ghosts, which means a player always has an opponent to race without needing a live session, and the whole ranking layer sits behind a swappable backend interface with a local fallback.'
+      ],
+      note: 'The leaderboard is defined by an interface with a local implementation behind it, so the game is fully playable and rankable with no backend at all. A hosted backend becomes an upgrade rather than a dependency — the same instinct as paper-vs-live in AlphaForge.',
+      stack: ['Unity 6 / URP', 'C#', 'Firebase (Auth + Firestore)', 'Ghost replay recording', 'Elo ranking'],
+      links: [
+        { label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }
+      ]
+    },
+    'monopoly-madness': {
+      eyebrow: 'Games & Interactive',
+      title: 'Monopoly Madness',
+      byline: '2026 · Personal',
+      body: [
+        'Full-stack real-time multiplayer Monopoly with a live auction and trading system, plus game modifiers that change the rules of a match.',
+        'The hard part of a board game online is not the board, it is agreement: every client has to see the same auction at the same moment, and a trade has to either complete for both parties or not happen at all. State is synchronised through Firebase so those transitions stay consistent across clients.'
+      ],
+      note: 'Auctions and trades are the only places where two players act on the same object at once, so they are the parts that define the synchronisation model. The rest of the game is comparatively forgiving.',
+      stack: ['React', 'TypeScript', 'Firebase', 'Vercel'],
+      links: [
+        { label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' },
+        { label: 'Play', url: 'https://monopoly-madness.vercel.app/' }
+      ]
+    },
+    'sha256-vault': {
+      eyebrow: 'Tools',
+      title: 'SHA256 Vault',
+      byline: 'Jan 2025 · Personal',
+      body: [
+        'A local credential manager structured as layers rather than a script: configurable service layers, interface adapters, and a separate utility layer for the cryptographic operations, so the storage backend and the interface can change independently of the crypto.',
+        'SHA-256 is used for hashing — identifiers and password verification — and is not a reversible operation; stored secrets are encrypted separately. The published repository holds the earlier command-line version, and a later local build moves the same layering behind a web interface.'
+      ],
+      note: 'Separating the cryptographic utility layer from the service layer is what keeps the interface replaceable. It also keeps the distinction between hashing and encryption explicit in the code rather than implied by naming.',
+      stack: ['Python', 'SHA-256 hashing', 'Fernet encryption', 'Structured CLI', 'Flask (later build)'],
+      links: [
+        { label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }
+      ]
     }
   };
 
@@ -2386,7 +2496,7 @@ function _fireHexButtonSparks() {
     html += '<p class="modal-byline">' + p.byline + '</p>';
     p.body.forEach(function (para) { html += '<p class="modal-p">' + para + '</p>'; });
     if (p.note) {
-      html += '<div class="modal-note"><span class="modal-note-label">Architecture Note</span><p>' + p.note + '</p></div>';
+      html += '<div class="modal-note"><span class="modal-note-label">Architecture</span><p>' + p.note + '</p></div>';
     }
     if (p.stack && p.stack.length) {
       html += '<h4 class="modal-h4">Stack</h4><div class="tags">';

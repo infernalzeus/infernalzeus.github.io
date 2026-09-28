@@ -1,6 +1,5 @@
 /* Stack Graph — shared by index.html (#projects) and docs/stack-graph/.
-   Generated from the accepted standalone page. Boots only if #stackgraph is
-   present, and leaks nothing into the page's global scope. */
+   Boots only when #stackgraph is present and leaks nothing into page scope. */
 (function(){
 var root=document.getElementById('stackgraph');
 if(!root)return;
@@ -8,58 +7,58 @@ function cssVar(n){return parseFloat(getComputedStyle(root).getPropertyValue(n))
 function sgTop(){return cssVar('--sg-top')||195}
 function sgBottom(){return cssVar('--sg-bottom')||90}
 var P=[
- {id:'agenthub',t:'AGENT HUB',cat:'systems',y:'Aug 2026 â€” Present',
-  b:'Access PC tools, manage AI agents, and browse files through one private-network hub.',
+ {id:'agenthub',t:'AGENT HUB',cat:'systems',y:'Aug 2026 — Present',
+  b:'Run PC tools, AI agents, and file browsing from one private hub.',
   caps:['Orchestration & Infra','LLM & Agents','Developer Tooling','Dashboards & UI'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Agent-Hub',icon:'gh'},{label:'DOWNLOAD',href:'/Agent-Hub/'}]},
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Agent-Hub',icon:'gh'},{label:'DOWNLOAD',href:'/Agent-Hub/'},{label:'OVERVIEW',href:'/#project/agent-hub'}]},
  {id:'alphaforge',t:'ALPHAFORGE',cat:'systems',y:'May 2026',
-  b:'Analyse markets, backtest strategies, and manage paper or live trades from one dashboard.',
+  b:'Analyse markets, backtest strategies, and manage trades in one dashboard.',
   caps:['LLM & Agents','Orchestration & Infra','Simulation & Modelling','Dashboards & UI'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/AlphaForge',icon:'gh'},{label:'FULL WRITE-UP',href:'/#project/alphaforge'}]},
- {id:'clipper',t:'SHORTS CLIPPER',cat:'systems',y:'Jul 2026 â€” Present',
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/AlphaForge',icon:'gh'},{label:'OVERVIEW',href:'/#project/alphaforge'}]},
+ {id:'clipper',t:'SHORTS CLIPPER',cat:'systems',y:'Jul 2026 — Present',
   b:'Turn movie scenes into captioned vertical clips with optional AI narration.',
   caps:['Media Generation','LLM & Agents','Developer Tooling'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/movie-shorts-clipper',icon:'gh'},{label:'FULL WRITE-UP',href:'/#project/movie-shorts-clipper'}]},
- {id:'cadenza',t:'CADENZA',cat:'ml',y:'Jun 2026 â€” Present',
-  b:'Generate musical arrangements and rank them by genre or mood before rendering audio.',
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/movie-shorts-clipper',icon:'gh'},{label:'OVERVIEW',href:'/#project/movie-shorts-clipper'}]},
+ {id:'cadenza',t:'CADENZA',cat:'ml',y:'Jun 2026 — Present',
+  b:'Generate arrangements, then rank them by genre or mood before rendering.',
   caps:['Media Generation','Machine Learning Models'],
-  links:[{label:'FULL WRITE-UP',href:'/#project/cadenza'}]},
- {id:'circadian',t:'CIRCADIAN HEALTH SYSTEMS',cat:'research',y:'Mar 2024 â€” Present Â· NHS / Univ. of Kent',
-  b:'Turn wearable activity and light recordings into research metrics and compliance reports.',
+  links:[{label:'OVERVIEW',href:'/#project/cadenza'}]},
+ {id:'circadian',t:'CIRCADIAN HEALTH SYSTEMS',cat:'research',y:'Mar 2024 — Present · NHS / Univ. of Kent',
+  b:'Turn wearable activity and light data into research-grade metrics.',
   caps:['Data Pipelines','Research Instrumentation','Statistical Analysis','Dashboards & UI'],
-  links:[{label:'FULL WRITE-UP + ALL LINKS',href:'/#project/circadian-health-systems'}]},
- {id:'mri',t:'MRI SIMULATION',cat:'research',y:'2026 Â· Kent mobile-MRI resourcing',
-  b:'Compare mobile MRI scheduling strategies against shared patient-demand scenarios.',
+  links:[{label:'OVERVIEW',href:'/#project/circadian-health-systems'}]},
+ {id:'mri',t:'MRI SIMULATION',cat:'research',y:'2026 · Kent mobile-MRI resourcing',
+  b:'Compare mobile-MRI scheduling strategies against shared demand scenarios.',
   caps:['Simulation & Modelling','Research Instrumentation','Data Pipelines','Dashboards & UI'],
-  links:[{label:'FULL WRITE-UP',href:'/#project/portable-mri-sim'}]},
- {id:'rlvr',t:'RL / VR AGENT',cat:'ml',y:'Aug 2021 â€” Aug 2022 Â· Collaboration',
+  links:[{label:'OVERVIEW',href:'/#project/portable-mri-sim'}]},
+ {id:'rlvr',t:'RL / VR AGENT',cat:'ml',y:'Aug 2021 — Aug 2022 · KCL IoPPN, CSI Lab',
   b:'Train reinforcement-learning agents to complete tasks in VR cognitive assessments.',
   caps:['Machine Learning Models','Research Instrumentation','Simulation & Modelling','Computer Vision'],
-  links:[]},
- {id:'bbox',t:'3D BOUNDING BOX',cat:'ml',y:'Jan â€” May 2021',
+  links:[{label:'OVERVIEW',href:'/#project/rl-vr-agent'}]},
+ {id:'bbox',t:'3D BOUNDING BOX',cat:'ml',y:'Jan — May 2021',
   b:'Detect 3D objects in driving datasets using camera and LiDAR information.',
   caps:['Computer Vision','Machine Learning Models'],
-  links:[]},
- {id:'bm25',t:'BM25 SEARCH',cat:'ml',y:'Mar â€” Apr 2023',
+  links:[{label:'OVERVIEW',href:'/#project/3d-bounding-box'}]},
+ {id:'bm25',t:'BM25 SEARCH',cat:'ml',y:'Mar — Apr 2023',
   b:'Search over 100,000 news articles using BM25 ranking and a web interface.',
   caps:['Information Retrieval','Machine Learning Models','Dashboards & UI'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/BM-IR-Search-Engine',icon:'gh'}]},
- {id:'notebooks',t:'ML NOTEBOOKS',cat:'ml',y:'2021 â€” 2023',
-  b:'Explore classification, regression, and clustering through practical machine-learning notebooks.',
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/BM-IR-Search-Engine',icon:'gh'},{label:'OVERVIEW',href:'/#project/bm25-search'}]},
+ {id:'notebooks',t:'ML NOTEBOOKS',cat:'ml',y:'2021 — 2023',
+  b:'Classification, regression, and clustering in practical ML notebooks.',
   caps:['Machine Learning Models','Statistical Analysis'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Jupyter-Notebooks',icon:'gh'}]},
- {id:'neon',t:'NEON WARFARE',cat:'game',y:'2026 â€” Present',
-  b:'Power a real-time tactical auto-battler with a match-three reactor board.',
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Jupyter-Notebooks',icon:'gh'},{label:'OVERVIEW',href:'/#project/ml-notebooks'}]},
+ {id:'neon',t:'NEON WARFARE',cat:'game',y:'2026 — Present',
+  b:'A real-time lane-based auto-battler with a match-token core board.',
   caps:['Game Systems','Real-Time Multiplayer'],
-  links:[]},
+  links:[{label:'LANDING PAGE',href:'https://infernalzeus.github.io/neon-warfare/'},{label:'OVERVIEW',href:'/#project/neon-warfare'}]},
  {id:'monopoly',t:'MONOPOLY MADNESS',cat:'game',y:'2026',
   b:'Play multiplayer Monopoly with live auctions, trading, and custom game modes.',
   caps:['Game Systems','Real-Time Multiplayer'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Monopoly-Madness',icon:'gh'},{label:'PLAY',href:'https://monopoly-madness.vercel.app/'}]},
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Monopoly-Madness',icon:'gh'},{label:'PLAY',href:'https://monopoly-madness.vercel.app/'},{label:'OVERVIEW',href:'/#project/monopoly-madness'}]},
  {id:'sha256',t:'SHA256 VAULT',cat:'systems',y:'Jan 2025',
   b:'Manage account credentials through a local password-vault interface.',
   caps:['Developer Tooling'],
-  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/SHA256-Encryptor',icon:'gh'}]}
+  links:[{label:'GITHUB',href:'https://github.com/infernalzeus/SHA256-Encryptor',icon:'gh'},{label:'OVERVIEW',href:'/#project/sha256-vault'}]}
 ];
 const $=s=>root.querySelector(s), stage=$('.stage'), list=$('.list'), caps=$('.caps'), svg=$('.wires');
 const colors={systems:'#00e676',research:'#00e8ff',ml:'#a78bfa',game:'#f5c842'},groupNames={systems:'Systems',research:'Research',ml:'ML',game:'Game'};
@@ -67,9 +66,6 @@ let index=0,pivot=null,expanded=true,hover=null,capNodes=[],raf=0,drag=null,igno
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const GH='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>';
 const external=h=>/^https?:/i.test(h);
-// Write-up links are root-prefixed so they resolve from the nested standalone
-// preview. On the site root that prefix would force a full page reload, so drop
-// it there and let the existing hash handler open the modal in place.
 const atRoot=/(^\/|\/index\.html)$/i.test(location.pathname);
 const hrefFor=h=>(atRoot&&h.slice(0,2)==='/#')?h.slice(1):h;
 function actionsHTML(p){return (p.links||[]).map(l=>'<a class="action" href="'+hrefFor(l.href)+'"'+(external(l.href)?' target="_blank" rel="noopener"':'')+'>'+(l.icon==='gh'?GH:'')+'<span>'+l.label+'</span></a>').join('')}
@@ -78,7 +74,7 @@ function actionsHTML(p){return (p.links||[]).map(l=>'<a class="action" href="'+h
 const rows=P.map((p,i)=>{let a=document.createElement('article');a.className='project';a.dataset.sgProject=p.id;a.style.setProperty('--accent',colors[p.cat]);a.innerHTML='<button class="focus-btn" aria-expanded="false"><span class="title">'+p.t+'</span><span class="year">'+p.y+'</span><span class="body">'+p.b+'</span></button><div class="actions">'+actionsHTML(p)+'</div>';a.addEventListener('click',e=>{if(e.target.closest('a'))return;focusProject(i)});a.onpointerenter=()=>{hover={kind:'project',id:i};draw()};a.onpointerleave=()=>{hover=null;draw()};list.append(a);return a});
 const actionsOf=r=>r.querySelector('.actions');
 function setActionsFocusable(r,on){actionsOf(r).querySelectorAll('a').forEach(x=>{x.tabIndex=on?0:-1;if(on)x.removeAttribute('aria-hidden');else x.setAttribute('aria-hidden','true')})}
-$('.mobile').innerHTML=P.map(p=>'<article style="--accent:'+colors[p.cat]+'"><h2>'+p.t+'</h2><span class="year">'+groupNames[p.cat]+' Â· '+p.y+'</span><p>'+p.b+'</p><div class="inline">Tech stack: '+p.caps.join(' Â· ')+'</div><div class="actions">'+actionsHTML(p)+'</div></article>').join('');
+$('.mobile').innerHTML=P.map(p=>'<article style="--accent:'+colors[p.cat]+'"><h2>'+p.t+'</h2><span class="year">'+groupNames[p.cat]+' · '+p.y+'</span><p>'+p.b+'</p><div class="inline">Tech stack: '+p.caps.join(' · ')+'</div><div class="actions">'+actionsHTML(p)+'</div></article>').join('');
 function membership(c,kind='stack'){return P.map((p,i)=>(kind==='group'?p.cat===c:p.caps.includes(c))?i:-1).filter(i=>i>=0)}
 function linked(){return pivot?membership(pivot.id,pivot.kind):P.map((_,i)=>i)}
 function clearSelection(){pivot=null;expanded=true;update(false)}

@@ -1,8 +1,7 @@
 /* Stack Graph — shared by index.html (#projects) and docs/stack-graph/.
-   Generated from the accepted standalone page; scoped under #stackgraph so it
-   cannot touch the rest of the site. Vertical offsets are variables because the
-   embedded copy sits under a panel heading and needs less headroom than the
-   full-page copy. */
+   Generated from the accepted standalone page and scoped under #stackgraph so it
+   cannot touch the rest of the site. The vertical offsets are variables because
+   the embedded copy sits under a panel heading and needs less headroom. */
 #stackgraph{--sg-top:195px;--sg-bottom:90px;--sg-label-top:160px;--sg-min-h:600px;
   position:relative;flex:1;min-height:var(--sg-min-h);
   color:#e0eee9;font-family:Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -98,8 +97,15 @@
 @media(max-width:1000px) and (min-width:760px){#stackgraph .action{font-size:9px;padding:7px 9px}}
 @media(max-width:759px){#stackgraph .mobile .actions{display:flex;margin-top:16px}}
 @media(prefers-reduced-motion:reduce){#stackgraph .action{transition:none}}
-/* embedded copy: the page already shows a panel heading above the graph,
-   so it needs far less headroom than the full-page copy. */
+/* embedded copy: the page already shows a panel heading above the graph, so it
+   needs far less headroom than the full-page copy. */
 #stackgraph.embedded{--sg-top:56px;--sg-label-top:16px;--sg-min-h:540px}
 #stackgraph.embedded .hud{left:0;right:0;bottom:6px}
 #stackgraph.embedded .column-label.group-label{left:0}
+
+/* project cards read centred; copy is kept short enough that no description
+   runs past a second line at the narrowest desktop card width. */
+#stackgraph .project,#stackgraph .focus-btn{text-align:center}
+#stackgraph .actions{justify-content:center}
+#stackgraph .mobile article{text-align:center}
+#stackgraph .mobile .actions{justify-content:center}
