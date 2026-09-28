@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=14">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=16">
   <style>
     :root {
       --bg:         #080c28;
@@ -2410,7 +2410,7 @@ function _fireHexButtonSparks() {
         '<b>Live</b> — real execution, reached only by a deliberate switch.',
         '<b>Any model</b> — local by default, hosted only if you choose it.'
       ],
-      note: 'Simulated and real execution are modelled as separate modes rather than one flag, because that is the boundary between an agent reasoning about a market and an agent committing capital — and a boundary drawn at the start is the only kind that survives the feature after next.',
+      note: 'The analyst team reaches the market through an MCP server rather than bespoke glue, so candles, indicators and position state are callable by any agent that speaks the protocol — swapping the model does not mean rewriting the integration. Trade, activity and state history live in SQLite rather than flat files, which is what stops a \'clear history\' action from half-succeeding across several stores.',
       stack: ['Python', 'FastAPI + uvicorn', 'Any LLM provider — Ollama (default), Anthropic, OpenAI', 'TradingAgents-style bull/bear analyst debate', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
       links: [
         { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
@@ -2424,11 +2424,11 @@ function _fireHexButtonSparks() {
         'A film goes in and captioned vertical clips come out, ready to post. Dialogue is captioned from the film\'s own subtitles where they exist, and transcribed locally where they do not.'
       ],
       bullets: [
-        '<b>Selection</b> — which moments get cut, by hand, by scene, by story spine, or from a script.',
-        '<b>Voice</b> — whether anyone speaks over them, and in what register.',
-        '<b>Shape</b> — the format the finished clip takes.'
+        '<b>Selection</b> — pick clips by hand, by detected scene cut, by the story\'s spine, or straight from a script.',
+        '<b>Voice</b> — keep the original audio, add commentary, narrate it as a story, or lay music underneath.',
+        '<b>Shape</b> — vertical for shorts or landscape for long-form, captions burned in either way.'
       ],
-      note: 'Those three were originally a single mode with three values, which meant only the three combinations someone had already named were reachable. Splitting them made every combination expressible; the old mode names survive as presets over the new settings rather than as the settings themselves.',
+      note: 'Captions come from the film\'s own subtitle track where one exists; where it does not, a local Whisper pass is seeded with the film\'s title so character names and proper nouns survive transcription. In the narrated formats the script leads — the spoken line sets how long its shot stays on screen, rather than narration being cut to fit a clip that was already timed.',
       stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'Per-stage local or cloud model selection'],
       links: [
         { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
@@ -2439,14 +2439,15 @@ function _fireHexButtonSparks() {
       title: 'Cadenza',
       byline: 'Jun 2026 – Present · Personal (private repo)',
       body: [
-        'Describe a genre or a mood and get a finished track back — mastered audio, not a MIDI file you still have to render yourself.'
+        'Ask for a genre or a mood and get a finished, mastered track back — not a MIDI file you still have to render yourself.'
       ],
       bullets: [
-        '<b>Generator</b> — writes candidate arrangements, and is free to be prolific.',
-        '<b>Classifier</b> — listens to them and keeps only what fits the brief.',
-        '<b>Matching</b> — blends two tracks toward a shared key and tempo rather than by ear.'
+        '<b>Generator</b> — writes candidate arrangements from a categorised MIDI corpus, and is free to be prolific.',
+        '<b>Classifier</b> — scores every candidate against the requested genre or mood and discards the rest.',
+        '<b>Render</b> — what survives becomes an LMMS project, rendered headless and mastered to audio.',
+        '<b>Matching</b> — Camelot-wheel key and BPM compatibility, so two tracks can be blended to a shared target.'
       ],
-      note: 'Volume is the first model\'s problem and taste is the second\'s, with an explicit interface between them — so either half can be replaced or retrained without disturbing the other. The same separation shows up in the larger pipeline work, at a smaller scale.',
+      note: 'The classifier trains on the same categorised corpus the generator draws from, so ‘fits the brief’ means the same thing on both sides of the interface. Because judgement lives in its own model, the writing half can be swapped — Markov chain, neural, anything — without retraining taste; an install without torch quietly falls back to the Markov path instead of failing.',
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
       links: [
         { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
@@ -2457,15 +2458,16 @@ function _fireHexButtonSparks() {
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
       body: [
-        'How many mobile MRI units, sent where, clears the backlog fastest? This answers that before anyone commits a vehicle to it. Units set out daily from six hubs to GP practices across Kent, and demand is held fixed so the only thing varying between runs is the strategy.'
+        'How many mobile units, sent where, clears the backlog fastest? Units set out each day from six hubs to roughly 184 GP practices across Kent, simulated over a five-year horizon, so a resourcing decision can be argued from evidence rather than intuition.'
       ],
       bullets: [
-        '<b>Greedy</b> — fast, and the only one that scales to a five-year horizon.',
-        '<b>Genetic</b> — a full evolutionary pass per simulated day.',
+        '<b>Demand</b> — a referral population generated once from a seed and reused, so every strategy faces identical demand.',
+        '<b>Greedy</b> — nearest-practice allocation, and the only strategy fast enough for a full five-year run.',
+        '<b>Genetic</b> — a complete evolutionary search per simulated day, for short windows.',
         '<b>MCTS (UCT)</b> — look-ahead search with a per-day iteration budget.',
-        '<b>Sliders</b> — units, working hours and referral growth, moved by a stakeholder directly.'
+        '<b>Sliders</b> — units, working hours and referral growth, changed live by a non-technical stakeholder.'
       ],
-      note: 'Fixing demand before varying strategy is what makes the comparison a controlled experiment rather than a demonstration. Separately, every tunable parameter is declared once in a single schema from which both the command-line flags and the web sliders are generated — so the two interfaces cannot drift apart as the model grows.',
+      note: 'Units do not return to base overnight — each resumes from wherever it finished, matching how the service actually runs and materially changing which practices are reachable on a given day. Practice selection is explicit rather than the whole list: roughly 184 active GP nodes plus six hubs, filtered on months-active and mean-referral thresholds.',
       stack: ['Python', 'FastAPI + slider UI', 'Schema-driven config (CLI + UI from one source)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
@@ -2651,7 +2653,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=14"></script>
+<script src="assets/stack-graph/stack-graph.js?v=16"></script>
 </body>
 </html>
 

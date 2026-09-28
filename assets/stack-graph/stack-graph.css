@@ -158,3 +158,55 @@
 /* list mode at any width: the action links must be usable, not just present */
 #stackgraph.listmode .mobile .actions{display:flex;margin-top:14px}
 #stackgraph.listmode .mobile .actions:empty{display:none!important}
+
+/* ── List mode cards ───────────────────────────────────────────────────────
+   Same language as the graph: a bordered box carrying the domain accent, an
+   Orbitron title, and the graph's own type scale so the two modes read as one
+   design rather than a graph and a fallback. */
+#stackgraph .mobile{padding:6px 0 60px}
+#stackgraph .lcard{
+  border:1px solid var(--accent); border-radius:10px;
+  background:#0a122c; padding:18px 18px 16px; margin:0 0 16px;
+  border-bottom:1px solid var(--accent);      /* override the old rule */
+}
+#stackgraph .lhead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:14px; margin-bottom:11px;
+}
+#stackgraph .ldomain{
+  font:700 9px Orbitron,monospace; letter-spacing:2px; text-transform:uppercase;
+  color:var(--accent); padding:4px 9px; border-radius:20px;
+  border:1px solid var(--accent); opacity:.9; white-space:nowrap;
+}
+#stackgraph .lyear{ font-size:11.5px; color:#7d8ba3; letter-spacing:.3px; text-align:right }
+#stackgraph .mobile h2{
+  font:700 14px/1.5 Orbitron,monospace; letter-spacing:1.4px;
+  color:var(--accent); margin:0 0 10px;
+}
+#stackgraph .mobile p{
+  font-size:15px; line-height:1.65; color:#a9b4c9; margin:0;
+}
+#stackgraph .ltags{
+  display:flex; flex-wrap:wrap; align-items:center; gap:7px;
+  margin-top:14px; padding-top:13px; border-top:1px solid rgba(132,152,178,.18);
+}
+#stackgraph .ltag-label{
+  font:700 8.5px Orbitron,monospace; letter-spacing:1.8px; text-transform:uppercase;
+  color:#60738f; margin-right:3px;
+}
+#stackgraph .ltag{
+  font-size:12px; line-height:1.4; color:#9aa6bb; letter-spacing:.3px;
+  padding:3px 9px; border-radius:4px; background:rgba(132,152,178,.10);
+}
+#stackgraph .lcard .actions{ margin-top:14px }
+@media(max-width:759px){
+  #stackgraph .lcard{ padding:16px 15px 14px; margin-bottom:14px }
+  #stackgraph .mobile h2{ font-size:12.5px; letter-spacing:1.1px }
+  #stackgraph .mobile p{ font-size:13.5px; line-height:1.6 }
+  #stackgraph .ltag{ font-size:11px }
+  #stackgraph .lhead{ gap:10px }
+}
+@media(min-width:760px){
+  #stackgraph.listmode .mobile{ columns:2; column-gap:22px }
+  #stackgraph .lcard{ break-inside:avoid; margin-bottom:22px }
+}
