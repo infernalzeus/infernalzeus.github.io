@@ -1351,6 +1351,7 @@
           <p class="card-byline">BJPsych Open, September 2026 (open access)</p>
           <p class="venue">Kent &amp; Medway Mental Health NHS Trust</p>
         </div>
+      </div>
 
       <div class="rcard">
         <p class="rcard-type">Publication</p>
@@ -2388,14 +2389,15 @@ function _fireHexButtonSparks() {
     },
     'rl-vr-agent': {
       eyebrow: 'Machine Learning & Research',
-      title: 'RL / VR Agent',
+      title: 'RL Agent for VR Cognitive Assessment',
       byline: 'Aug 2021 – Aug 2022 · King\'s College London (IoPPN, CSI Lab)',
       body: [
-        'Cognitive assessments delivered in virtual reality record where a person looks and moves as a heatmap. The question here was whether an AI agent could learn to carry out the same assessment task well enough that its behaviour became a usable model of how the task gets solved.',
-        'The agent learns by trial and error. Almost all of the work went into the environment around it rather than the learning algorithm itself — how the task is presented, what counts as progress, and how the agent perceives what is around it. After those changes, task completion went from 58% to 100%.'
+        'Clinical cognitive assessments delivered in virtual reality produce spatial heatmaps of gaze and movement. The work trains a reinforcement-learning agent to perform the same assessment task, so that the learned policy becomes a computational model of how the task is solved — a reference against which participant behaviour, including in psychosis, can be compared.',
+        'The agent is a TD3-DDPG double Q-learning actor-critic running against a custom OpenAI Gym environment. The performance gain came from the environment rather than the learner: the gym architecture, the reward functions, and the percept sequence, which encodes local state as a quantised Moore neighbourhood and adds a Lyapunov function to supply a monotonic progress signal, stabilising credit assignment across long episodes.',
+        'Behavioural simulation task completion rose from 58.33% to 100%.'
       ],
-      note: 'Nothing about the learning algorithm changed. What changed was how the problem was described to it, which is usually where the difference actually lies.',
-      stack: ['Python', 'OpenAI Gym', 'TD3-DDPG double Q-learning', 'Virtual Reality heatmaps'],
+      note: 'TD3 already corrects the value-overestimation bias that destabilises DDPG. What it cannot correct is a percept in which progress is not observable — hence the Lyapunov term. The result is an environment-design result, not an algorithm one.',
+      stack: ['Python', 'OpenAI Gym (custom environment)', 'TD3-DDPG double Q-learning', 'Quantised Moore-neighbourhood percepts', 'Lyapunov progress function', 'VR gaze/movement heatmaps'],
       links: []
     },
     '3d-bounding-box': {
@@ -2403,11 +2405,11 @@ function _fireHexButtonSparks() {
       title: '3D Bounding Box Annotation',
       byline: 'Jan – May 2021 · Academic',
       body: [
-        'Self-driving datasets record the same scene twice: once through a camera, once through LiDAR. Combining them into accurate 3D boxes around cars and pedestrians is what turns raw capture into usable training data.',
-        'This pipeline aligns the two sources, detects objects with YOLO, and places the boxes in 3D, reaching 90.28% overlap accuracy against the Lyft and KITTI benchmarks.'
+        'Autonomous-driving datasets pair monocular camera frames with LiDAR point clouds captured of the same scene but in different coordinate frames. Producing 3D bounding boxes means resolving both into one metric frame before any detection can be placed in space.',
+        'The pipeline recovers camera intrinsics and the camera-to-LiDAR extrinsic transform through OpenCV calibration, detects objects in the image plane with YOLOv3/v5, and back-projects those detections against the point cloud to fit oriented 3D boxes. Evaluated across the Lyft and KITTI datasets, it reaches 90.28% IoU confidence.'
       ],
-      note: 'Aligning the camera and the LiDAR matters more than the detector does. If that alignment is even slightly off, every box in the scene moves with it.',
-      stack: ['Python', 'OpenCV camera calibration', 'YOLOv3 / YOLOv5', 'LiDAR imaging', 'Lyft + KITTI datasets'],
+      note: 'Detector precision bounds the score, but extrinsic calibration bounds the entire scene: a small rotational error in the camera-to-LiDAR transform displaces every box, and the displacement grows with range. Calibration is therefore validated as its own stage rather than assumed correct.',
+      stack: ['Python', 'OpenCV camera calibration (intrinsics + extrinsics)', 'YOLOv3 / YOLOv5', 'LiDAR point-cloud back-projection', 'Lyft + KITTI benchmarks'],
       links: []
     },
     'bm25-search': {
@@ -2415,11 +2417,11 @@ function _fireHexButtonSparks() {
       title: 'BM25 Search Engine',
       byline: 'Mar – Apr 2023 · Academic',
       body: [
-        'A search engine over 100,000+ news articles that ranks results using BM25 — a classical method that scores documents on word matching rather than through a neural model.',
-        'That was a deliberate choice: you can trace exactly why a document ranked where it did. A Flask backend serves it behind a simple web interface, packaged with Docker so the index and the application always travel together.'
+        'A retrieval system over the MIND (Microsoft News) collection of 100,000+ articles, ranked with Okapi BM25 — a probabilistic sparse model scoring on saturating term frequency and inverse document frequency, with document-length normalisation.',
+        'Sparse retrieval was chosen over a dense vector approach deliberately: a BM25 score decomposes per query term, so any ranking can be attributed to specific terms and their document statistics. The index is prebuilt and served from a Flask application, containerised with Docker so index construction and query-time behaviour stay reproducible together.'
       ],
-      note: 'When you need to explain a ranking rather than just produce one, a scoring function you can read beats a model you cannot.',
-      stack: ['Python', 'BM25 ranking', 'Flask', 'Docker', 'MIND news dataset'],
+      note: 'Where a dense retriever\'s failure is opaque, a BM25 failure traces back to a term statistic. That matters when a retrieval system has to be evaluated rather than merely demonstrated.',
+      stack: ['Python', 'Okapi BM25 over a prebuilt inverted index', 'Flask', 'Docker', 'MIND news corpus (100k+ documents)'],
       links: [
         { label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }
       ]
@@ -2429,11 +2431,11 @@ function _fireHexButtonSparks() {
       title: 'ML Reference Notebooks',
       byline: '2021 – 2023 · Academic',
       body: [
-        'A working reference across classical machine learning — exploring data, classification, regression and clustering — built on real bank data rather than tidy textbook examples.',
-        'Kept as notebooks on purpose: the value is in seeing each intermediate step and its output, which is what makes them worth coming back to.'
+        'A reference implementation set spanning supervised and unsupervised learning — exploratory analysis, classification, regression and clustering — worked end to end on real bank marketing data rather than curated teaching sets.',
+        'Each notebook carries the full path rather than the model call alone: feature inspection, treatment of class imbalance, fitting with scikit-learn, and evaluation against metrics appropriate to the task rather than raw accuracy.'
       ],
-      note: 'Supervised and unsupervised methods run against the same dataset, so what you are comparing is the methods rather than the data.',
-      stack: ['Python', 'scikit-learn', 'pandas / NumPy', 'Jupyter'],
+      note: 'Holding the dataset constant across methods makes the comparison one of inductive bias rather than of data preparation, which is the only way a like-for-like comparison of classical models says anything useful.',
+      stack: ['Python', 'scikit-learn', 'pandas / NumPy', 'Jupyter', 'Bank marketing dataset'],
       links: [
         { label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }
       ]
@@ -2443,11 +2445,11 @@ function _fireHexButtonSparks() {
       title: 'NEON WARFARE',
       byline: '2026 – Present · Personal (private repo)',
       body: [
-        'A real-time tactical auto-battler built in Unity. Units fight along lanes while you play a match-token board that drives your economy, so the puzzle and the battle feed each other instead of running as two separate games.',
-        'Competitive play works without a connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and rankings work offline with an online backend as an optional extra rather than a requirement.'
+        'A real-time lane-based tactical auto-battler in Unity 6 (URP) whose economy is driven by a match-token core board rather than a timed resource tick, so board state and lane combat are coupled — play on one side of the screen funds the other.',
+        'Competitive progression runs on recorded ghosts rather than live sessions: a run is serialised as a deterministic trace and replayed as an opponent, with Elo ranking over daily-seeded boards. The ranking layer sits behind an ILeaderboardBackend interface, with a local implementation as the default and Firebase Auth/Firestore as the hosted one.'
       ],
-      note: 'The leaderboard sits behind a swappable interface with a local version underneath, so the game stays fully playable and rankable with no server at all.',
-      stack: ['Unity 6 / URP', 'C#', 'Firebase (Auth + Firestore)', 'Ghost replay recording', 'Elo ranking'],
+      note: 'Defining the leaderboard as an interface with a local fallback keeps the game fully playable, rankable and shippable with no backend at all. Network availability becomes a capability flag rather than a hard runtime dependency — the same instinct as paper-vs-live execution in AlphaForge.',
+      stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'ILeaderboardBackend abstraction', 'Firebase Auth + Firestore'],
       links: [
         { label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }
       ]
@@ -2457,11 +2459,11 @@ function _fireHexButtonSparks() {
       title: 'Monopoly Madness',
       byline: '2026 · Personal',
       body: [
-        'Multiplayer Monopoly you can play in a browser, with live auctions, player-to-player trading, and modifiers that change the rules of a match.',
-        'The hard part of a board game online is not the board, it is agreement: everyone has to see the same auction at the same moment, and a trade has to either complete for both players or not happen at all.'
+        'Full-stack real-time multiplayer Monopoly in React/TypeScript on Firebase, with live auctions, player-to-player trading, and rule modifiers that alter match economics.',
+        'The synchronisation problem concentrates in the contested actions. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid; a trade is a two-party atomic exchange that has to commit for both sides or roll back entirely. Both are driven from authoritative shared state rather than reconciled optimistically per client.'
       ],
-      note: 'Auctions and trades are the only moments when two players act on the same thing at once, so they are what set the design for keeping game state in sync.',
-      stack: ['React', 'TypeScript', 'Firebase', 'Vercel'],
+      note: 'Turn-based movement tolerates latency; auctions and trades do not. Designing the state model around those two rather than around the common case is what keeps the game consistent under real network conditions.',
+      stack: ['React', 'TypeScript', 'Firebase (authoritative shared state)', 'Vercel'],
       links: [
         { label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' },
         { label: 'Play', url: 'https://monopoly-madness.vercel.app/' }
@@ -2472,11 +2474,11 @@ function _fireHexButtonSparks() {
       title: 'SHA256 Vault',
       byline: 'Jan 2025 · Personal',
       body: [
-        'A credential manager that runs on your own machine rather than as a service. Secrets are stored encrypted locally, and the tool is built in layers so the storage and the interface can change without touching the cryptography.',
-        'SHA-256 is used for hashing — checking a password without storing it — while the stored secrets themselves are encrypted separately. The public repository holds the original command-line version; a later local build puts the same structure behind a web interface.'
+        'A local-first credential manager structured in layers — configurable service layers, interface adapters, and a separate cryptographic utility layer — so storage and presentation can be replaced without touching key handling.',
+        'SHA-256 is used where a one-way digest is the correct primitive: deriving record identifiers and verifying passwords without storing them. Secret material itself is encrypted with Fernet (AES-CBC under an HMAC authentication tag), kept deliberately out of the hashing path. The published repository holds the original structured CLI; a later local build places the same layering behind a Flask interface.'
       ],
-      note: 'Hashing and encryption do different jobs, and the code keeps them in separate layers rather than blurring the two together.',
-      stack: ['Python', 'SHA-256 hashing', 'Fernet encryption', 'Structured CLI', 'Flask (later build)'],
+      note: 'Keeping hashing and encryption in separate layers forecloses the most common error in tools of this kind — treating a digest as though it were reversible. The separation is enforced by the module boundary rather than by convention.',
+      stack: ['Python', 'SHA-256 (identifiers, password verification)', 'Fernet / AES-CBC + HMAC', 'Layered service + adapter architecture', 'Flask (later build)'],
       links: [
         { label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }
       ]

@@ -31,7 +31,7 @@ var P=[
   b:'Plan a mobile scanner\'s week before it leaves the depot.',
   caps:['Simulation & Modelling','Research Instrumentation','Data Pipelines','Dashboards & UI'],
   links:[{label:'OVERVIEW',href:'/#project/portable-mri-sim'}]},
- {id:'rlvr',t:'RL / VR AGENT',cat:'ml',y:'Aug 2021 — Aug 2022 · KCL IoPPN, CSI Lab',
+ {id:'rlvr',t:'RL AGENT FOR VR ASSESSMENT',cat:'ml',y:'Aug 2021 — Aug 2022 · KCL IoPPN, CSI Lab',
   b:'Train reinforcement-learning agents to complete tasks in VR cognitive assessments.',
   caps:['Machine Learning Models','Research Instrumentation','Simulation & Modelling','Computer Vision'],
   links:[{label:'OVERVIEW',href:'/#project/rl-vr-agent'}]},
@@ -62,7 +62,7 @@ var P=[
 ];
 const $=s=>root.querySelector(s), stage=$('.stage'), list=$('.list'), caps=$('.caps'), svg=$('.wires');
 const colors={systems:'#00e676',research:'#00e8ff',ml:'#a78bfa',game:'#f5c842'},groupNames={systems:'Systems',research:'Research',ml:'ML',game:'Game'};
-let index=0,pivot=null,expanded=true,hover=null,capNodes=[],raf=0,drag=null,ignoreClick=false,lock=0;
+let capGap=40,index=0,pivot=null,expanded=true,hover=null,capNodes=[],raf=0,drag=null,ignoreClick=false,lock=0;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const GH='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>';
 const external=h=>/^https?:/i.test(h);
@@ -89,12 +89,32 @@ function placeLabels(){
   var gl=$('.group-label'),pl=$('.project-label'),sl=$('.stack-label');
   if(!gl||!pl||!sl)return;
   var g=capNodes.filter(n=>n.kind==='group'),s=capNodes.filter(n=>n.kind==='stack');
-  if(g.length)gl.style.left=Math.round(Math.min.apply(null,g.map(n=>n.x)))+'px';
+  if(g.length)gl.style.left=Math.round(listX()-capGap-gl.offsetWidth)+'px';
   if(s.length)sl.style.left=Math.round(Math.min.apply(null,s.map(n=>n.x)))+'px';
   pl.style.left=Math.round(listX()+rowWidth()/2)+'px';
   pl.style.transform='translateX(-50%)';
 }
-function placeCaps(){let w=stage.clientWidth,h=stage.clientHeight;for(let side of ['group','stack']){let ns=capNodes.filter(n=>n.kind===side),total=ns.reduce((s,n)=>s+n.el.offsetHeight,0)+32*(ns.length-1),y=Math.max(sgTop()+20,(h-total)/2);ns.forEach(n=>{n.x=side==='group'?Math.max(22,w*.07):Math.max(listX()+rowWidth()+40,w*.75);if(side==='group')n.x=Math.min(n.x,listX()-n.el.offsetWidth-32);else n.x=Math.min(n.x,w-n.el.offsetWidth-20);n.y=y;n.el.style.left=n.x+'px';n.el.style.top=y+'px';y+=n.el.offsetHeight+32})}placeLabels()}
+function placeCaps(){
+  let w=stage.clientWidth,h=stage.clientHeight;
+  let groups=capNodes.filter(n=>n.kind==='group'),stacks=capNodes.filter(n=>n.kind==='stack');
+  let widest=ns=>ns.reduce((m,n)=>Math.max(m,n.el.offsetWidth),0);
+  // one gap for both sides, limited by whichever side has less room
+  let room=Math.min(listX()-16-widest(groups), w-16-widest(stacks)-listX()-rowWidth());
+  let gap=Math.max(28,Math.min(120,room));
+  capGap=gap;
+  for(let side of ['group','stack']){
+    let ns=side==='group'?groups:stacks;
+    let total=ns.reduce((t,n)=>t+n.el.offsetHeight,0)+32*(ns.length-1);
+    let y=Math.max(sgTop()+20,(h-total)/2);
+    ns.forEach(n=>{
+      n.x=side==='group'?listX()-gap-n.el.offsetWidth:listX()+rowWidth()+gap;
+      n.x=Math.max(12,Math.min(n.x,w-n.el.offsetWidth-12));
+      n.y=y;n.el.style.left=n.x+'px';n.el.style.top=y+'px';
+      y+=n.el.offsetHeight+32;
+    });
+  }
+  placeLabels();
+}
 function update(animate=true){if(scrolling)stopWheel();clearTimeout(snapTimer);scrolling=false;cancelAnimationFrame(raf);hover=null;stage.classList.toggle('group-selection',pivot?.kind==='group');stage.style.setProperty('--selection-color',pivot?.kind==='group'?colors[pivot.id]:'#00e676');list.querySelectorAll('.outgoing-body').forEach(e=>e.remove());let outgoing=null;const previous=rows.find(r=>r.classList.contains('active'));if(animate&&!pivot&&!reduced.matches&&previous&&previous!==rows[index]){let body=previous.querySelector('.body');outgoing=body.cloneNode(true);outgoing.classList.add('outgoing-body');outgoing.style.cssText='position:absolute;left:20px;right:20px;top:'+body.offsetTop+'px;margin:0;visibility:visible;pointer-events:none';}let oldHeights=rows.map(r=>r.offsetHeight),oldTop=parseFloat(rows[0].style.top)||0;let ids=linked();rows.forEach((r,i)=>{let active=expanded&&i===index;r.classList.toggle('active',active);r.classList.toggle('match',!!pivot&&ids.includes(i));r.classList.toggle('unmatched',!!pivot&&!ids.includes(i));r.querySelector('.focus-btn').setAttribute('aria-expanded',String(active));r.style.height='auto';r.style.paddingTop=(active?24:10)+'px';r.style.paddingBottom=(active?24:10)+'px';r.querySelector('.body').style.display=active?'block':'none';actionsOf(r).style.cssText=active?'':'display:none';setActionsFocusable(r,active);r.querySelector('.year').style.display=pivot&&!active?'none':'block'});let heights=rows.map(r=>r.offsetHeight);if(outgoing){previous.append(outgoing);outgoing.animate([{opacity:1},{opacity:0}],{duration:240,easing:'ease-out',fill:'forwards'}).finished.then(()=>outgoing.remove())}if(animate&&!pivot&&!reduced.matches){let body=rows[index].querySelector('.body');body.getAnimations().forEach(a=>a.cancel());body.animate([{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:480,delay:100,fill:'backwards',easing:'ease-out'})}let ys=Array(P.length),gap=24;
 if(pivot){let total=ids.reduce((s,i)=>s+heights[i],0)+gap*(ids.length-1),y=Math.max(sgTop()+10,(stage.clientHeight-total)/2);if(expanded){y=stage.clientHeight/2-heights[index]/2;for(let i of ids){if(i===index)break;y-=heights[i]+gap}}let top=y;ids.forEach(i=>{ys[i]=y;y+=heights[i]+gap});let rest=P.map((_,i)=>i).filter(i=>!ids.includes(i)),split=Math.ceil(rest.length/2),up=top-gap;rest.slice(0,split).reverse().forEach(i=>{up-=heights[i];ys[i]=up;up-=gap});rest.slice(split).forEach(i=>{ys[i]=y;y+=heights[i]+gap})}
 else{let y=stage.clientHeight/2-heights[index]/2;for(let i=0;i<index;i++)y-=heights[i]+gap;rows.forEach((r,i)=>{ys[i]=y;y+=heights[i]+gap})}
