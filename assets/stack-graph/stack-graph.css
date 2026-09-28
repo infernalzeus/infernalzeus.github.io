@@ -136,3 +136,14 @@
   #stackgraph .controls button{padding:8px 10px;font-size:10px}
   #stackgraph .hint{display:none}
 }
+
+/* View toggle: swap the graph for the same projects as a plain list. */
+#stackgraph.listmode .stage{display:none!important}
+#stackgraph.listmode .mobile{display:block!important}
+#stackgraph.listmode{min-height:0}
+#stackgraph .mobile{max-height:none}
+#stackgraph #viewmode{letter-spacing:1.4px}
+@media(min-width:760px){
+  #stackgraph.listmode .mobile{columns:2;column-gap:34px;padding:8px 0 70px}
+  #stackgraph.listmode .mobile article{break-inside:avoid}
+}

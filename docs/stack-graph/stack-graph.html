@@ -3,7 +3,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <!-- The graph itself lives in the shared asset pair so this preview and the
      homepage (#projects) can never drift apart. Only the page shell is local. -->
-<link rel="stylesheet" href="../../assets/stack-graph/stack-graph.css?v=6">
+<link rel="stylesheet" href="../../assets/stack-graph/stack-graph.css?v=7">
 <style>
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -38,7 +38,8 @@ footer .only-mobile{display:none}
         <div class="controls">
           <span class="hint">Scroll through all projects &middot; Click a node to explore</span>
           <button id="back" hidden>&larr; Clear selection</button>
-          <button id="prev" aria-label="Previous project">&uarr;</button>
+          <button id="viewmode" aria-pressed="false">LIST</button>
+            <button id="prev" aria-label="Previous project">&uarr;</button>
           <button id="next" aria-label="Next project">&darr;</button>
         </div>
       </div>
@@ -47,5 +48,5 @@ footer .only-mobile{display:none}
   </div>
 </main>
 <footer><b>Explore by group or tech stack.</b> Click either side to bring linked projects together. Select a project for details.<br><span class="only-mobile">Mobile preview uses a simple list; the interactive graph is available on wider screens.</span></footer>
-<script src="../../assets/stack-graph/stack-graph.js?v=6"></script>
+<script src="../../assets/stack-graph/stack-graph.js?v=7"></script>
 </body></html>

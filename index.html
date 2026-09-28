@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=6">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=7">
   <style>
     :root {
       --bg:         #080c28;
@@ -1321,6 +1321,7 @@
           <div class="controls">
             <span class="hint">Scroll through all projects &middot; Click a node to explore</span>
             <button id="back" hidden>&larr; Clear selection</button>
+            <button id="viewmode" aria-pressed="false">LIST</button>
             <button id="prev" aria-label="Previous project">&uarr;</button>
             <button id="next" aria-label="Next project">&darr;</button>
           </div>
@@ -2570,7 +2571,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=6"></script>
+<script src="assets/stack-graph/stack-graph.js?v=7"></script>
 </body>
 </html>
 

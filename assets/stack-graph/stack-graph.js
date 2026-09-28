@@ -130,7 +130,51 @@ function beginWheel(){cancelAnimationFrame(raf);wheelPosition=index;wheelTarget=
 function wheelTick(now){let dt=Math.min(32,now-wheelTime);wheelTime=now;wheelPosition+=(wheelTarget-wheelPosition)*(1-Math.exp(-dt/145));if(Math.abs(wheelPosition-wheelTarget)<.001)wheelPosition=wheelTarget;let nearest=Math.round(wheelPosition);if(index!==nearest){index=nearest;buildCaps();placeCaps();$('.status').textContent=P[index].t+' / '+groupNames[P[index].cat];$('#prev').disabled=index===0;$('#next').disabled=index===P.length-1}let heights=sceneSizes.map((s,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition));return s.small+(s.large-s.small)*weight}),tops=[],y=0;heights.forEach(h=>{tops.push(y);y+=h+24});let lo=Math.floor(wheelPosition),hi=Math.min(P.length-1,lo+1),fraction=wheelPosition-lo;let center=(tops[lo]+heights[lo]/2)*(1-fraction)+(tops[hi]+heights[hi]/2)*fraction;rows.forEach((r,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition)),body=r.querySelector('.body');r.classList.toggle('active',weight>.001);r.querySelector('.focus-btn').setAttribute('aria-expanded',String(i===nearest));r.style.top=(stage.clientHeight/2+tops[i]-center)+'px';r.style.height=heights[i]+'px';r.style.paddingTop=(10+14*weight)+'px';r.style.paddingBottom=(10+14*weight)+'px';r.style.opacity=.46+.54*weight;r.querySelector('.title').style.fontSize=(12+5*weight)+'px';body.style.display='block';body.style.visibility='visible';body.style.opacity=weight;body.style.transform='translateY('+((1-weight)*8)+'px)';let act=actionsOf(r);act.style.display='flex';act.style.opacity=weight;setActionsFocusable(r,weight>.99)});draw();if(wheelPosition!==wheelTarget)wheelFrame=requestAnimationFrame(wheelTick);else{stopWheel();update(false)}}
 stage.addEventListener('wheel',e=>{if(innerWidth<760||e.ctrlKey||Math.abs(e.deltaY)<Math.abs(e.deltaX)||!e.deltaY)return;if(pivot)clearSelection();let delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?stage.clientHeight:1);let position=scrolling?wheelTarget:index;if((position===0&&delta<0)||(position===P.length-1&&delta>0))return;e.preventDefault();if(!scrolling)beginWheel();wheelInput=Math.max(0,Math.min(P.length-1,wheelInput+delta/100));wheelTarget=Math.round(wheelInput);wheelRemainder=wheelInput-wheelTarget;if(reduced.matches){index=wheelTarget;stopWheel();update(false);return}if(!wheelFrame){wheelTime=performance.now();wheelFrame=requestAnimationFrame(wheelTick)}},{passive:false});
 document.addEventListener('keydown',e=>{if(stage.getBoundingClientRect().bottom<=0)return;if(e.key==='Escape'){if(pivot){e.preventDefault();clearSelection()}return}let next=({ArrowUp:index-1,PageUp:index-1,ArrowDown:index+1,PageDown:index+1,Home:0,End:P.length-1})[e.key];if(next===undefined||next<0||next>=P.length)return;e.preventDefault();let selected=!!pivot;pivot=null;index=next;expanded=true;update(!selected)});
-let touchY=null;stage.addEventListener('touchstart',e=>{if(!e.target.closest('.cap'))touchY=e.touches[0].clientY},{passive:true});stage.addEventListener('touchend',e=>{if(touchY!==null){let dy=touchY-e.changedTouches[0].clientY;if(Math.abs(dy)>(innerWidth<=759?28:45))step(Math.sign(dy));touchY=null}},{passive:true});
+// Touch takes the gesture and drives the same eased scene position the wheel
+// does, so dragging moves the list with your finger instead of stepping once
+// per swipe while the page scrolls underneath. The page is only released at
+// the first and last project, so the section can never trap you.
+let tY=null,tHeld=false;
+stage.addEventListener('touchstart',e=>{
+  if(e.target.closest('.cap')||e.target.closest('a')||e.target.closest('.controls')){tY=null;return}
+  tY=e.touches[0].clientY;tHeld=false;
+},{passive:true});
+stage.addEventListener('touchmove',e=>{
+  if(tY===null)return;
+  let y=e.touches[0].clientY,dy=tY-y;tY=y;
+  if(!dy)return;
+  let at=scrolling?wheelTarget:index;
+  if(!tHeld&&((at===0&&dy<0)||(at===P.length-1&&dy>0)))return;   // let the page take it
+  tHeld=true;
+  e.preventDefault();
+  if(pivot)clearSelection();
+  if(!scrolling)beginWheel();
+  wheelInput=Math.max(0,Math.min(P.length-1,wheelInput+dy/70));
+  wheelTarget=Math.round(wheelInput);
+  wheelRemainder=wheelInput-wheelTarget;
+  if(reduced.matches){index=wheelTarget;stopWheel();update(false);return}
+  if(!wheelFrame){wheelTime=performance.now();wheelFrame=requestAnimationFrame(wheelTick)}
+},{passive:false});
+stage.addEventListener('touchend',()=>{tY=null;tHeld=false},{passive:true});
+stage.addEventListener('touchcancel',()=>{tY=null;tHeld=false},{passive:true});
+
+// view toggle: the graph, or the same projects as a plain list
+(function(){
+  let btn=$('#viewmode');if(!btn)return;
+  function paint(){
+    let list=root.classList.contains('listmode');
+    btn.textContent=list?'GRAPH':'LIST';
+    btn.setAttribute('aria-pressed',String(list));
+    btn.title=list?'Switch to the interactive graph':'Switch to a plain list';
+    ['#prev','#next'].forEach(s=>{let b=$(s);if(b)b.hidden=list});
+  }
+  btn.addEventListener('click',()=>{
+    root.classList.toggle('listmode');
+    if(!root.classList.contains('listmode')){update(false)}
+    paint();
+  });
+  paint();
+})();
 caps.addEventListener('pointerdown',e=>{let el=e.target.closest('.cap');if(!el||el.classList.contains('selected'))return;let n=capNodes.find(n=>n.el===el);drag={n,px:e.clientX,py:e.clientY,x:n.x,y:n.y};ignoreClick=false;el.setPointerCapture(e.pointerId)});
 caps.addEventListener('pointermove',e=>{if(!drag)return;let n=drag.n,dx=e.clientX-drag.px,dy=e.clientY-drag.py;if(Math.abs(dx)+Math.abs(dy)>4)ignoreClick=true;let left=n.kind==='group',min=left?20:listX()+rowWidth()+32,max=left?listX()-n.el.offsetWidth-32:stage.clientWidth-n.el.offsetWidth-20,x=Math.max(min,Math.min(max,drag.x+dx)),y=Math.max(sgTop()+10,Math.min(stage.clientHeight-n.el.offsetHeight-sgBottom(),drag.y+dy));let collision=capNodes.some(o=>o!==n&&x<o.x+o.el.offsetWidth+20&&x+n.el.offsetWidth+20>o.x&&y<o.y+o.el.offsetHeight+20&&y+n.el.offsetHeight+20>o.y);if(!collision){n.x=x;n.y=y;n.el.style.left=x+'px';n.el.style.top=y+'px';draw()}});
 function release(){drag=null;setTimeout(()=>ignoreClick=false,0)}caps.addEventListener('pointerup',release);caps.addEventListener('pointercancel',release);
