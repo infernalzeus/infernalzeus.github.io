@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=7">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=9">
   <style>
     :root {
       --bg:         #080c28;
@@ -1168,6 +1168,30 @@
       padding: 0.9rem 1.1rem;
       margin: 1.25rem 0 1.5rem;
     }
+    .modal-bullets {
+      list-style: none; margin: 0.4rem 0 0.2rem; padding: 0;
+      display: flex; flex-direction: column; gap: 0.55rem;
+    }
+    .modal-bullets li {
+      position: relative; padding-left: 1.15rem;
+      font-size: 0.93rem; line-height: 1.65; color: var(--text-muted);
+    }
+    .modal-bullets li::before {
+      content: ''; position: absolute; left: 0; top: 0.6em;
+      width: 5px; height: 5px; border-radius: 1px;
+      background: var(--accent); opacity: 0.8;
+    }
+    .modal-bullets li b { color: var(--text); font-weight: 600; }
+    .modal-figure { margin: 1.4rem 0 0.6rem; }
+    .modal-figure img {
+      width: 100%; height: auto; display: block; aspect-ratio: 1120 / 492;
+      border: 1px solid var(--border-dim); border-radius: 6px; background: #070b1f;
+    }
+    .modal-figure figcaption {
+      margin-top: 0.55rem; font-size: 0.72rem; color: var(--text-faint);
+      letter-spacing: 0.03em;
+    }
+
     .modal-note-label {
       font-size: 0.62rem;
       font-weight: 700;
@@ -2277,6 +2301,25 @@ function _fireHexButtonSparks() {
 
   initCarousel('projects-grid', 'proj-prev', 'proj-next', 'proj-dots');
   initCarousel('research-grid', 'res-prev',  'res-next',  'res-dots');
+
+  /* One research card fills a phone screen, so let a horizontal swipe page it. */
+  (function () {
+    var grid = document.getElementById('research-grid');
+    if (!grid) return;
+    var x0 = null, y0 = null;
+    grid.addEventListener('touchstart', function (e) {
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    grid.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = x0 - e.changedTouches[0].clientX;
+      var dy = y0 - e.changedTouches[0].clientY;
+      x0 = y0 = null;
+      if (Math.abs(dx) < 42 || Math.abs(dx) < Math.abs(dy)) return;   // vertical wins
+      var btn = document.getElementById(dx > 0 ? 'res-next' : 'res-prev');
+      if (btn && !btn.disabled) btn.click();
+    }, { passive: true });
+  })();
 })();
 
 (function() {
@@ -2332,9 +2375,17 @@ function _fireHexButtonSparks() {
       byline: 'Aug 2026 – Present · Personal',
       body: [
         'One private address for everything your PC can do, reachable from any device you own. Sign in from a laptop, a phone or a tablet and the machine at home answers — without opening anything to the public internet.',
-        'What sits behind that address is split four ways. Dispatch work to autonomous agents, let them work in isolated copies of a repository, then review what they changed before any of it lands. Speak to the machine, build up routines it has learned, and approve them before they run. Pull media down, convert it, browse it, and send files back the other way. And see every repository\'s status and uncommitted diff in one place, instead of opening each one to find out.',
-        'Each of those runs as its own service. The hub decides what is reachable, what is running, and who is allowed to ask.'
+        'What sits behind that address is split four ways:'
       ],
+      bullets: [
+        '<b>Autonomous LLM</b> — dispatch work to agents, let them work in isolated copies of a repository, review what changed, then apply it.',
+        '<b>MCP control</b> — speak to the machine, build up routines it has learned, approve them before they run.',
+        '<b>Media vault</b> — download, convert, browse, and receive files from wherever you are.',
+        '<b>Git graph</b> — every repository\'s status and uncommitted diff in one place.'
+      ],
+      figure: { src: 'assets/diagrams/agent-hub-architecture.svg',
+        alt: 'Agent Hub architecture: phone, tablet and laptop connect through Tailscale to the Hub, which feeds the autonomous LLM pipeline, MCP control, the media vault and the git graph.',
+        caption: 'The live architecture diagram from the Agent Hub project itself.' },
       note: 'Access arrives over Tailscale from whichever device you are on and lands on a single entry point; the four capability zones sit behind it, each as an independently supervised process. The hub binds to loopback only — nothing is published to the local network — so the private network is what grants reach, and the application never has to be exposed to grant it.',
       stack: ['Python', 'aiohttp', 'Tailscale', 'Process lifecycle supervisor', 'D3.js project graph', 'MCP', 'PyInstaller packaging'],
       links: [
@@ -2472,7 +2523,7 @@ function _fireHexButtonSparks() {
       title: 'Monopoly Madness',
       byline: '2026 · Personal',
       body: [
-        'Monopoly in a browser with the parts that actually cause arguments: live auctions where everyone bids at once, player-to-player trading, and modifiers that change the rules of a match before it starts.',
+        'Monopoly in a browser, played live: auctions where everyone bids at once, direct trading between players, and rule modifiers set before a match begins.',
         'Everything happens in real time — a bid placed on one device is visible on every other as it lands.'
       ],
       note: 'Turn-based movement tolerates latency; auctions and trades do not. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid, and a trade is a two-party exchange that has to commit for both sides or roll back entirely. Designing the state model around those two, rather than around the common case, is what keeps the game consistent under real network conditions.',
@@ -2510,6 +2561,16 @@ function _fireHexButtonSparks() {
     html += '<h2 id="modal-title">' + p.title + '</h2>';
     html += '<p class="modal-byline">' + p.byline + '</p>';
     p.body.forEach(function (para) { html += '<p class="modal-p">' + para + '</p>'; });
+    if (p.bullets && p.bullets.length) {
+      html += '<ul class="modal-bullets">';
+      p.bullets.forEach(function (b) { html += '<li>' + b + '</li>'; });
+      html += '</ul>';
+    }
+    if (p.figure) {
+      html += '<figure class="modal-figure"><img src="' + p.figure.src + '" alt="' + p.figure.alt + '" decoding="async">';
+      if (p.figure.caption) html += '<figcaption>' + p.figure.caption + '</figcaption>';
+      html += '</figure>';
+    }
     if (p.note) {
       html += '<div class="modal-note"><span class="modal-note-label">Design note</span><p>' + p.note + '</p></div>';
     }
@@ -2571,7 +2632,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=7"></script>
+<script src="assets/stack-graph/stack-graph.js?v=9"></script>
 </body>
 </html>
 
