@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=2">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=6">
   <style>
     :root {
       --bg:         #080c28;
@@ -215,6 +215,13 @@
     }
 
     .degree-line:hover .degree-inst { opacity: 1; }
+
+    /* Research cards: hold the same internal rhythm so descriptions, action rows
+       and bylines line up across cards whose titles wrap to different depths. */
+    .rcard h3 { min-height: 4rem; }
+    .rcard .rcard-author { min-height: 1.32rem; }
+    .rcard .card-actions { min-height: 3.6rem; align-items: flex-start; align-content: flex-start; }
+    .rcard .card-footer { min-height: 7.6rem; }
 
     .card-byline {
       font-size: 0.68rem;
@@ -1391,6 +1398,7 @@
         <p class="rcard-author">Data Controller</p>
         <p>Developing actigraphy-based circadian rhythm abstraction.<br> Conducting circadian measures research on eClocker study: NHS shift-workers' cognitive performance.</p>
         <div class="card-footer">
+            <div class="card-actions" aria-hidden="true"></div>
           <p class="card-byline">Mar 2024 – Present</p>
           <p class="venue">Kent and Medway Medical School</p>
         </div>
@@ -2303,11 +2311,11 @@ function _fireHexButtonSparks() {
       title: 'Circadian Health Systems',
       byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
       body: [
-        'CHiP-D (Circadian Health in Psychosis and Depression) and the eClocker shift-worker study run on the same raw material: multi-week wrist-worn actigraphy and light-logger recordings from clinical participants. Turning that into something a researcher can run statistics on takes several distinct transformations, each with its own failure modes — so the work is decomposed into separate repositories with an explicit file contract between stages rather than one growing script.',
-        'Raw GENEActiv .bin files are epoched into sample- and epoch-level CSVs, passed through a device-position calibration stage, then converted into validated sleep-regularity metrics. A parallel branch does the same for MiEYE light-logger exports, producing per-day luminosity metrics and a compliance verdict. Both surface through a single FastAPI compliance dashboard, config-driven so it points at arbitrary data folders, and built deliberately without a JS framework or build step because the people using it daily are clinical researchers rather than developers.',
-        'Underneath sits a Medallion-structured research data lake covering 500+ participants across four seasons, multiple device types and multiple studies, for which I am data controller, supporting correlation across six research-grade activity-monitoring measures.'
+        'Clinical participants wear a wrist monitor and a light logger for two weeks. What comes off those devices is raw signal — this turns it into the sleep and circadian measures a researcher can actually run statistics on.',
+        'A compliance dashboard sits on top, so the research team can see who wore what, for how long, and whether a participant\'s fortnight is usable before it reaches analysis rather than after. It was built for clinical researchers to use directly, without a developer in the loop.',
+        'Behind it is a research data lake covering 500+ participants across four seasons, multiple device types and several studies, spanning six research-grade activity measures. I am the data controller for it.'
       ],
-      note: 'Each stage consumes the previous stage\'s CSV or JSON output through an explicit contract, so the pipeline can absorb a new device or a new metric without anyone touching upstream code. That decomposition is as much the result here as the statistics are.',
+      note: 'The work is decomposed into four contracted stages — epoching, calibration, compliance, then validated sleep metrics — each living in its own repository and consuming the previous stage\'s output through an explicit file contract. A new device or a new metric can therefore be absorbed without touching anything upstream, which is what keeps a multi-study pipeline maintainable.',
       stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'GENEActiv .bin parser', 'MiEYE light-logger parser', 'YAML config', 'Plain HTML/JS dashboard (no build step)'],
       links: [
         { label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' },
@@ -2322,12 +2330,12 @@ function _fireHexButtonSparks() {
       title: 'Agent Hub',
       byline: 'Aug 2026 – Present · Personal',
       body: [
-        'A reverse-proxy and orchestration platform fronting a portfolio of personal AI/ML services — a video clipper, a file browser, a media downloader, an MCP-connected coding assistant — behind one address on a private Tailscale mesh. Each fronted app keeps its own process; the hub owns routing, lifecycle and the public surface.',
-        'A supervisor handles start, stop and restart per service. The process binds to loopback and Tailscale Serve terminates from outside, so nothing is published to the LAN. Access control is layered rather than binary: CSRF on state-changing routes, scoped integration tokens for machine callers, and an optional PBKDF2-hashed power PIN gating privileged actions.',
-        'Above that sits a self-updating project graph in D3 that auto-discovers repositories on disk and diffs each against its remote to report sync state — treating the portfolio itself as an observable system rather than a list of links.'
+        'One private address for everything your PC can do, reachable from any device you own. Sign in from a laptop, a phone or a tablet and the machine at home answers — without opening anything to the public internet.',
+        'What sits behind that address is split four ways. Dispatch work to autonomous agents, let them work in isolated copies of a repository, then review what they changed before any of it lands. Speak to the machine, build up routines it has learned, and approve them before they run. Pull media down, convert it, browse it, and send files back the other way. And see every repository\'s status and uncommitted diff in one place, instead of opening each one to find out.',
+        'Each of those runs as its own service. The hub decides what is reachable, what is running, and who is allowed to ask.'
       ],
-      note: 'A reverse proxy is an architectural commitment rather than a convenience: it fixes a stable public surface so each backend can evolve independently behind it. Binding to loopback and letting the mesh terminate externally makes network exposure a property of the deployment, not of the application.',
-      stack: ['Python', 'aiohttp', 'Tailscale (mesh + Serve)', 'Process lifecycle supervisor', 'D3.js project graph', 'CSRF, scoped tokens, PBKDF2 power PIN', 'MCP', 'PyInstaller packaging'],
+      note: 'Access arrives over Tailscale from whichever device you are on and lands on a single entry point; the four capability zones sit behind it, each as an independently supervised process. The hub binds to loopback only — nothing is published to the local network — so the private network is what grants reach, and the application never has to be exposed to grant it.',
+      stack: ['Python', 'aiohttp', 'Tailscale', 'Process lifecycle supervisor', 'D3.js project graph', 'MCP', 'PyInstaller packaging'],
       links: [
         { label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }
       ]
@@ -2337,12 +2345,12 @@ function _fireHexButtonSparks() {
       title: 'AlphaForge',
       byline: 'May 2026 · Personal',
       body: [
-        'A trading platform and an MCP (Model Context Protocol) server in one process. The MCP layer is the integration contract: it exposes live Binance candle data, configurable technical indicators and narrative generation as tools, which is what turns a general-purpose coding agent into a domain-specific systematic market analyst rather than a chat wrapper over a chart.',
-        'Above the analysis layer sits a full auto-trader with backtesting and session history, wrapped in a Bloomberg-style single-page dashboard in vanilla JS/HTML with no framework, backed by a FastAPI server. Trade, activity and state history live in SQLite rather than flat files, so a \'clear history\' action cannot silently no-op by clearing only one of several stores.',
-        'Execution has two first-class modes, paper and live, with paper as the default.'
+        'A team of LLM analysts argues a position before you take it. One builds the bull case, another builds the bear case, and what comes back is a reasoned call with the disagreement still visible — rather than a chart for you to interpret alone.',
+        'Nothing has to touch real money to be useful. The same call can be run backwards over historical data to see how it would have done, run forward on simulated funds, or executed for real — three modes of the same engine, with simulation as the default and real execution a deliberate switch.',
+        'All of it reports into one dashboard: open positions, session history, and how each decision was reached.'
       ],
-      note: 'Paper-versus-live is modelled as a mode rather than a flag because it is the boundary between an agent reasoning about a market and an agent moving capital. Designing that boundary in from the start is what makes the autonomy safe to extend later.',
-      stack: ['Python', 'FastAPI + uvicorn', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget', 'Anthropic Claude (narrative generation)'],
+      note: 'Simulated and real execution are modelled as modes rather than a flag, because that is the boundary between an agent reasoning about a market and an agent committing capital. The analyst team is provider-agnostic: it runs against a local model by default, so research costs nothing and leaves the machine only when you choose a hosted one.',
+      stack: ['Python', 'FastAPI + uvicorn', 'Any LLM provider — Ollama (default), Anthropic, OpenAI', 'TradingAgents-style bull/bear analyst debate', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
       links: [
         { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
       ]
@@ -2352,11 +2360,11 @@ function _fireHexButtonSparks() {
       title: 'Movie Shorts Clipper',
       byline: 'Jul 2026 – Present · Personal, fronted by Agent Hub',
       body: [
-        'One cut, caption and composite pipeline for turning long-form film into vertical shorts. Configuration was originally a three-value mode enum; it was rebuilt around orthogonal axes — selection (manual, scene, spine, script), voice (none, commentary, storytelling, music) and shape — so combinations the enum had no name for became expressible. The mode flag now only names a preset over those axes.',
-        'Dialogue captions come from the source subtitle track where one exists, falling back to local faster-whisper transcription seeded with the film title to bias vocabulary toward proper nouns. Burn-in runs through ffmpeg with libass; narration is generated with edge-tts, with audio ducking and beat synchronisation via librosa and OpenCV.',
-        'The storytelling recap format is narration-led rather than clip-led: the spoken script\'s duration sets each clip\'s length, instead of narration being fitted into a cut that was already fixed.'
+        'A film goes in and captioned vertical clips come out, ready to post. Dialogue is captioned from the film\'s own subtitles where they exist, and transcribed locally where they do not.',
+        'Three things are yours to choose: which moments get cut, whether anyone speaks over them, and the shape of the finished clip. A narrated recap and a straight captioned scene come out of the same run — it is the same pipeline either way, set differently.',
+        'Where a clip is narrated, the script leads: the spoken line decides how long the shot stays on screen, rather than the narration being squeezed into a cut that was already fixed.'
       ],
-      note: 'Collapsing a mode enum into named axes is the difference between a pipeline that supports the combinations someone thought of and one that supports the combinations that exist. Model selection is exposed per stage rather than globally, so bandwidth cost is a deliberate choice rather than a hidden default.',
+      note: 'The three settings were originally one combined mode with three values, which meant only the three combinations someone had named were reachable. Separating them into independent choices made every combination expressible, and the old mode names survive only as presets over the new settings.',
       stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'Per-stage local or cloud model selection'],
       links: [
         { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
@@ -2367,10 +2375,11 @@ function _fireHexButtonSparks() {
       title: 'Cadenza',
       byline: 'Jun 2026 – Present · Personal (private repo)',
       body: [
-        'A generative music pipeline built on a single separation: the generator proposes, the classifier judges. A categorised MIDI corpus feeds candidate arrangement generation, and a separate scikit-learn classifier scores those candidates against a requested genre or mood and filters them. Volume and variety are the generator\'s job; taste is the classifier\'s.',
-        'Accepted candidates are written out as LMMS project files, rendered headless and mastered through ffmpeg, so the output is finished audio rather than MIDI. A CLI and a Flask UI drive the same pipeline, and the library supports Camelot-wheel harmonic and BPM matching, so two tracks can be blended toward a shared key and tempo target.'
+        'Describe a genre or a mood and get a finished track back — mastered audio, not a MIDI file you still have to render yourself.',
+        'It works because two models split the job. One writes candidate arrangements and is free to be prolific; a second one listens to them and keeps only what actually fits the brief. Volume is the first model\'s problem, taste is the second\'s.',
+        'Tracks in the library can also be matched to each other by key and tempo, so two that sit well together can be blended toward a shared target rather than picked by ear.'
       ],
-      note: 'Splitting proposal from judgement into two models with an explicit interface between them means either half can be replaced without retraining the other — the same separation of concerns that shows up in the larger pipeline work, at a smaller scale.',
+      note: 'Proposal and judgement are two separate models with an explicit interface between them, so either half can be replaced or retrained without disturbing the other — the same separation that shows up in the larger pipeline work, at a smaller scale.',
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
       links: [
         { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
@@ -2381,12 +2390,12 @@ function _fireHexButtonSparks() {
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
       body: [
-        'A two-stage discrete-event simulation for a mobile MRI service across Kent. Units launch daily from six Memory Assessment Service hubs and visit GP practices to clear MRI referrals; the tool synthesises a demand population, then runs serving strategies against it and shows how backlog builds and clears over a multi-year horizon.',
-        'The two stages are deliberately decoupled. Population generation is reproducible from a seed and independent of any strategy, so several strategies can be raced against identical demand — which is the only condition under which comparing them means anything. Three are implemented: greedy, a genetic search running a full evolutionary pass per simulated day, and an MCTS (UCT) look-ahead with a per-day iteration budget. Greedy scales to five-year runs; the search strategies are for short windows.',
-        'Every tunable parameter is declared once in a PARAM_SCHEMA, and both the CLI flags and the web UI sliders are generated from it, so the two interfaces cannot drift apart.'
+        'How many mobile MRI units, sent where, clears the backlog fastest? This answers that question before anyone commits a vehicle to it.',
+        'Demand is built once and held fixed — referrals arriving across Kent\'s GP practices, with units setting out each day from six hubs. Serving strategies are then raced against that same demand, so the difference you see between them is the strategy and nothing else. Three are implemented: a fast greedy allocator that scales to five-year runs, a genetic search, and a Monte-Carlo tree search that looks ahead.',
+        'A stakeholder can move the sliders — units, working hours, referral growth — and watch the backlog build or clear month by month.'
       ],
-      note: 'Decoupling demand from strategy turns the simulation into a controlled experiment rather than a demonstration. Generating both interfaces from one schema means a new parameter appears in both without a second edit, and practice filtering — roughly 184 active GP nodes plus six hubs — is an explicit modelling assumption rather than a silent default.',
-      stack: ['Python', 'FastAPI + slider UI', 'PARAM_SCHEMA-driven config (CLI + UI)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
+      note: 'Holding demand fixed while strategies vary is what turns a simulation into a controlled comparison rather than a demonstration. Every tunable parameter is declared once in a single schema, and both the command-line flags and the web sliders are generated from it, so the two interfaces cannot drift apart as the model grows.',
+      stack: ['Python', 'FastAPI + slider UI', 'Schema-driven config (CLI + UI from one source)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
     'rl-vr-agent': {
@@ -2394,11 +2403,11 @@ function _fireHexButtonSparks() {
       title: 'RL Agent for VR Cognitive Assessment',
       byline: 'Aug 2021 – Aug 2022 · King\'s College London (IoPPN, CSI Lab)',
       body: [
-        'Clinical cognitive assessments delivered in virtual reality produce spatial heatmaps of gaze and movement. The work trains a reinforcement-learning agent to perform the same assessment task, so that the learned policy becomes a computational model of how the task is solved — a reference against which participant behaviour, including in psychosis, can be compared.',
-        'The agent is a TD3-DDPG double Q-learning actor-critic running against a custom OpenAI Gym environment. The performance gain came from the environment rather than the learner: the gym architecture, the reward functions, and the percept sequence, which encodes local state as a quantised Moore neighbourhood and adds a Lyapunov function to supply a monotonic progress signal, stabilising credit assignment across long episodes.',
-        'Behavioural simulation task completion rose from 58.33% to 100%.'
+        'Task completion went from 58.33% to 100% — and not because the learning algorithm changed.',
+        'Clinical cognitive assessments delivered in virtual reality record where a person looks and moves. The work trains an agent to carry out the same assessment task, so its learned behaviour becomes a reference model of how the task gets solved, against which participant behaviour — including in psychosis — can be compared.',
+        'The gain came from redesigning what the agent could perceive and what counted as progress, rather than from the learner itself.'
       ],
-      note: 'TD3 already corrects the value-overestimation bias that destabilises DDPG. What it cannot correct is a percept in which progress is not observable — hence the Lyapunov term. The result is an environment-design result, not an algorithm one.',
+      note: 'The agent is a TD3-DDPG double Q-learning actor-critic on a custom environment. TD3 already corrects the value-overestimation bias that destabilises DDPG; what it cannot correct is a percept in which progress is invisible. Encoding local state as a quantised Moore neighbourhood and adding a Lyapunov function to supply a monotonic progress signal is what stabilised credit assignment across long episodes. An environment-design result, not an algorithm one.',
       stack: ['Python', 'OpenAI Gym (custom environment)', 'TD3-DDPG double Q-learning', 'Quantised Moore-neighbourhood percepts', 'Lyapunov progress function', 'VR gaze/movement heatmaps'],
       links: []
     },
@@ -2407,10 +2416,10 @@ function _fireHexButtonSparks() {
       title: '3D Bounding Box Annotation',
       byline: 'Jan – May 2021 · Academic',
       body: [
-        'Autonomous-driving datasets pair monocular camera frames with LiDAR point clouds captured of the same scene but in different coordinate frames. Producing 3D bounding boxes means resolving both into one metric frame before any detection can be placed in space.',
-        'The pipeline recovers camera intrinsics and the camera-to-LiDAR extrinsic transform through OpenCV calibration, detects objects in the image plane with YOLOv3/v5, and back-projects those detections against the point cloud to fit oriented 3D boxes. Evaluated across the Lyft and KITTI datasets, it reaches 90.28% IoU confidence.'
+        '90.28% IoU on 3D object recognition across the Lyft and KITTI self-driving datasets.',
+        'Those datasets record the same scene twice — once through a camera, once through LiDAR — in different coordinate frames. Resolving both into one metric frame is what lets a detection be placed in space rather than merely found in a picture.'
       ],
-      note: 'Detector precision bounds the score, but extrinsic calibration bounds the entire scene: a small rotational error in the camera-to-LiDAR transform displaces every box, and the displacement grows with range. Calibration is therefore validated as its own stage rather than assumed correct.',
+      note: 'Detector precision caps the score, but camera-to-LiDAR calibration caps the whole scene: a small rotational error in that transform displaces every box, and the displacement grows with range. Calibration is therefore validated as its own stage rather than assumed correct.',
       stack: ['Python', 'OpenCV camera calibration (intrinsics + extrinsics)', 'YOLOv3 / YOLOv5', 'LiDAR point-cloud back-projection', 'Lyft + KITTI benchmarks'],
       links: []
     },
@@ -2419,10 +2428,10 @@ function _fireHexButtonSparks() {
       title: 'BM25 Search Engine',
       byline: 'Mar – Apr 2023 · Academic',
       body: [
-        'A retrieval system over the MIND (Microsoft News) collection of 100,000+ articles, ranked with Okapi BM25 — a probabilistic sparse model scoring on saturating term frequency and inverse document frequency, with document-length normalisation.',
-        'Sparse retrieval was chosen over a dense vector approach deliberately: a BM25 score decomposes per query term, so any ranking can be attributed to specific terms and their document statistics. The index is prebuilt and served from a Flask application, containerised with Docker so index construction and query-time behaviour stay reproducible together.'
+        'Search across 100,000+ news articles where the ranking can be explained, not just produced. A BM25 score decomposes per query term, so any result\'s position traces back to specific terms and their document statistics — which a dense vector model cannot offer.',
+        'The index is built ahead of time and served behind a web interface, packaged so that index construction and query behaviour stay reproducible together.'
       ],
-      note: 'Where a dense retriever\'s failure is opaque, a BM25 failure traces back to a term statistic. That matters when a retrieval system has to be evaluated rather than merely demonstrated.',
+      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated.',
       stack: ['Python', 'Okapi BM25 over a prebuilt inverted index', 'Flask', 'Docker', 'MIND news corpus (100k+ documents)'],
       links: [
         { label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }
@@ -2433,11 +2442,12 @@ function _fireHexButtonSparks() {
       title: 'ML Reference Notebooks',
       byline: '2021 – 2023 · Academic',
       body: [
-        'A reference implementation set spanning supervised and unsupervised learning — exploratory analysis, classification, regression and clustering — worked end to end on real bank marketing data rather than curated teaching sets.',
-        'Each notebook carries the full path rather than the model call alone: feature inspection, treatment of class imbalance, fitting with scikit-learn, and evaluation against metrics appropriate to the task rather than raw accuracy.'
+        'A working reference across three areas: classical machine learning, natural language processing, and neural networks.',
+        'Classical work covers exploratory analysis, classification, regression and clustering on real bank marketing data. The language side runs from word embeddings through to transformer-based sentiment analysis. The neural side covers autoencoders and their variational form on image data.',
+        'Kept as notebooks deliberately — the value is in seeing each intermediate step and its output, which is what makes them worth returning to.'
       ],
-      note: 'Holding the dataset constant across methods makes the comparison one of inductive bias rather than of data preparation, which is the only way a like-for-like comparison of classical models says anything useful.',
-      stack: ['Python', 'scikit-learn', 'pandas / NumPy', 'Jupyter', 'Bank marketing dataset'],
+      note: 'Holding the dataset constant across methods makes a comparison one of inductive bias rather than of data preparation, which is the only way a like-for-like comparison of models says anything useful.',
+      stack: ['Python', 'scikit-learn', 'BERT (aspect-based sentiment)', 'LSTM text classification', 'GloVe + Skip-gram Word2Vec', 'Autoencoders + VAE (MNIST / Fashion-MNIST)', 'pandas / NumPy', 'Jupyter'],
       links: [
         { label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }
       ]
@@ -2447,11 +2457,11 @@ function _fireHexButtonSparks() {
       title: 'NEON WARFARE',
       byline: '2026 – Present · Personal (private repo)',
       body: [
-        'A real-time lane-based tactical auto-battler in Unity 6 (URP) whose economy is driven by a match-token core board rather than a timed resource tick, so board state and lane combat are coupled — play on one side of the screen funds the other.',
-        'Competitive progression runs on recorded ghosts rather than live sessions: a run is serialised as a deterministic trace and replayed as an opponent, with Elo ranking over daily-seeded boards. The ranking layer sits behind an ILeaderboardBackend interface, with a local implementation as the default and Firebase Auth/Firestore as the hosted one.'
+        'The board you are playing funds the battle you are fighting. Matching tokens on a core board drives the economy, while units fight along lanes in real time — so neither half can be ignored to win the other.',
+        'Competitive play needs no connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and the ladder ranks you whether or not anything is online.'
       ],
-      note: 'Defining the leaderboard as an interface with a local fallback keeps the game fully playable, rankable and shippable with no backend at all. Network availability becomes a capability flag rather than a hard runtime dependency — the same instinct as paper-vs-live execution in AlphaForge.',
-      stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'ILeaderboardBackend abstraction', 'Firebase Auth + Firestore'],
+      note: 'The leaderboard is defined as an interface with a local implementation underneath and a hosted one behind it, so the game stays fully playable, rankable and shippable with no backend at all. Network availability becomes a capability flag rather than a hard runtime dependency — the same instinct as simulated-versus-real execution in AlphaForge.',
+      stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'Swappable leaderboard backend', 'Firebase Auth + Firestore'],
       links: [
         { label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }
       ]
@@ -2461,10 +2471,10 @@ function _fireHexButtonSparks() {
       title: 'Monopoly Madness',
       byline: '2026 · Personal',
       body: [
-        'Full-stack real-time multiplayer Monopoly in React/TypeScript on Firebase, with live auctions, player-to-player trading, and rule modifiers that alter match economics.',
-        'The synchronisation problem concentrates in the contested actions. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid; a trade is a two-party atomic exchange that has to commit for both sides or roll back entirely. Both are driven from authoritative shared state rather than reconciled optimistically per client.'
+        'Monopoly in a browser with the parts that actually cause arguments: live auctions where everyone bids at once, player-to-player trading, and modifiers that change the rules of a match before it starts.',
+        'Everything happens in real time — a bid placed on one device is visible on every other as it lands.'
       ],
-      note: 'Turn-based movement tolerates latency; auctions and trades do not. Designing the state model around those two rather than around the common case is what keeps the game consistent under real network conditions.',
+      note: 'Turn-based movement tolerates latency; auctions and trades do not. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid, and a trade is a two-party exchange that has to commit for both sides or roll back entirely. Designing the state model around those two, rather than around the common case, is what keeps the game consistent under real network conditions.',
       stack: ['React', 'TypeScript', 'Firebase (authoritative shared state)', 'Vercel'],
       links: [
         { label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' },
@@ -2476,10 +2486,10 @@ function _fireHexButtonSparks() {
       title: 'SHA256 Vault',
       byline: 'Jan 2025 · Personal',
       body: [
-        'A local-first credential manager structured in layers — configurable service layers, interface adapters, and a separate cryptographic utility layer — so storage and presentation can be replaced without touching key handling.',
-        'SHA-256 is used where a one-way digest is the correct primitive: deriving record identifiers and verifying passwords without storing them. Secret material itself is encrypted with Fernet (AES-CBC under an HMAC authentication tag), kept deliberately out of the hashing path. The published repository holds the original structured CLI; a later local build places the same layering behind a Flask interface.'
+        'Your passwords stay on your own machine. No service, no sync, no account with somebody else holding the keys.',
+        'It is built in layers — storage, interface and cryptography kept apart — so the way credentials are stored or presented can change without anyone touching the part that handles keys. The published repository holds the original command-line version; a later local build puts the same structure behind a web interface.'
       ],
-      note: 'Keeping hashing and encryption in separate layers forecloses the most common error in tools of this kind — treating a digest as though it were reversible. The separation is enforced by the module boundary rather than by convention.',
+      note: 'SHA-256 is used where a one-way digest is the correct primitive: deriving record identifiers and verifying a password without storing it. The secrets themselves are encrypted separately, under an authenticated scheme. Keeping those two in different layers forecloses the most common error in tools of this kind — treating a digest as though it were reversible — and the separation is enforced by the module boundary rather than by convention.',
       stack: ['Python', 'SHA-256 (identifiers, password verification)', 'Fernet / AES-CBC + HMAC', 'Layered service + adapter architecture', 'Flask (later build)'],
       links: [
         { label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }
@@ -2560,7 +2570,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=2"></script>
+<script src="assets/stack-graph/stack-graph.js?v=6"></script>
 </body>
 </html>
 

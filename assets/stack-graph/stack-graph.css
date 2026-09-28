@@ -43,7 +43,7 @@
 #stackgraph .hint{font-size:12px;color:#77859c;margin-right:14px}
 #stackgraph .mobile{display:none}
 #stackgraph [hidden]{display:none!important}
-@media(max-width:759px){#stackgraph .stage{display:none}
+@media(max-width:759px){#stackgraph .stage{display:block}
 #stackgraph .mobile{display:block;padding:10px 24px}
 #stackgraph .mobile article{padding:28px 0;border-bottom:1px solid #24304a}
 #stackgraph .mobile h2{font:700 16px Orbitron,monospace;color:var(--accent);line-height:1.6}
@@ -112,3 +112,27 @@
 
 /* embedded copy sits directly on the page background: no panel of its own */
 #stackgraph.embedded .stage{background:none}
+
+/* Phones get the graph, not a list. Everything shrinks together: the card, the
+   side labels, the gaps and the reserved headroom, so the three columns still
+   fit at 360px. Swipe moves the focus the way the wheel does on desktop. */
+@media(max-width:759px){
+  #stackgraph .mobile{display:none}
+  #stackgraph.embedded{--sg-top:44px;--sg-label-top:10px;--sg-min-h:520px}
+  #stackgraph .project{padding:0 11px}
+  #stackgraph .project .title{font-size:9px;letter-spacing:.6px}
+  #stackgraph .project.active .title{font-size:12px;letter-spacing:.9px}
+  #stackgraph .project .year{font-size:9px;margin-top:4px}
+  #stackgraph .project .body{font-size:11.5px;line-height:1.5;margin-top:9px}
+  #stackgraph .cap{font-size:9.5px;max-width:68px;line-height:1.32;padding:3px 0}
+  #stackgraph .cap.selected{font-size:10.5px}
+  #stackgraph .cap.group{font-size:8.5px;letter-spacing:.5px}
+  #stackgraph .column-label{font-size:7px;letter-spacing:1.2px}
+  #stackgraph .action{font-size:8px;padding:6px 8px;gap:5px}
+  #stackgraph .action svg{width:10px;height:10px}
+  #stackgraph .actions{gap:6px;margin-top:11px}
+  #stackgraph .hud{padding:0 10px 10px}
+  #stackgraph .status{font-size:8px;letter-spacing:1px}
+  #stackgraph .controls button{padding:8px 10px;font-size:10px}
+  #stackgraph .hint{display:none}
+}
