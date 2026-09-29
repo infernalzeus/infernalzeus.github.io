@@ -12,7 +12,7 @@ var P=[
   caps:['Orchestration & Infra','LLM & Agents','Developer Tooling','Dashboards & UI'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/Agent-Hub',icon:'gh'},{label:'DOWNLOAD',href:'/Agent-Hub/'},{label:'OVERVIEW',href:'/#project/agent-hub'}]},
  {id:'alphaforge',t:'ALPHAFORGE',cat:'systems',y:'May 2026',
-  b:'Executes trades on confidence scores from a financial LLM analyst team.',
+  b:'Auto-manage your investment portfolio using financial fundamentals and LLM confidence markers',
   caps:['LLM & Agents','Orchestration & Infra','Simulation & Modelling','Dashboards & UI'],
   links:[{label:'GITHUB',href:'https://github.com/infernalzeus/AlphaForge',icon:'gh'},{label:'OVERVIEW',href:'/#project/alphaforge'}]},
  {id:'clipper',t:'MOVIE SHORTS CLIPPER',cat:'systems',y:'Jul 2026 — Present',
