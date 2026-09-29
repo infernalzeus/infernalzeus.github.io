@@ -199,8 +199,5 @@ stage.addEventListener('touchcancel',()=>{tY=null;tHeld=false;if(scrolling){stop
   });
   paint();
 })();
-caps.addEventListener('pointerdown',e=>{let el=e.target.closest('.cap');if(!el||el.classList.contains('selected'))return;let n=capNodes.find(n=>n.el===el);drag={n,px:e.clientX,py:e.clientY,x:n.x,y:n.y};ignoreClick=false;el.setPointerCapture(e.pointerId)});
-caps.addEventListener('pointermove',e=>{if(!drag)return;let n=drag.n,dx=e.clientX-drag.px,dy=e.clientY-drag.py;if(Math.abs(dx)+Math.abs(dy)>4)ignoreClick=true;let left=n.kind==='group',min=left?20:listX()+rowWidth()+32,max=left?listX()-n.el.offsetWidth-32:stage.clientWidth-n.el.offsetWidth-20,x=Math.max(min,Math.min(max,drag.x+dx)),y=Math.max(sgTop()+10,Math.min(stage.clientHeight-n.el.offsetHeight-sgBottom(),drag.y+dy));let collision=capNodes.some(o=>o!==n&&x<o.x+o.el.offsetWidth+20&&x+n.el.offsetWidth+20>o.x&&y<o.y+o.el.offsetHeight+20&&y+n.el.offsetHeight+20>o.y);if(!collision){n.x=x;n.y=y;n.el.style.left=x+'px';n.el.style.top=y+'px';draw()}});
-function release(){drag=null;setTimeout(()=>ignoreClick=false,0)}caps.addEventListener('pointerup',release);caps.addEventListener('pointercancel',release);
 window.addEventListener('resize',()=>update(false));document.fonts.ready.then(()=>update(false));update(false);
 })();
