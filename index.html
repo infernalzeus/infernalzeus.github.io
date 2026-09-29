@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=18">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=19">
   <style>
     :root {
       --bg:         #080c28;
@@ -2382,7 +2382,7 @@ function _fireHexButtonSparks() {
               '<b>Paper</b> — test strategy for auto-execution on simulated funds (default)',
               '<b>Live</b> — real portfolio management (authenticated switch)'
       ],
-      note: 'Each analysis is supported with reasoning, and represented on the chart',
+      note: 'Each analysis is supported with reasoning, and represented on the chart. Confidence scores are stored with the position they produced, so any trade can be traced back to the analysis and the news window that justified it.',
       stack: ['Python', 'FastAPI + uvicorn', 'Financial Agent (LLM) Analyst Team', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
       links: [{ label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }]
     },
@@ -2409,11 +2409,12 @@ function _fireHexButtonSparks() {
               'Ask for a genre or a mood, or work with pre-existing music to self-directed, mastered track'
       ],
       bullets: [
-              '<b>Generator</b> — writes candidate arrangements from a categorised MIDI corpus, and is free to be prolific.',
-              '<b>Classifier</b> — scores every candidate against the requested genre or mood and discards the rest.',
-              '<b>Render</b> — what survives becomes an LMMS project, rendered headless and mastered to audio.',
-              '<b>Matching</b> — Camelot-wheel key and BPM compatibility, so two tracks can be blended to a shared target.'
+        '<b>Generator</b> — builds arrangements from a categorised MIDI corpus, tuned for output over polish.',
+        '<b>Classifier</b> — scores each arrangement against the requested genre or mood, keeping only what passes.',
+        '<b>Render</b> — accepted arrangements become LMMS projects, rendered and mastered to audio.',
+        '<b>Matching</b> — Camelot key and BPM compatibility, so two tracks can be blended to one target.'
       ],
+      note: 'Generator and classifier train on the same categorised corpus, so the target means the same thing on both sides. The generative half is swappable and falls back to a Markov model when torch is unavailable.',
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
       links: [{ label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }]
     },
@@ -2439,16 +2440,15 @@ function _fireHexButtonSparks() {
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
       body: [
-              'How many mobile units, sent where, clears the backlog fastest? Units set out each day from six hubs to roughly 184 GP practices across Kent, simulated over a five-year horizon, so a resourcing decision can be argued from evidence rather than intuition.'
+        'A feasibility simulation, not a deployed service. How many mobile units, sent where, clears the backlog fastest? Units set out each day from six hubs to roughly 184 GP practices across Kent, simulated over a five-year horizon, so a resourcing decision can be argued from evidence rather than intuition.'
       ],
       bullets: [
-              '<b>Demand</b> — a referral population generated once from a seed and reused, so every strategy faces identical demand.',
-              '<b>Greedy</b> — nearest-practice allocation, and the only strategy fast enough for a full five-year run.',
-              '<b>Genetic</b> — a complete evolutionary search per simulated day, for short windows.',
-              '<b>MCTS (UCT)</b> — look-ahead search with a per-day iteration budget.',
-              '<b>Sliders</b> — units, working hours and referral growth, changed live by a non-technical stakeholder.'
+        '<b>Demand</b> — a seeded referral population, reused so strategies are compared fairly.',
+        '<b>Routing</b> — daily runs from six hubs, each unit resuming where it stopped.',
+        '<b>Horizon</b> — five years, with backlog tracked month by month.',
+        '<b>Sliders</b> — units, working hours and referral growth, changed live.'
       ],
-      note: 'Units do not return to base overnight — each resumes from wherever it finished, matching how the service actually runs and materially changing which practices are reachable on a given day. Practice selection is explicit rather than the whole list: roughly 184 active GP nodes plus six hubs, filtered on months-active and mean-referral thresholds.',
+      note: 'Real-world operating expectations are built into the model rather than idealised.',
       stack: ['Python', 'FastAPI + slider UI', 'Schema-driven config (CLI + UI from one source)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
@@ -2471,7 +2471,6 @@ function _fireHexButtonSparks() {
               '90.28% ‘Intersection over Union’ score on 3D object recognition across the Lyft and KITTI self-driving datasets.',
               'As these datasets record the same scene twice (once through a camera, once through LiDAR) in different coordinate frames - resolving both into one metric frame lets detection be placed in space (3D) rather than in a picture (2D)'
       ],
-      note: 'Detector precision caps the score, but camera-to-LiDAR calibration caps the whole scene: a small rotational error in that transform displaces every box, and the displacement grows with range. Calibration is therefore validated as its own stage rather than assumed correct.',
       stack: ['Python', 'OpenCV camera calibration (intrinsics + extrinsics)', 'YOLOv3 / YOLOv5', 'LiDAR point-cloud back-projection', 'Lyft + KITTI benchmarks'],
       links: []
     },
@@ -2483,7 +2482,7 @@ function _fireHexButtonSparks() {
               'Search across 100,000+ news articles with explainable ranking of results. A BM25 score decomposes per query term, so any result\'s position traces back to specific terms and their document statistics — which a dense vector model cannot offer.',
               'The index is built ahead of time and served behind a web interface, packaged so that index construction and query behaviour stay reproducible together.'
       ],
-      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated. The repository also compares other legacy IR models (BM14)',
+      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated.',
       stack: ['Python', 'Okapi BM25 over a prebuilt inverted index', 'Flask', 'Docker', 'MIND news corpus (100k+ documents)'],
       links: [{ label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }]
     },
@@ -2492,8 +2491,12 @@ function _fireHexButtonSparks() {
       title: 'ML Reference Notebooks',
       byline: '2021 – 2023 · Academic',
       body: [
-              'A working reference across three areas: classical machine learning, natural language processing, and neural networks.',
-              'Classical work covers exploratory analysis, classification, regression and clustering on real bank marketing data. The language side runs from word embeddings through to transformer-based sentiment analysis. The neural side covers autoencoders and their variational form on image data.'
+        'A working reference across three areas: classical machine learning, natural language processing, and neural networks.'
+      ],
+      bullets: [
+        '<b>Classical ML</b> — EDA, classification, regression and clustering on bank marketing data.',
+        '<b>NLP</b> — word embeddings through to transformer-based sentiment analysis.',
+        '<b>Neural</b> — autoencoders and their variational form on image data.'
       ],
       stack: ['Python', 'scikit-learn', 'BERT (aspect-based sentiment)', 'LSTM text classification', 'GloVe + Skip-gram Word2Vec', 'Autoencoders + VAE (MNIST / Fashion-MNIST)', 'pandas / NumPy', 'Jupyter'],
       links: [{ label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }]
@@ -2503,10 +2506,10 @@ function _fireHexButtonSparks() {
       title: 'NEON WARFARE',
       byline: '2026 – Present · Personal (private repo)',
       body: [
-              'The board you are playing funds the battle you are fighting. Matching tokens on a core board drives the economy, while units fight along lanes in real time — so neither half can be ignored to win the other.',
-              'Competitive play needs no connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and the ladder ranks you whether or not anything is online.'
+        'Two games running at once: a match-token board drives your economy while units fight along lanes in real time, and neither can be neglected.',
+        'Competitive play needs no connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and the ladder ranks you whether or not anything is online.'
       ],
-      note: 'The leaderboard is defined as an interface with a local implementation underneath and a hosted one behind it, so the game stays fully playable, rankable and shippable with no backend at all. Network availability becomes a capability flag rather than a hard runtime dependency.',
+      note: 'Your runs are recorded as deterministic replays, so the ladder always has an opponent to put you against and ranks you with nothing online.',
       stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'Swappable leaderboard backend', 'Firebase Auth + Firestore'],
       links: [{ label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }]
     },
@@ -2518,7 +2521,7 @@ function _fireHexButtonSparks() {
               'Monopoly in a browser, played live: auctions where everyone bids at once, direct trading between players, and rule modifiers set before a match begins.',
               'Everything happens in real time — a bid placed on one device is visible on every other as it lands.'
       ],
-      note: 'Turn-based movement tolerates latency; auctions and trades do not. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid, and a trade is a two-party exchange that has to commit for both sides or roll back entirely. Designing the state model around those two, rather than around the common case, is what keeps the game consistent under real network conditions.',
+      note: 'Auctions and trades are the moments two players act on the same thing at once, so the whole design is built around those rather than around taking turns.',
       stack: ['React', 'TypeScript', 'Firebase (authoritative shared state)', 'Vercel'],
       links: [{ label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' }, { label: 'Play', url: 'https://monopoly-madness.vercel.app/' }]
     },
@@ -2619,7 +2622,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=18"></script>
+<script src="assets/stack-graph/stack-graph.js?v=19"></script>
 </body>
 </html>
 
