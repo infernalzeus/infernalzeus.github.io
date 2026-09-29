@@ -122,7 +122,8 @@
    fit at 360px. Swipe moves the focus the way the wheel does on desktop. */
 @media(max-width:759px){
   #stackgraph .mobile{display:none}
-  #stackgraph.embedded{--sg-top:44px;--sg-label-top:10px;--sg-min-h:520px}
+  /* fill the screen under the nav instead of a fixed 520px box */
+  #stackgraph.embedded{--sg-top:44px;--sg-bottom:70px;--sg-label-top:10px;--sg-min-h:max(540px,calc(100vh - 96px))}
   #stackgraph .project{padding:0 11px}
   #stackgraph .project .title{font-size:9px;letter-spacing:.6px}
   #stackgraph .project.active .title{font-size:12px;letter-spacing:.9px}

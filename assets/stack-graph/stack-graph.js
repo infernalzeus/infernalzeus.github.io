@@ -147,29 +147,32 @@ $('#prev').onclick=()=>step(-1);$('#next').onclick=()=>step(1);$('#back').onclic
 let snapTimer=null,scrolling=false,wheelPosition=0,wheelTarget=0,wheelInput=0,wheelFrame=0,wheelTime=0,wheelRemainder=0,sceneSizes=[];
 function stopWheel(){cancelAnimationFrame(wheelFrame);wheelFrame=0;scrolling=false;rows.forEach(r=>{r.style.opacity='';r.querySelector('.title').style.fontSize='';r.querySelector('.body').style.opacity='';r.querySelector('.body').style.visibility='';r.querySelector('.body').style.transform='';actionsOf(r).style.cssText=''})}
 function beginWheel(){cancelAnimationFrame(raf);wheelPosition=index;wheelTarget=index;wheelInput=index+wheelRemainder;scrolling=true;sceneSizes=rows.map(r=>{let body=r.querySelector('.body'),title=r.querySelector('.title'),act=actionsOf(r);body.getAnimations().forEach(a=>a.cancel());r.style.height='auto';r.style.paddingTop='10px';r.style.paddingBottom='10px';body.style.display='none';act.style.display='none';title.style.fontSize='12px';let small=r.offsetHeight;r.style.paddingTop='24px';r.style.paddingBottom='24px';body.style.display='block';act.style.display='flex';title.style.fontSize='17px';let large=r.offsetHeight;return {small,large}});list.querySelectorAll('.outgoing-body').forEach(e=>e.remove());wheelTime=performance.now()}
-function wheelTick(now){let dt=Math.min(32,now-wheelTime);wheelTime=now;wheelPosition+=(wheelTarget-wheelPosition)*(tHeld?1:(1-Math.exp(-dt/145)));if(Math.abs(wheelPosition-wheelTarget)<.001)wheelPosition=wheelTarget;let nearest=Math.round(wheelPosition);if(index!==nearest){index=nearest;buildCaps();placeCaps();$('.status').textContent=P[index].t+' / '+groupNames[P[index].cat];$('#prev').disabled=index===0;$('#next').disabled=index===P.length-1}let heights=sceneSizes.map((s,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition));return s.small+(s.large-s.small)*weight}),tops=[],y=0;heights.forEach(h=>{tops.push(y);y+=h+24});let lo=Math.floor(wheelPosition),hi=Math.min(P.length-1,lo+1),fraction=wheelPosition-lo;let center=(tops[lo]+heights[lo]/2)*(1-fraction)+(tops[hi]+heights[hi]/2)*fraction;rows.forEach((r,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition)),body=r.querySelector('.body');r.classList.toggle('active',weight>.001);r.querySelector('.focus-btn').setAttribute('aria-expanded',String(i===nearest));r.style.top=(stage.clientHeight/2+tops[i]-center)+'px';r.style.height=heights[i]+'px';r.style.paddingTop=(10+14*weight)+'px';r.style.paddingBottom=(10+14*weight)+'px';r.style.opacity=.46+.54*weight;r.querySelector('.title').style.fontSize=(12+5*weight)+'px';body.style.display='block';body.style.visibility='visible';body.style.opacity=weight;body.style.transform='translateY('+((1-weight)*8)+'px)';let act=actionsOf(r);act.style.display='flex';act.style.opacity=weight;setActionsFocusable(r,weight>.99)});draw();if(wheelPosition!==wheelTarget)wheelFrame=requestAnimationFrame(wheelTick);else{stopWheel();update(false)}}
+function wheelTick(now){let dt=Math.min(32,now-wheelTime);wheelTime=now;wheelPosition+=(wheelTarget-wheelPosition)*(tHeld?1:(1-Math.exp(-dt/145)));if(Math.abs(wheelPosition-wheelTarget)<.001)wheelPosition=wheelTarget;let nearest=Math.round(wheelPosition);if(index!==nearest){index=nearest;buildCaps();placeCaps();$('.status').textContent=P[index].t+' / '+groupNames[P[index].cat];$('#prev').disabled=index===0;$('#next').disabled=index===P.length-1}let heights=sceneSizes.map((s,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition));return s.small+(s.large-s.small)*weight}),tops=[],y=0;heights.forEach(h=>{tops.push(y);y+=h+24});let lo=Math.floor(wheelPosition),hi=Math.min(P.length-1,lo+1),fraction=wheelPosition-lo;let center=(tops[lo]+heights[lo]/2)*(1-fraction)+(tops[hi]+heights[hi]/2)*fraction;rows.forEach((r,i)=>{let weight=Math.max(0,1-Math.abs(i-wheelPosition)),body=r.querySelector('.body');r.classList.toggle('active',weight>.001);r.querySelector('.focus-btn').setAttribute('aria-expanded',String(i===nearest));r.style.top=(stage.clientHeight/2+tops[i]-center)+'px';r.style.height=heights[i]+'px';r.style.paddingTop=(10+14*weight)+'px';r.style.paddingBottom=(10+14*weight)+'px';r.style.opacity=.46+.54*weight;r.querySelector('.title').style.fontSize=(12+5*weight)+'px';body.style.display='block';body.style.visibility='visible';body.style.opacity=weight;body.style.transform='translateY('+((1-weight)*8)+'px)';let act=actionsOf(r);act.style.display='flex';act.style.opacity=weight;setActionsFocusable(r,weight>.99)});draw();if(wheelPosition!==wheelTarget)wheelFrame=requestAnimationFrame(wheelTick);else if(!tHeld){stopWheel();update(false)}}
 stage.addEventListener('wheel',e=>{if(innerWidth<760||e.ctrlKey||Math.abs(e.deltaY)<Math.abs(e.deltaX)||!e.deltaY)return;if(pivot)clearSelection();let delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?stage.clientHeight:1);let position=scrolling?wheelTarget:index;if((position===0&&delta<0)||(position===P.length-1&&delta>0))return;e.preventDefault();if(!scrolling)beginWheel();wheelInput=Math.max(0,Math.min(P.length-1,wheelInput+delta/100));wheelTarget=Math.round(wheelInput);wheelRemainder=wheelInput-wheelTarget;if(reduced.matches){index=wheelTarget;stopWheel();update(false);return}if(!wheelFrame){wheelTime=performance.now();wheelFrame=requestAnimationFrame(wheelTick)}},{passive:false});
 document.addEventListener('keydown',e=>{if(stage.getBoundingClientRect().bottom<=0)return;if(e.key==='Escape'){if(pivot){e.preventDefault();clearSelection()}return}let next=({ArrowUp:index-1,PageUp:index-1,ArrowDown:index+1,PageDown:index+1,Home:0,End:P.length-1})[e.key];if(next===undefined||next<0||next>=P.length)return;e.preventDefault();let selected=!!pivot;pivot=null;expanded=true;if(selected){index=next;update(false)}else{glideTo(next)}});
 // Touch takes the gesture and drives the same eased scene position the wheel
 // does, so dragging moves the list with your finger instead of stepping once
 // per swipe while the page scrolls underneath. The page is only released at
 // the first and last project, so the section can never trap you.
-let tY=null,tHeld=false;
+let tY=null,tHeld=false,tVel=0,tLast=0;
 stage.addEventListener('touchstart',e=>{
-  if(inList()||e.target.closest('.cap')||e.target.closest('a')||e.target.closest('.controls')){tY=null;return}
-  tY=e.touches[0].clientY;tHeld=false;
+  // Nodes no longer opt out: a swipe that starts on a side column drives the cards too,
+  // so the whole stage responds the same way. A tap with no movement still clicks.
+  if(inList()||e.target.closest('a')||e.target.closest('.controls')){tY=null;return}
+  tY=e.touches[0].clientY;tHeld=false;tVel=0;tLast=performance.now();
 },{passive:true});
 stage.addEventListener('touchmove',e=>{
   if(tY===null)return;
   let y=e.touches[0].clientY,dy=tY-y;tY=y;
   if(!dy)return;
+  let nowT=performance.now(),dtT=Math.max(1,nowT-tLast);tLast=nowT;tVel=tVel*.6+(dy/dtT)*.4;   // px/ms, smoothed
   let at=scrolling?wheelTarget:index;
   if(!tHeld&&((at===0&&dy<0)||(at===P.length-1&&dy>0)))return;   // let the page take it
   tHeld=true;
   e.preventDefault();
   if(pivot)clearSelection();
   if(!scrolling)beginWheel();
-  wheelInput=Math.max(0,Math.min(P.length-1,wheelInput+dy/(innerWidth<=759?54:78)));
+  wheelInput=Math.max(0,Math.min(P.length-1,wheelInput+dy/(innerWidth<=759?46:78)));
   wheelTarget=wheelInput;              // follow the finger, do not snap mid-drag
   wheelRemainder=0;
   if(reduced.matches){index=Math.round(wheelTarget);stopWheel();update(false);return}
@@ -177,7 +180,8 @@ stage.addEventListener('touchmove',e=>{
   cancelAnimationFrame(wheelFrame);wheelFrame=requestAnimationFrame(wheelTick);
 },{passive:false});
 stage.addEventListener('touchend',()=>{let held=tHeld;tY=null;tHeld=false;
-  if(held&&scrolling){wheelTarget=Math.max(0,Math.min(P.length-1,Math.round(wheelInput)));
+  if(held&&scrolling){let fling=Math.abs(tVel)>.3?tVel*150/(innerWidth<=759?46:78):0;   // a flick carries on a little
+    wheelTarget=Math.max(0,Math.min(P.length-1,Math.round(wheelInput+Math.max(-3,Math.min(3,fling)))));
     wheelInput=wheelTarget;wheelRemainder=0;wheelTime=performance.now();
     cancelAnimationFrame(wheelFrame);wheelFrame=requestAnimationFrame(wheelTick)}},{passive:true});
 stage.addEventListener('touchcancel',()=>{tY=null;tHeld=false;if(scrolling){stopWheel();update(false)}},{passive:true});
