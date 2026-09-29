@@ -2382,7 +2382,7 @@ function _fireHexButtonSparks() {
               '<b>Paper</b> — test strategy for auto-execution on simulated funds (default)',
               '<b>Live</b> — real portfolio management (authenticated switch)'
       ],
-      note: 'Each analysis is supported with reasoning, and represented on the chart. Confidence scores are stored with the position they produced, so any trade can be traced back to the analysis and the news window that justified it.',
+      note: 'Each analysis is supported with reasoning, and represented on the chart. Every trade is stored with its confidence score, the analysts’ reasoning and the headline that triggered it, so any position can be traced back to the call that justified it.',
       stack: ['Python', 'FastAPI + uvicorn', 'Financial Agent (LLM) Analyst Team', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
       links: [{ label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }]
     },
@@ -2482,7 +2482,7 @@ function _fireHexButtonSparks() {
               'Search across 100,000+ news articles with explainable ranking of results. A BM25 score decomposes per query term, so any result\'s position traces back to specific terms and their document statistics — which a dense vector model cannot offer.',
               'The index is built ahead of time and served behind a web interface, packaged so that index construction and query behaviour stay reproducible together.'
       ],
-      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated.',
+      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated. The repository also benchmarks other BM25 variants (BM11, BM15, BM25L and an adaptive form) in an evaluation notebook.',
       stack: ['Python', 'Okapi BM25 over a prebuilt inverted index', 'Flask', 'Docker', 'MIND news corpus (100k+ documents)'],
       links: [{ label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }]
     },
@@ -2509,7 +2509,7 @@ function _fireHexButtonSparks() {
         'Two games running at once: a match-token board drives your economy while units fight along lanes in real time, and neither can be neglected.',
         'Competitive play needs no connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and the ladder ranks you whether or not anything is online.'
       ],
-      note: 'Your runs are recorded as deterministic replays, so the ladder always has an opponent to put you against and ranks you with nothing online.',
+      note: 'The leaderboard is an interface with a local implementation as the default and a hosted one (Firebase) behind it, so the game stays fully playable, rankable and shippable with no backend at all. An offline or still-starting backend falls back to on-device data instead of failing. The board and combat rules are kept free of engine code and run deterministically, which is what lets a run be recorded as a ghost, replayed exactly, and simulated headless for balancing.',
       stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'Swappable leaderboard backend', 'Firebase Auth + Firestore'],
       links: [{ label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }]
     },
