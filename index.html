@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=16">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=18">
   <style>
     :root {
       --bg:         #080c28;
@@ -2350,79 +2350,105 @@ function _fireHexButtonSparks() {
   var GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg> GitHub';
 
   var PROJECTS = {
-    'circadian-health-systems': {
-      eyebrow: 'Health & Research Data Systems',
-      title: 'Circadian Health Systems',
-      byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
-      body: ["These tools help research teams process wearable activity recordings, light measurements and survey exports. A dashboard runs the analysis and collects reports, reducing the need to process each recording separately and copy results into spreadsheets."],
-      bullets: ["<b>Prepare recordings:</b> Convert raw activity data into timed summaries and assess differences between device positions.", "<b>Review participation:</b> Check recording coverage and wear time, with results marked for pass, review or fail.", "<b>Export findings:</b> Produce sleep and circadian measures, light-exposure reports, and summary spreadsheets."],
-      note: "The dashboard combines several analysis repositories. Each can also run separately for a particular device or research task.",
-      stack: ['Python', 'pandas / NumPy', 'FastAPI + uvicorn', 'GENEActiv .bin parser', 'MiEYE light-logger parser', 'YAML config', 'Plain HTML/JS dashboard (no build step)'],
-      links: [
-        { label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' },
-        { label: 'actigraphy-calibration (private)', url: 'https://github.com/infernalzeus/actigraphy-calibration' },
-        { label: 'actigraphy-sleep-metrics', url: 'https://github.com/infernalzeus/actigraphy-sleep-metrics' },
-        { label: 'luminosity-metrics', url: 'https://github.com/infernalzeus/luminosity-metrics' },
-        { label: 'CD-Compliance-Checks', url: 'https://github.com/infernalzeus/CD-Compliance-Checks' }
-      ]
-    },
     'agent-hub': {
       eyebrow: 'AI Systems & Automation',
       title: 'Agent Hub',
       byline: 'Aug 2026 – Present · Personal',
-      body: ["Agent Hub brings the tools on a home PC into one web dashboard. It lets you start AI coding tasks, manage files and media, and open connected apps from a phone or another computer."],
-      bullets: ["<b>AI tasks:</b> Give an agent a job, inspect its changes, then choose whether to apply them.", "<b>Files and media:</b> Browse drives, transfer files, and download or convert video and audio.", "<b>PC and project tools:</b> Control supported Windows apps and see the status of local Git repositories."],
-      note: "Remote access uses your private Tailscale network. Desktop control is available on Windows; the other tools also support macOS and Linux.",
-      figure: { src: 'assets/diagrams/agent-hub-architecture.svg',
-        alt: 'Agent Hub architecture: phone, tablet and laptop connect through Tailscale to the Hub, which feeds the autonomous LLM pipeline, MCP control, the media vault and the git graph.',
-        caption: 'The live architecture diagram from the Agent Hub project itself.' },
-            stack: ['Python', 'aiohttp', 'Tailscale', 'Process lifecycle supervisor', 'D3.js project graph', 'MCP', 'PyInstaller packaging'],
-      links: [
-        { label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }
-      ]
+      body: [
+              'One private address for everything your PC can do, reachable from any device you own. Sign in from a laptop, a phone or a tablet and the machine at home answers — without opening anything to the public internet.'
+      ],
+      bullets: [
+              '<b>Autonomous LLM</b> — dispatch work to agents, let them work in isolated copies of a repository, review what changed, then apply it.',
+              '<b>MCP control</b> — speak to the machine, build up routines it has learned, approve them before they run.',
+              '<b>Media vault</b> — download, convert, browse, and receive files from wherever you are.',
+              '<b>Git graph</b> — every repository\'s status and uncommitted diff in one place.',
+              '<b>App ingestion</b> — bring in any app you choose and front it through the same hub.'
+      ],
+      figure: { src: 'assets/diagrams/agent-hub-architecture.svg', alt: 'The live architecture diagram from the Agent Hub project itself.', caption: 'The live architecture diagram from the Agent Hub project itself.' },
+      stack: ['Python', 'aiohttp', 'Tailscale', 'D3.js project graph', 'MCP', 'Process lifecycle supervisor', 'PyInstaller packaging'],
+      links: [{ label: 'Agent-Hub', url: 'https://github.com/infernalzeus/Agent-Hub' }]
     },
     'alphaforge': {
       eyebrow: 'AI Systems & Automation',
       title: 'AlphaForge',
       byline: 'May 2026 · Personal',
-      body: ["AlphaForge combines market charts, trading signals and automated execution in one dashboard. You can test a strategy on historical prices, run it with simulated funds, and review the reasoning behind a proposed trade."],
-      bullets: ["<b>Strategy testing:</b> Configure indicators, run backtests, and compare trading sessions.", "<b>AI review:</b> Bull and bear analysts assess the same market data; a judge weighs their arguments.", "<b>Trade tracking:</b> Monitor positions, profit and loss, and trade history in paper or live mode."],
-      note: "Paper trading is the default. Live trading requires exchange credentials and an explicit choice to enable it.",
-      stack: ['Python', 'FastAPI + uvicorn', 'Any LLM provider — Ollama (default), Anthropic, OpenAI', 'TradingAgents-style bull/bear analyst debate', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
-      links: [
-        { label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }
-      ]
+      body: [
+              'An auto trader that executes strategic trades on your positions supported with confidence scores calculated on Financial Fundamentals and Agentic Analyst team consensus on real time news and historical confidence scores'
+      ],
+      bullets: [
+              '<b>Fundamental</b> — calculated financial indicators',
+              '<b>Backtest</b> — historical positions before committing to a trade',
+              '<b>Debate</b> — a team of financial LLM agents argue the same position (bear/bull) until the decision resolves into numeric score.',
+              '<b>Paper</b> — test strategy for auto-execution on simulated funds (default)',
+              '<b>Live</b> — real portfolio management (authenticated switch)'
+      ],
+      note: 'Each analysis is supported with reasoning, and represented on the chart',
+      stack: ['Python', 'FastAPI + uvicorn', 'Financial Agent (LLM) Analyst Team', 'MCP server', 'SQLite state layer', 'Binance REST API + yfinance', 'TradingView widget'],
+      links: [{ label: 'AlphaForge', url: 'https://github.com/infernalzeus/AlphaForge' }]
     },
     'movie-shorts-clipper': {
       eyebrow: 'AI Systems & Automation',
       title: 'Movie Shorts Clipper',
       byline: 'Jul 2026 – Present · Personal',
-      body: ["Movie Shorts Clipper handles the repeated steps of making short clips from films or TV footage: selecting scenes, cutting video, adding captions, and preparing the final layout. It also supports narrated clips and story recaps."],
-      bullets: ["<b>Choose scenes:</b> Supply timestamps or use model-assisted suggestions from the subtitles.", "<b>Add speech and captions:</b> Use existing subtitles or local transcription, with optional generated narration.", "<b>Export the clip:</b> Combine footage, voiceover, captions and music in the selected layout."],
-      stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'Per-stage local or cloud model selection'],
-      links: [
-        { label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }
-      ]
+      body: [
+              'One shot edit pipeline for turning long-form film into recapped, narrative and composite content, supported with contextualization via captioning'
+      ],
+      bullets: [
+              '<b>Choose scenes</b> — Supply timestamps or use LLM-assisted suggestions from the subtitles.',
+              '<b>Add speech and captions</b> — Use existing subtitles or local transcription, with optional generated narration.',
+              '<b>Export the clip</b> — Combine footage, voiceover, captions and music in the select formats with metadata.'
+      ],
+      stack: ['Python', 'faster-whisper', 'ffmpeg + libass', 'edge-tts', 'librosa + OpenCV (beat sync)', 'local + cloud LLM'],
+      links: [{ label: 'movie-shorts-clipper', url: 'https://github.com/infernalzeus/movie-shorts-clipper' }]
     },
     'cadenza': {
       eyebrow: 'AI Systems & Automation',
       title: 'Cadenza',
       byline: 'Jun 2026 – Present · Personal (private repo)',
-      body: ["Cadenza creates short musical arrangements from controls such as genre, mood, key, tempo and instruments. It generates several candidates, scores how well they match the chosen mood, and turns the selected arrangement into an LMMS project and audio files."],
-      bullets: ["<b>Compose:</b> Adjust melody, chords, drums, instruments and song structure from the web interface.", "<b>Choose a result:</b> Compare generated candidates using a trained mood classifier, with a simpler scoring fallback.", "<b>Keep working:</b> Export the editable LMMS project, WAV audio and an MP3 render."],
-      note: "The same seed and settings reproduce an arrangement, so you can revisit a result and change individual choices.",
+      body: [
+              'Ask for a genre or a mood, or work with pre-existing music to self-directed, mastered track'
+      ],
+      bullets: [
+              '<b>Generator</b> — writes candidate arrangements from a categorised MIDI corpus, and is free to be prolific.',
+              '<b>Classifier</b> — scores every candidate against the requested genre or mood and discards the rest.',
+              '<b>Render</b> — what survives becomes an LMMS project, rendered headless and mastered to audio.',
+              '<b>Matching</b> — Camelot-wheel key and BPM compatibility, so two tracks can be blended to a shared target.'
+      ],
       stack: ['Python', 'mido (MIDI)', 'scikit-learn classifier', 'Flask', 'LMMS headless render', 'ffmpeg mastering', 'Demucs (stem separation)'],
-      links: [
-        { label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }
-      ]
+      links: [{ label: 'Cadenza', url: 'https://github.com/infernalzeus/Cadenza' }]
+    },
+    'circadian-health-systems': {
+      eyebrow: 'Health & Research Data Systems',
+      title: 'Circadian Health Systems',
+      byline: 'Mar 2024 – Present · Kent & Medway NHS / University of Kent',
+      body: [
+              'A cross-platform tool for data controllers to be able to explore and generate data cohort exports for circadian health research.'
+      ],
+      bullets: [
+              '<b>Epoching</b> — raw device files resolved into epoch-level records.',
+              '<b>Calibration</b> — correction for device position and circadian adjustments',
+              '<b>Compliance</b> — usability of data across device, duration',
+              '<b>Compute</b> — Open-source/published circadian validated measures, combined for cohort feasibility'
+      ],
+      note: 'As part of the CHiP-D (Circadian Health in Psychosis and Depression, funded by Wellcome), 500+ participants provide device data from wrist actigraph and a light exposure logger for two weeks, alongwith biological hormonal samples, experience sampling and cognitive assessment, across four seasons. Raw signals are converted to meaningful analysable statistical data for sleep and circadian researchers.Each compute lives in its own repository and consumes the previous stage\'s output through an explicit file contract, so a new device or a new metric can be absorbed into study design without touching anything upstream. That is what lets several studies share one pipeline instead of forking it',
+      stack: ['Python', 'pandas / NumPy', 'Sharepoint', 'Signal Processing', 'FastAPI + uvicorn', 'YAML config', 'HTML/JS dashboard'],
+      links: [{ label: 'actigraphy-epoching', url: 'https://github.com/liyang-D/actigraphy-epoching' }, { label: 'actigraphy-calibration (private)', url: 'https://github.com/infernalzeus/actigraphy-calibration' }, { label: 'actigraphy-sleep-metrics', url: 'https://github.com/infernalzeus/actigraphy-sleep-metrics' }, { label: 'luminosity-metrics', url: 'https://github.com/infernalzeus/luminosity-metrics' }, { label: 'CD-Compliance-Checks', url: 'https://github.com/infernalzeus/CD-Compliance-Checks' }]
     },
     'portable-mri-sim': {
       eyebrow: 'Health & Research Data Systems',
       title: 'Portable MRI Simulation',
       byline: '2026 · Kent mobile-MRI resourcing project (private repo)',
-      body: ["This simulator explores how a mobile MRI service could serve GP practices across Kent. It generates patient demand, assigns mobile units to practices, and shows how different schedules affect the backlog over time."],
-      bullets: ["<b>Set the scenario:</b> Adjust the starting backlog, referral growth, number of units and working hours.", "<b>Compare schedules:</b> Run greedy, genetic or tree-search strategies against the same generated demand.", "<b>Inspect the results:</b> Explore routes on a map and compare how the backlog changes between runs."],
-      note: "Results depend on the demand and operating assumptions you enter. Reusing one demand sample makes the strategy comparisons consistent.",
+      body: [
+              'How many mobile units, sent where, clears the backlog fastest? Units set out each day from six hubs to roughly 184 GP practices across Kent, simulated over a five-year horizon, so a resourcing decision can be argued from evidence rather than intuition.'
+      ],
+      bullets: [
+              '<b>Demand</b> — a referral population generated once from a seed and reused, so every strategy faces identical demand.',
+              '<b>Greedy</b> — nearest-practice allocation, and the only strategy fast enough for a full five-year run.',
+              '<b>Genetic</b> — a complete evolutionary search per simulated day, for short windows.',
+              '<b>MCTS (UCT)</b> — look-ahead search with a per-day iteration budget.',
+              '<b>Sliders</b> — units, working hours and referral growth, changed live by a non-technical stakeholder.'
+      ],
+      note: 'Units do not return to base overnight — each resumes from wherever it finished, matching how the service actually runs and materially changing which practices are reachable on a given day. Practice selection is explicit rather than the whole list: roughly 184 active GP nodes plus six hubs, filtered on months-active and mean-referral thresholds.',
       stack: ['Python', 'FastAPI + slider UI', 'Schema-driven config (CLI + UI from one source)', 'Greedy / genetic / MCTS (UCT) strategies', 'Nearest-neighbour day routing', 'NumPy run persistence'],
       links: []
     },
@@ -2430,75 +2456,83 @@ function _fireHexButtonSparks() {
       eyebrow: 'Machine Learning & Research',
       title: 'RL Agent for VR Cognitive Assessment',
       byline: 'Aug 2021 – Aug 2022 · King\'s College London (IoPPN, CSI Lab)',
-      body: ["An academic collaboration exploring reinforcement learning for tasks used in virtual-reality cognitive assessments. The work focused on the training environment, the information available to the agent, and the rewards used to guide its behaviour."],
-      bullets: ["<b>Task modelling:</b> Represent the assessment as an environment the agent can interact with.", "<b>Agent training:</b> Use task observations and rewards to learn a sequence of actions.", "<b>Evaluation:</b> Assess task completion as the environment and reward design change."],
-      stack: ['Python', 'OpenAI Gym', 'Reinforcement learning', 'VR task data'],
+      body: [
+              'Clinical cognitive assessments delivered in virtual reality record where a person looks and moves. This research explored how a reinforcement learning agent would carry out the same assessment task, so its learned behaviour becomes a reference model of how the task gets solved, against which participant behaviour (including in psychosis or under placebo) can be compared. An agent’s task completion improved from 58.33% to 100% by adding state-space quantisation and monotonic signal recognition'
+      ],
+      note: 'The agent is a TD3-DDPG double Q-learning actor-critic on a custom environment. TD3 already corrects the value-overestimation bias that destabilises DDPG; what it cannot correct is a percept in which progress is invisible. Encoding local state as a quantised Moore neighbourhood and adding a Lyapunov function to supply a monotonic progress signal is what stabilised credit assignment across long episodes.',
+      stack: ['Python', 'OpenAI Gym (custom environment)', 'TD3-DDPG double Q-learning', 'Quantised Moore-neighbourhood percepts', 'Lyapunov progress function', 'VR gaze/movement heatmaps'],
       links: []
     },
     '3d-bounding-box': {
       eyebrow: 'Computer Vision',
       title: '3D Bounding Box Annotation',
       byline: 'Jan – May 2021 · Academic',
-      body: ["An academic computer-vision project working with camera and LiDAR data from the Lyft and KITTI driving datasets. The aim was to identify objects and place bounding boxes around them in three dimensions."],
-      bullets: ["<b>Camera calibration:</b> Work with the camera geometry needed to relate images to the scene.", "<b>Object detection:</b> Use YOLO models to identify objects in images.", "<b>3D annotation:</b> Combine image detections with LiDAR information to locate objects in space."],
-      stack: ['Python', 'OpenCV', 'YOLOv3 / YOLOv5', 'LiDAR', 'Lyft / KITTI'],
+      body: [
+              '90.28% ‘Intersection over Union’ score on 3D object recognition across the Lyft and KITTI self-driving datasets.',
+              'As these datasets record the same scene twice (once through a camera, once through LiDAR) in different coordinate frames - resolving both into one metric frame lets detection be placed in space (3D) rather than in a picture (2D)'
+      ],
+      note: 'Detector precision caps the score, but camera-to-LiDAR calibration caps the whole scene: a small rotational error in that transform displaces every box, and the displacement grows with range. Calibration is therefore validated as its own stage rather than assumed correct.',
+      stack: ['Python', 'OpenCV camera calibration (intrinsics + extrinsics)', 'YOLOv3 / YOLOv5', 'LiDAR point-cloud back-projection', 'Lyft + KITTI benchmarks'],
       links: []
     },
     'bm25-search': {
       eyebrow: 'Information Retrieval',
       title: 'BM25 Search Engine',
       byline: 'Mar – Apr 2023 · Academic',
-      body: ["This search engine finds news articles in the MIND dataset using BM25, a ranking method based on the words in a query and how they appear in each article. A web interface lets you enter a search and browse the results."],
-      bullets: ["<b>Search:</b> Enter keywords to retrieve ranked articles from the news collection.", "<b>Rank results:</b> Use an index of article terms to calculate BM25 relevance scores.", "<b>Run locally:</b> Start the Flask application directly or use the Docker setup."],
+      body: [
+              'Search across 100,000+ news articles with explainable ranking of results. A BM25 score decomposes per query term, so any result\'s position traces back to specific terms and their document statistics — which a dense vector model cannot offer.',
+              'The index is built ahead of time and served behind a web interface, packaged so that index construction and query behaviour stay reproducible together.'
+      ],
+      note: 'Sparse lexical retrieval remains a strong baseline and an auditable one. That matters most when a retrieval system has to be evaluated rather than merely demonstrated. The repository also compares other legacy IR models (BM14)',
       stack: ['Python', 'Okapi BM25 over a prebuilt inverted index', 'Flask', 'Docker', 'MIND news corpus (100k+ documents)'],
-      links: [
-        { label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }
-      ]
+      links: [{ label: 'BM-IR-Search-Engine', url: 'https://github.com/infernalzeus/BM-IR-Search-Engine' }]
     },
     'ml-notebooks': {
       eyebrow: 'Machine Learning',
       title: 'ML Reference Notebooks',
       byline: '2021 – 2023 · Academic',
-      body: ["A collection of machine-learning notebooks from academic work. They keep the code, intermediate results and model outputs together, making it easier to follow an experiment or return to a particular method."],
-      bullets: ["<b>Tabular data:</b> Explore bank marketing data and compare classification models.", "<b>Language:</b> Work with word embeddings, LSTM text classification and BERT sentiment analysis.", "<b>Images:</b> Study autoencoders and variational autoencoders using handwritten digits and clothing images."],
+      body: [
+              'A working reference across three areas: classical machine learning, natural language processing, and neural networks.',
+              'Classical work covers exploratory analysis, classification, regression and clustering on real bank marketing data. The language side runs from word embeddings through to transformer-based sentiment analysis. The neural side covers autoencoders and their variational form on image data.'
+      ],
       stack: ['Python', 'scikit-learn', 'BERT (aspect-based sentiment)', 'LSTM text classification', 'GloVe + Skip-gram Word2Vec', 'Autoencoders + VAE (MNIST / Fashion-MNIST)', 'pandas / NumPy', 'Jupyter'],
-      links: [
-        { label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }
-      ]
+      links: [{ label: 'Jupyter-Notebooks', url: 'https://github.com/infernalzeus/Jupyter-Notebooks' }]
     },
     'neon-warfare': {
       eyebrow: 'Games & Interactive',
       title: 'NEON WARFARE',
       byline: '2026 – Present · Personal (private repo)',
-      body: ["Neon Warfare combines a puzzle board with a real-time strategy battle. Matches supply resources for troops and abilities, while deployed units fight along separate lanes. The player balances attention between building resources and responding to the battlefield."],
-      bullets: ["<b>Puzzle board:</b> Make matches, trigger cascades and combine special pieces.", "<b>Battlefield:</b> Deploy units across lanes and use abilities to influence the fight.", "<b>Recorded opponents:</b> Replay saved actions as an opposing force and track results on a leaderboard."],
+      body: [
+              'The board you are playing funds the battle you are fighting. Matching tokens on a core board drives the economy, while units fight along lanes in real time — so neither half can be ignored to win the other.',
+              'Competitive play needs no connection. Your runs are recorded and replayed as ghosts, so there is always an opponent to race, and the ladder ranks you whether or not anything is online.'
+      ],
+      note: 'The leaderboard is defined as an interface with a local implementation underneath and a hosted one behind it, so the game stays fully playable, rankable and shippable with no backend at all. Network availability becomes a capability flag rather than a hard runtime dependency.',
       stack: ['Unity 6 / URP', 'C#', 'Deterministic ghost replay traces', 'Elo ranking, daily-seeded boards', 'Swappable leaderboard backend', 'Firebase Auth + Firestore'],
-      links: [
-        { label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }
-      ]
+      links: [{ label: 'Landing page', url: 'https://infernalzeus.github.io/neon-warfare/' }]
     },
     'monopoly-madness': {
       eyebrow: 'Games & Interactive',
       title: 'Monopoly Madness',
       byline: '2026 · Personal',
-      body: ["Monopoly Madness lets players share a game in the browser, with multiplayer lobbies, property auctions and trading. Match settings change how the game is played, including auction timing and rule variations."],
-      bullets: ["<b>Play together:</b> Create or join a lobby and follow the shared board state.", "<b>Bid and trade:</b> Take part in timed auctions and exchange properties with other players.", "<b>Customise a match:</b> Choose game settings before play begins."],
-      stack: ['React', 'TypeScript', 'Firebase', 'Vercel'],
-      links: [
-        { label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' },
-        { label: 'Play', url: 'https://monopoly-madness.vercel.app/' }
-      ]
+      body: [
+              'Monopoly in a browser, played live: auctions where everyone bids at once, direct trading between players, and rule modifiers set before a match begins.',
+              'Everything happens in real time — a bid placed on one device is visible on every other as it lands.'
+      ],
+      note: 'Turn-based movement tolerates latency; auctions and trades do not. An auction is a multi-party state machine on a shared timer where every client must converge on the same winning bid, and a trade is a two-party exchange that has to commit for both sides or roll back entirely. Designing the state model around those two, rather than around the common case, is what keeps the game consistent under real network conditions.',
+      stack: ['React', 'TypeScript', 'Firebase (authoritative shared state)', 'Vercel'],
+      links: [{ label: 'Monopoly-Madness', url: 'https://github.com/infernalzeus/Monopoly-Madness' }, { label: 'Play', url: 'https://monopoly-madness.vercel.app/' }]
     },
     'sha256-vault': {
       eyebrow: 'Tools',
       title: 'SHA256 Vault',
       byline: 'Jan 2025 · Personal',
-      body: ["SHA256 Vault stores account credentials on the local machine. The project includes an earlier command-line tool and a Flask web interface for browsing and managing entries."],
-      bullets: ["<b>Manage accounts:</b> Add, view, edit and delete stored entries.", "<b>Access the vault:</b> Sign in with a master password before viewing the web interface.", "<b>Store credentials:</b> Encrypt saved secrets with Fernet and use SHA-256 to generate record identifiers."],
+      body: [
+              'Your passwords stay on your own machine. No service, no sync, no account with somebody else holding the keys.',
+              'It is built in layers — storage, interface and cryptography kept apart — so the way credentials are stored or presented can change without anyone touching the part that handles keys. The published repository holds the original command-line version; a later local build puts the same structure behind a web interface.'
+      ],
+      note: 'SHA-256 is used where a one-way digest is the correct primitive: deriving record identifiers and verifying a password without storing it. The secrets themselves are encrypted separately, under an authenticated scheme. Keeping those two in different layers forecloses the most common error in tools of this kind — treating a digest as though it were reversible — and the separation is enforced by the module boundary rather than by convention.',
       stack: ['Python', 'SHA-256 (identifiers, password verification)', 'Fernet / AES-CBC + HMAC', 'Layered service + adapter architecture', 'Flask (later build)'],
-      links: [
-        { label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }
-      ]
+      links: [{ label: 'SHA256-Encryptor', url: 'https://github.com/infernalzeus/SHA256-Encryptor' }]
     }
   };
 
@@ -2525,7 +2559,7 @@ function _fireHexButtonSparks() {
       html += '</figure>';
     }
     if (p.note) {
-      html += '<div class="modal-note"><span class="modal-note-label">Good to know</span><p>' + p.note + '</p></div>';
+      html += '<div class="modal-note"><p>' + p.note + '</p></div>';
     }
     if (p.stack && p.stack.length) {
       html += '<h4 class="modal-h4">Stack</h4><div class="tags">';
@@ -2585,7 +2619,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=16"></script>
+<script src="assets/stack-graph/stack-graph.js?v=18"></script>
 </body>
 </html>
 
