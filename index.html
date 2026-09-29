@@ -7,8 +7,9 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=19">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;800&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=20">
   <style>
     :root {
       --bg:         #080c28;
@@ -1080,8 +1081,12 @@
         z-index: 2;
         width: 40px;
         height: 46px;
-        animation: mobile-hex-pulse 2s ease-in-out infinite !important;
+        animation: mobile-hex-pulse 3.2s ease-in-out infinite !important;
       }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #hero-hex-btn { animation: none !important; opacity: 0.8; }
     }
 
     /* ── PROJECT MODAL ───────────────────────────────── */
@@ -2051,155 +2056,209 @@ function _fireHexButtonSparks() {
   });
 }
 
-/* ── MOBILE HEX GRID CANVAS ─────────────────────────────── */
+/* ── MOBILE HEX GRID CANVAS (triangle cells) ────────────── */
 /*
- * Always-running rAF loop — mirrors the desktop canvas philosophy.
- * Instead of cursor-driven glow, uses a radial ripple ("breathing") that
- * pulses outward from the canvas centre (= button centre = grid vertex).
- * Jolt wave overlays the breathing on button click, same as desktop.
+ * Same behaviour as the desktop grid: dark until something wakes it. The
+ * button's ripple travels outward as a wavefront, and a finger dragging across
+ * the grid lights the cells under it the way the cursor does on desktop.
+ * Each hexagon is drawn as its six equilateral triangles, so the wavefront
+ * moves across six times as many cells and reads as smoother.
  *
- * No DOM manipulation — button is in #mobile-hex-wrap from the HTML;
- * CSS already centres it via position:absolute + left/top 50%.
+ * The loop only runs while something is animating; at rest the grid is drawn
+ * once. Cells are computed once per size, and one path is stroked per
+ * brightness level rather than one per triangle. A ripple fires on every
+ * button tap and once per button pulse while the grid is on screen.
  */
 (function () {
   if (window.innerWidth > 640) return;   /* desktop: do nothing here */
 
   var canvas = document.getElementById('mobile-hex-canvas');
   var wrap   = document.getElementById('mobile-hex-wrap');
+  var btn    = document.getElementById('hero-hex-btn');
   if (!canvas || !wrap) return;
 
-  var ctx = canvas.getContext('2d');
-  var W = 0, H = 0;
+  var ctx     = canvas.getContext('2d');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var dpr     = Math.min(window.devicePixelRatio || 1, 2);
 
-  /* Grid constants (pointy-top, same family as desktop canvas) */
   var HEX_R  = 22;
-  var HEX_RD = 20;
-  var HS     = HEX_R * Math.sqrt(3);   /* horizontal pitch ≈ 38.1 px */
-  var VS     = HEX_R * 1.5;            /* vertical pitch   = 33 px   */
+  var HEX_RD = 20;                       /* triangle side = hex radius */
+  var HS     = HEX_R * Math.sqrt(3);
+  var VS     = HEX_R * 1.5;
+  var FADE   = 58;                       /* edge fade zone (px)        */
+  var RING   = 48;                       /* wavefront thickness (px)   */
+  var REACH  = 74;                       /* finger glow radius (px)    */
+  var LEVELS = 6;
 
-  /* Grid offset so a hex vertex lands exactly at W/2, H/2 (= button centre) */
-  var gOffX = 0, gOffY = 0;
-
-  /* Active jolt waves */
+  var W = 0, H = 0;
+  var cells = null;                      /* stride 9: ax ay bx by px py dist mx my */
+  var count = 0;
+  var edge  = null;                      /* per-triangle edge fade           */
   var jolts = [];
+  var finger = { x: 0, y: 0, a: 0, down: false };
+  var raf = 0, lastTs = 0, visible = true;
 
-  /* ── init / resize ───────────────────────────────── */
+  /* ── build the triangle cells once per size ─────────── */
   function setup() {
-    var bw = wrap.offsetWidth;
-    var bh = wrap.offsetHeight;
-    if (bw < 1 || bh < 1) {               /* layout not ready — retry */
-      requestAnimationFrame(setup);
-      return;
-    }
-    W = canvas.width  = bw;
-    H = canvas.height = bh;
+    var bw = wrap.offsetWidth, bh = wrap.offsetHeight;
+    if (bw < 1 || bh < 1) { requestAnimationFrame(setup); return; }
+    if (bw === W && bh === H && cells) return;   /* resize with no size change (address bar) */
 
-    var cx = W * 0.5, cy = H * 0.5;
-    var row = Math.round(cy / VS);
-    var rOf = (row & 1) ? HS * 0.5 : 0;
-    var col = Math.round((cx - rOf) / HS);
-    gOffX   = cx - (col * HS + rOf);
-    gOffY   = cy - (row * VS);
+    W = bw; H = bh;
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    requestAnimationFrame(tick);          /* start the always-on loop */
-  }
+    var ox = W * 0.5, oy = H * 0.5;
+    /* offset so a hex centre lands exactly on the button centre */
+    var row0 = Math.round(oy / VS);
+    var rOf0 = (row0 & 1) ? HS * 0.5 : 0;
+    var col0 = Math.round((ox - rOf0) / HS);
+    var gx = ox - (col0 * HS + rOf0);
+    var gy = oy - row0 * VS;
 
-  /* ── main render loop ────────────────────────────── */
-  function tick(now) {
-    requestAnimationFrame(tick);
-
-    ctx.clearRect(0, 0, W, H);
-
-    /* remove expired jolts */
-    for (var j = jolts.length - 1; j >= 0; j--) {
-      if (now - jolts[j].s >= jolts[j].d) jolts.splice(j, 1);
-    }
-
-    var secs  = now / 1000;
-    var cx    = W * 0.5, cy = H * 0.5;
-    var maxD  = Math.sqrt(cx * cx + cy * cy);
-    var cols  = Math.ceil(W / HS) + 4;
-    var rows  = Math.ceil(H / VS) + 4;
-
+    var rows = Math.ceil(H / VS) + 4, cols = Math.ceil(W / HS) + 4;
+    var out = [], fades = [];
     for (var r = -2; r < rows; r++) {
       var xoff = (r & 1) ? HS * 0.5 : 0;
       for (var c = -2; c < cols; c++) {
-        var hx = c * HS + xoff + gOffX;
-        var hy = r * VS        + gOffY;
-
-        /* edge fade — FADE px zone at each border */
-        var FADE = 58;
-        var ef = Math.max(0, Math.min(1,
-          hx / FADE, (W - hx) / FADE,
-          hy / FADE, (H - hy) / FADE));
-        if (ef < 0.005) continue;
-
-        /* radial distance from canvas centre (normalised 0→1) */
-        var dx = hx - cx, dy = hy - cy;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        var cNorm = Math.max(0, 1 - dist / maxD);
-        var cBrt  = cNorm * cNorm;               /* squared → tighter centre spotlight */
-
-        /* breathing ripple: pulse propagates outward from centre.
-           period ≈ 2 s; phase shifts with distance so it looks like a live wave */
-        var phase   = secs * Math.PI - dist * 0.032;
-        var breathe = 0.50 + 0.50 * Math.sin(phase);   /* 0 … 1 */
-
-        /* base brightness = ambient + breathing modulation */
-        var t = (0.07 + 0.28 * cBrt * breathe) * ef;
-
-        /* ── jolt wave (same algorithm as desktop) ── */
-        for (var k = 0; k < jolts.length; k++) {
-          var jolt   = jolts[k];
-          var prog   = (now - jolt.s) / jolt.d;
-          var radius = prog * jolt.maxR * 1.05;
-          var diff   = radius - dist;
-          if (diff < -12 || diff >= 55) continue;
-          var jt   = diff < 0 ? 1 + diff / 12 : 1 - diff / 55;
-          var fade = 1 - prog;
-          jt = Math.max(0, jt) * fade * (0.60 + 0.40 * fade) * ef;
-          if (jt > t) t = jt;
-        }
-
-        if (t < 0.01) continue;
-
-        /* draw hex */
-        ctx.beginPath();
+        var hx = c * HS + xoff + gx, hy = r * VS + gy;
+        var vx = [], vy = [];
         for (var i = 0; i < 6; i++) {
           var a = Math.PI / 3 * i - Math.PI / 6;
-          i === 0
-            ? ctx.moveTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a))
-            : ctx.lineTo(hx + HEX_RD * Math.cos(a), hy + HEX_RD * Math.sin(a));
+          vx.push(hx + HEX_RD * Math.cos(a));
+          vy.push(hy + HEX_RD * Math.sin(a));
         }
-        ctx.closePath();
-
-        ctx.fillStyle   = 'rgba(0,230,118,' + (t * 0.06).toFixed(3) + ')';
-        ctx.fill();
-
-        if (t > 0.18) {
-          ctx.shadowColor = 'rgba(0,230,118,' + (t * 0.65).toFixed(3) + ')';
-          ctx.shadowBlur  = 3 + t * 12;
+        for (i = 0; i < 6; i++) {
+          var j = (i + 1) % 6;
+          var mx = (hx + vx[i] + vx[j]) / 3, my = (hy + vy[i] + vy[j]) / 3;
+          var ef = Math.max(0, Math.min(1, mx / FADE, (W - mx) / FADE, my / FADE, (H - my) / FADE));
+          if (ef < 0.02) continue;
+          out.push(vx[i], vy[i], vx[j], vy[j], hx, hy, Math.sqrt((mx - ox) * (mx - ox) + (my - oy) * (my - oy)), mx, my);
+          fades.push(ef);
         }
-        ctx.strokeStyle = 'rgba(0,230,118,' + Math.min(0.88, t * 0.90).toFixed(3) + ')';
-        ctx.lineWidth   = 0.7 + t * 0.5;
-        ctx.stroke();
-        ctx.shadowBlur  = 0;
       }
+    }
+    cells = new Float32Array(out);
+    edge  = new Float32Array(fades);
+    count = fades.length;
+    render(performance.now());
+  }
+
+  /* ── one frame ───────────────────────────────────── */
+  function render(now) {
+    if (!cells) return;
+    ctx.clearRect(0, 0, W, H);
+
+    var maxR = Math.sqrt(W * W + H * H) * 0.5 + RING;
+    var paths = [];
+    for (var q = 0; q < LEVELS; q++) paths.push(new Path2D());
+
+    for (var n = 0; n < count; n++) {
+      var o = n * 9, d = cells[o + 6], ef = edge[n];
+      var t = 0.05 * ef;                                   /* faint resting grid */
+
+      for (var k = 0; k < jolts.length; k++) {
+        var jo = jolts[k], prog = (now - jo.s) / jo.d;
+        var diff = prog * (maxR + 12) - d;
+        if (diff < -12 || diff >= RING) continue;
+        var jt = diff < 0 ? 1 + diff / 12 : 1 - diff / RING;
+        var fade = 1 - prog;
+        jt = Math.max(0, jt) * fade * (0.60 + 0.40 * fade) * jo.k * ef;
+        if (jt > t) t = jt;
+      }
+
+      if (finger.a > 0.01) {
+        var fx = cells[o + 7] - finger.x, fy = cells[o + 8] - finger.y;
+        var fd = Math.sqrt(fx * fx + fy * fy);
+        if (fd < REACH) {
+          var ct = 1 - fd / REACH;
+          ct = ct * ct * (3 - 2 * ct) * finger.a * ef;
+          if (ct > t) t = ct;
+        }
+      }
+
+      if (t < 0.02) continue;
+      var lv = Math.min(LEVELS - 1, Math.floor(t * LEVELS));
+      var p = paths[lv];
+      p.moveTo(cells[o + 4], cells[o + 5]);
+      p.lineTo(cells[o],     cells[o + 1]);
+      p.lineTo(cells[o + 2], cells[o + 3]);
+      p.closePath();
+    }
+
+    for (q = 0; q < LEVELS; q++) {
+      var al = (q + 1) / LEVELS;
+      if (q >= 3) {                                        /* cheap glow: wide, faint underlay */
+        ctx.strokeStyle = 'rgba(0,230,118,' + (al * 0.16).toFixed(3) + ')';
+        ctx.lineWidth   = 2.6 + al * 2;
+        ctx.stroke(paths[q]);
+      }
+      ctx.fillStyle   = 'rgba(0,230,118,' + (al * 0.10).toFixed(3) + ')';
+      ctx.fill(paths[q]);
+      ctx.strokeStyle = 'rgba(0,230,118,' + Math.min(0.9, al * 0.92).toFixed(3) + ')';
+      ctx.lineWidth   = 0.6 + al * 0.5;
+      ctx.stroke(paths[q]);
     }
   }
 
-  window._fireMobileJolt = function () {
-    jolts.push({
-      s: performance.now(), d: 1300,
-      maxR: Math.sqrt(W * W + H * H),
-      /* origin = canvas centre = snapped grid vertex = button centre */
-    });
-  };
+  function frame(now) {
+    raf = 0;
+    var dt = Math.min(0.05, (now - (lastTs || now)) / 1000);
+    lastTs = now;
+
+    for (var j = jolts.length - 1; j >= 0; j--) {
+      if (now - jolts[j].s >= jolts[j].d) jolts.splice(j, 1);
+    }
+    finger.a = finger.down ? Math.min(1, finger.a + dt * 8) : Math.max(0, finger.a - dt * 2.4);
+
+    render(now);
+
+    if (jolts.length || finger.down || finger.a > 0.01) raf = requestAnimationFrame(frame);
+    else lastTs = 0;
+  }
+
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  function fire(k) {
+    if (reduced.matches || !cells) return;
+    jolts.push({ s: performance.now(), d: 1300, k: k });
+    kick();
+  }
+  window._fireMobileJolt = function () { fire(1); };
+
+  /* ── finger acts as the cursor does on desktop ───── */
+  function track(e) {
+    var r = wrap.getBoundingClientRect();
+    finger.x = e.clientX - r.left;
+    finger.y = e.clientY - r.top;
+  }
+  wrap.addEventListener('pointerdown', function (e) {
+    if (reduced.matches || e.target.closest('#hero-hex-btn')) return;
+    track(e); finger.down = true; kick();
+  });
+  wrap.addEventListener('pointermove', function (e) { if (finger.down) track(e); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+    wrap.addEventListener(ev, function () { finger.down = false; kick(); });
+  });
+
+  /* ── a soft ripple on each button pulse, only while visible ── */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(wrap);
+  }
+  if (btn) {
+    var onPulse = function (e) {
+      if (e.target !== btn) return;
+      setTimeout(function () {
+        if (visible && !document.hidden) fire(0.55);   /* lands as the button peaks */
+      }, 1600);
+    };
+    btn.addEventListener('animationstart', onPulse);
+    btn.addEventListener('animationiteration', onPulse);
+  }
 
   setup();
-  window.addEventListener('resize', function () {
-    if (window.innerWidth <= 640) setup();
-  });
+  window.addEventListener('resize', setup);
 })();
 
 /* ── HEX BUTTON CLICK HANDLER ────────────────────────────── */
@@ -2622,7 +2681,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=19"></script>
+<script src="assets/stack-graph/stack-graph.js?v=20"></script>
 </body>
 </html>
 
