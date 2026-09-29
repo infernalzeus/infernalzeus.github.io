@@ -12,8 +12,6 @@
 #stackgraph button:focus-visible{outline:2px solid #00e676;outline-offset:6px}
 #stackgraph .eyebrow{font:10px Orbitron,monospace;letter-spacing:3px;color:#00e676}
 #stackgraph .stage{height:100%;min-height:var(--sg-min-h);position:relative;overflow:hidden;background:radial-gradient(ellipse at 35% 50%,#101a3c,transparent 65%)}
-#stackgraph .list{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
-#stackgraph .wires{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
 #stackgraph .list,#stackgraph .caps{position:absolute;inset:0;pointer-events:none}
 #stackgraph .project{position:absolute;width:340px;padding:0 20px;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;pointer-events:auto;overflow:hidden;opacity:.35}
 #stackgraph .project.active{background:#0c1630;border-color:var(--accent);opacity:1;box-shadow:0 20px 70px #0004}
@@ -65,7 +63,13 @@
 #stackgraph .group-label{left:7%}
 #stackgraph .project-label{left:calc(50% - 170px)}
 #stackgraph .stack-label{left:75%}
-#stackgraph .list,#stackgraph .wires{clip-path:inset(var(--sg-top) 0 var(--sg-bottom))}
+/* Cards and wires fade out across the top and bottom of the graph area instead of
+   being cut off by a hard edge. */
+#stackgraph{--sg-fade:64px}
+#stackgraph .list,#stackgraph .wires{
+  -webkit-mask-image:linear-gradient(to bottom,transparent var(--sg-top),#000 calc(var(--sg-top) + var(--sg-fade)),#000 calc(100% - var(--sg-bottom) - var(--sg-fade)),transparent calc(100% - var(--sg-bottom)));
+  mask-image:linear-gradient(to bottom,transparent var(--sg-top),#000 calc(var(--sg-top) + var(--sg-fade)),#000 calc(100% - var(--sg-bottom) - var(--sg-fade)),transparent calc(100% - var(--sg-bottom)))}
+@media(max-width:759px){#stackgraph{--sg-fade:40px}}
 @media(max-width:1000px) and (min-width:760px){#stackgraph .project{width:290px}
 #stackgraph .cap{font-size:12px;max-width:155px}
 #stackgraph .cap.group{font-size:10px}

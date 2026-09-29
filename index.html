@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;800&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=21">
+  <link rel="stylesheet" href="assets/stack-graph/stack-graph.css?v=23">
   <style>
     :root {
       --bg:         #080c28;
@@ -1075,6 +1075,10 @@
 
       /* Button sits at wrapper centre, painted above the canvas */
       #hero-hex-btn {
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        user-select: none;
+        -webkit-user-select: none;
         position: absolute !important;
         left: 50%  !important;
         top:  50%  !important;
@@ -2088,11 +2092,11 @@ function _fireHexButtonSparks() {
   var HS     = HEX_R * Math.sqrt(3);
   var VS     = HEX_R * 1.5;
   var FADE   = 70;                       /* edge fade zone (px)        */
-  var LEAD   = 34;                       /* soft leading edge (px)     */
-  var TAIL   = 110;                      /* trailing glow (px)         */
-  var REACH  = 84;                       /* finger glow radius (px)    */
+  var LEAD   = 9;                        /* leading edge (px)          */
+  var TAIL   = 46;                       /* trailing fade: ~2 triangle rows */
+  var REACH  = 70;                       /* finger glow radius (px)    */
   var DUR    = 1900;                     /* ripple duration (ms)       */
-  var LEVELS = 16;
+  var LEVELS = 12;
 
   var W = 0, H = 0, ox = 0, oy = 0, maxR = 0;
   var cells = null, edge = null, count = 0;   /* cells stride 9: ax ay bx by px py dist mx my */
@@ -2196,18 +2200,15 @@ function _fireHexButtonSparks() {
 
     for (q = 0; q < LEVELS; q++) {
       var al = (q + 1) / LEVELS;
-      if (q >= 2) {                                       /* underglow: two wide, faint strokes */
+      if (q >= 4) {                                       /* soft underglow on the brightest cells only */
         ctx.strokeStyle = 'rgba(0,230,118,' + (al * 0.10).toFixed(3) + ')';
-        ctx.lineWidth   = 6 + al * 4;
-        ctx.stroke(paths[q]);
-        ctx.strokeStyle = 'rgba(0,230,118,' + (al * 0.20).toFixed(3) + ')';
-        ctx.lineWidth   = 3 + al * 2;
+        ctx.lineWidth   = 3.2;
         ctx.stroke(paths[q]);
       }
-      ctx.fillStyle   = 'rgba(0,230,118,' + (al * 0.09).toFixed(3) + ')';
+      ctx.fillStyle   = 'rgba(0,230,118,' + (al * 0.05).toFixed(3) + ')';
       ctx.fill(paths[q]);
-      ctx.strokeStyle = 'rgba(0,230,118,' + Math.min(0.9, al * 0.92).toFixed(3) + ')';
-      ctx.lineWidth   = 0.6 + al * 0.55;
+      ctx.strokeStyle = 'rgba(0,230,118,' + (al * 0.62).toFixed(3) + ')';
+      ctx.lineWidth   = 0.6 + al * 0.4;
       ctx.stroke(paths[q]);
     }
   }
@@ -2678,7 +2679,7 @@ function _fireHexButtonSparks() {
   checkHash();
 })();
 </script>
-<script src="assets/stack-graph/stack-graph.js?v=21"></script>
+<script src="assets/stack-graph/stack-graph.js?v=23"></script>
 </body>
 </html>
 
